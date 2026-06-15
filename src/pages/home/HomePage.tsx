@@ -5,11 +5,13 @@ import { Entry, getEntriesByMonth } from "../../entities/entry";
 import { MonthlySummary } from "../../widgets/monthly-summary/MonthlySummary";
 import { RecentEntries } from "../../widgets/recent-entries/RecentEntries";
 import { EntryForm, useEntryFormStore } from "../../features/add-entry";
+import { SearchSheet } from "../../features/search-entries";
 
 export function HomePage() {
   const { user } = useAuthStore();
   const [entries, setEntries] = useState<Entry[]>([]);
   const { isOpen, open, close } = useEntryFormStore();
+  const [isSearchOpen, setSearchOpen] = useState(false);
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
@@ -26,6 +28,15 @@ export function HomePage() {
 
   return (
     <ScrollView className="flex-1 bg-gray-50">
+      <View className="flex-row justify-between items-center px-6 pt-4">
+        <Text className="text-lg font-bold">Money Space</Text>
+        <TouchableOpacity className="p-2" onPress={() => setSearchOpen(true)}>
+          <Text className="text-xl">🔍</Text>
+        </TouchableOpacity>
+      </View>
+      <Modal visible={isSearchOpen} animationType="slide">
+        <SearchSheet onClose={() => setSearchOpen(false)} />
+      </Modal>
       <MonthlySummary year={year} month={month} income={income} expense={expense} />
       <RecentEntries entries={entries} />
       <TouchableOpacity className="absolute bottom-6 right-6 bg-blue-500 w-14 h-14 rounded-full items-center justify-center shadow-lg" onPress={open}>
