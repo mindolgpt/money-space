@@ -86,3 +86,48 @@ CREATE POLICY categories_select ON categories
 CREATE POLICY categories_insert ON categories FOR INSERT WITH CHECK (user_id = auth.uid());
 CREATE POLICY categories_update ON categories FOR UPDATE USING (user_id = auth.uid());
 CREATE POLICY categories_delete ON categories FOR DELETE USING (user_id = auth.uid());
+
+ALTER TABLE families ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY families_select ON families
+  FOR SELECT USING (
+    id IN (SELECT family_id FROM family_members WHERE user_id = auth.uid())
+  );
+
+CREATE POLICY families_insert ON families FOR INSERT WITH CHECK (true); -- any user can create a family
+CREATE POLICY families_update ON families FOR UPDATE USING (
+  id IN (SELECT family_id FROM family_members WHERE user_id = auth.uid() AND role = 'owner')
+);
+
+ALTER TABLE family_members ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY family_members_select ON family_members
+  FOR SELECT USING (
+    family_id IN (SELECT family_id FROM family_members WHERE user_id = auth.uid())
+  );
+
+CREATE POLICY family_members_insert ON family_members FOR INSERT WITH CHECK (true); -- invite acceptance
+
+CREATE POLICY budgets_select ON budgets
+  FOR SELECT USING (
+    user_id = auth.uid()
+    OR (
+      family_id IN (SELECT family_id FROM family_members WHERE user_id = auth.uid())
+    )
+  );
+
+CREATE POLICY budgets_insert ON budgets FOR INSERT WITH CHECK (user_id = auth.uid());
+CREATE POLICY budgets_update ON budgets FOR UPDATE USING (user_id = auth.uid());
+CREATE POLICY budgets_delete ON budgets FOR DELETE USING (user_id = auth.uid());
+
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER entries_updated_at
+  BEFORE UPDATE ON entries
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
