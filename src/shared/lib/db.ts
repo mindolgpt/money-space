@@ -75,4 +75,38 @@ function initTables(database: SQLite.SQLiteDatabase) {
       created_at TEXT DEFAULT (datetime('now'))
     );
   `);
+
+  seedDefaultCategories(database);
+}
+
+function seedDefaultCategories(database: SQLite.SQLiteDatabase) {
+  const count = database.getFirstSync<{ c: number }>("SELECT COUNT(*) as c FROM categories");
+  if (count!.c > 0) return;
+
+  const defaults = [
+    { name: "월급", icon: "💰", type: "income", sort: 1 },
+    { name: "용돈", icon: "🎁", type: "income", sort: 2 },
+    { name: "사업수입", icon: "💼", type: "income", sort: 3 },
+    { name: "식비", icon: "🍽️", type: "expense", sort: 1 },
+    { name: "교통", icon: "🚌", type: "expense", sort: 2 },
+    { name: "주거", icon: "🏠", type: "expense", sort: 3 },
+    { name: "통신", icon: "📱", type: "expense", sort: 4 },
+    { name: "의료", icon: "🏥", type: "expense", sort: 5 },
+    { name: "교육", icon: "📚", type: "expense", sort: 6 },
+    { name: "문화", icon: "🎬", type: "expense", sort: 7 },
+    { name: "쇼핑", icon: "🛍️", type: "expense", sort: 8 },
+    { name: "카드대금", icon: "💳", type: "expense", sort: 9 },
+    { name: "보험", icon: "🛡️", type: "expense", sort: 10 },
+    { name: "경조사", icon: "🎊", type: "expense", sort: 11 },
+    { name: "적금", icon: "🏦", type: "saving", sort: 1 },
+    { name: "투자", icon: "📈", type: "saving", sort: 2 },
+    { name: "연금", icon: "👴", type: "saving", sort: 3 },
+  ];
+
+  for (const cat of defaults) {
+    database.runSync(
+      "INSERT INTO categories (id, user_id, name, icon, type, sort_order) VALUES (?, 'default', ?, ?, ?, ?)",
+      [crypto.randomUUID(), cat.name, cat.icon, cat.type, cat.sort]
+    );
+  }
 }
