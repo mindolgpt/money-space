@@ -1,9 +1,5 @@
-import { View, Text } from "react-native";
+import { SharedPage } from "../../pages/shared/SharedPage";
 
 export default function SharedScreen() {
-  return (
-    <View className="flex-1 justify-center items-center">
-      <Text>공유 가계부</Text>
-    </View>
-  );
+  return <SharedPage />;
 }
