@@ -1,9 +1,5 @@
-import { View, Text } from "react-native";
+import { StatisticsPage } from "../../pages/statistics/StatisticsPage";
 
 export default function StatisticsScreen() {
-  return (
-    <View className="flex-1 justify-center items-center">
-      <Text>통계</Text>
-    </View>
-  );
+  return <StatisticsPage />;
 }
