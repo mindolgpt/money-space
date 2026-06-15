@@ -1,0 +1,37 @@
+import { View, Text, TouchableOpacity } from "react-native";
+import { PaymentMethod } from "../../../entities/entry";
+
+interface Props {
+  value?: PaymentMethod;
+  onChange: (v: PaymentMethod) => void;
+}
+
+const METHODS: { key: PaymentMethod; label: string }[] = [
+  { key: "cash", label: "현금" },
+  { key: "card", label: "카드" },
+  { key: "account", label: "계좌" },
+  { key: "transfer", label: "이체" },
+];
+
+export function PaymentMethodSelector({ value, onChange }: Props) {
+  return (
+    <View className="mb-4">
+      <Text className="text-sm text-gray-500 mb-2">결제수단</Text>
+      <View className="flex-row">
+        {METHODS.map((m) => (
+          <TouchableOpacity
+            key={m.key}
+            className={`px-4 py-2 rounded-full mr-2 ${
+              value === m.key ? "bg-blue-500" : "bg-gray-100"
+            }`}
+            onPress={() => onChange(m.key)}
+          >
+            <Text className={value === m.key ? "text-white" : "text-gray-700"}>
+              {m.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+}
