@@ -55,6 +55,12 @@ function initTables(database: SQLite.SQLiteDatabase) {
       UNIQUE(user_id, category_id, month)
     );
 
+    CREATE TABLE IF NOT EXISTS families (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
     CREATE TABLE IF NOT EXISTS family_members (
       id TEXT PRIMARY KEY,
       family_id TEXT NOT NULL,
