@@ -1,5 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
+import Animated, { useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { getDb } from "../../../shared/lib/db";
 
 interface Category {
@@ -34,16 +35,22 @@ export function CategoryPicker({ type, selectedId, onSelect }: Props) {
         data={categories}
         keyExtractor={(c) => c.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            className={`px-4 py-2 rounded-full mr-2 ${
-              selectedId === item.id ? "bg-blue-500" : "bg-gray-100"
-            }`}
-            onPress={() => onSelect(item.id)}
+          <Animated.View
+            style={useAnimatedStyle(() => ({
+              transform: [{ scale: withSpring(selectedId === item.id ? 1.1 : 1, { stiffness: 150, damping: 8 }) }],
+            }), [selectedId, item.id])}
           >
-            <Text className={selectedId === item.id ? "text-white" : "text-gray-700"}>
-              {item.icon} {item.name}
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              className={`px-4 py-2 rounded-full mr-2 ${
+                selectedId === item.id ? "bg-blue-500" : "bg-gray-100"
+              }`}
+              onPress={() => onSelect(item.id)}
+            >
+              <Text className={selectedId === item.id ? "text-white" : "text-gray-700"}>
+                {item.icon} {item.name}
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
         )}
       />
     </View>
