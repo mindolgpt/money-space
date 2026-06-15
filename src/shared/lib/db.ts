@@ -5,14 +5,16 @@ let db: SQLite.SQLiteDatabase | null = null;
 
 export function getDb(): SQLite.SQLiteDatabase {
   if (!db) {
-    db = SQLite.openDatabaseSync(DB_NAME);
-    initTables();
+    const instance = SQLite.openDatabaseSync(DB_NAME);
+    instance.execSync("PRAGMA foreign_keys = ON");
+    initTables(instance);
+    db = instance;
   }
   return db;
 }
 
-function initTables() {
-  db!.execSync(`
+function initTables(database: SQLite.SQLiteDatabase) {
+  database.execSync(`
     CREATE TABLE IF NOT EXISTS entries (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
