@@ -1,0 +1,5 @@
+export { createEntryLocally } from '@/features/sync/sync-engine/model/create-entry-locally'
+export { modifyEntryLocally } from '@/features/sync/sync-engine/model/modify-entry-locally'
+export { removeEntryLocally } from '@/features/sync/sync-engine/model/remove-entry-locally'
+export { pushPendingChanges } from '@/features/sync/sync-engine/model/push-pending-changes'
+export { subscribeToRealtime } from '@/features/sync/sync-engine/lib/subscribe-to-realtime'

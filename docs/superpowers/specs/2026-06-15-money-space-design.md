@@ -38,40 +38,93 @@ src/
 │   └── _layout.tsx
 ├── pages/                  # FSD pages layer (복잡한 페이지 컴포넌트)
 │   ├── home/
+│   │   └── ui/HomeScreen.tsx
 │   ├── statistics/
+│   │   └── ui/StatisticsScreen.tsx
 │   ├── shared/
+│   │   └── ui/SharedScreen.tsx
 │   ├── calendar/
+│   │   └── ui/CalendarScreen.tsx
 │   └── settings/
+│       └── ui/SettingsScreen.tsx
 ├── widgets/                # FSD widgets layer (재사용 가능한 섹션)
 │   ├── monthly-summary/
+│   │   ├── MonthlySummary.tsx
+│   │   └── index.ts
 │   ├── recent-entries/
+│   │   ├── RecentEntries.tsx
+│   │   └── index.ts
 │   ├── category-chart/
+│   │   ├── CategoryChart.tsx
+│   │   └── index.ts
 │   ├── budget-progress/
+│   │   ├── BudgetProgress.tsx
+│   │   └── index.ts
 │   ├── quick-input/
+│   │   └── (empty)
 │   └── sync-status/
+│       ├── SyncStatus.tsx
+│       └── index.ts
 ├── features/               # FSD features layer (비즈니스 기능 단위)
-│   ├── add-entry/
-│   ├── edit-entry/
-│   ├── search-entries/
-│   ├── sync-engine/
-│   ├── family-invite/
-│   ├── budget-manager/
-│   └── auth/
+│   ├── entry/
+│   │   ├── add-entry/
+│   │   ├── search-entries/
+│   │   └── edit-entry/
+│   ├── auth/
+│   │   └── auth-manager/
+│   ├── budget/
+│   │   └── budget-manager/
+│   ├── family/
+│   │   └── family-invite/
+│   └── sync/
+│       └── sync-engine/
 ├── entities/               # FSD entities layer (도메인 모델)
 │   ├── entry/
+│   │   ├── model/types.ts    (Entry, EntryType, PaymentMethod, CreateEntryInput)
+│   │   ├── api/index.ts      (createEntryApi factory, useEntries hooks, ENTRY_KEYS)
+│   │   └── index.ts
 │   ├── category/
+│   │   ├── model/types.ts
+│   │   ├── api/index.ts      (createCategoryApi factory)
+│   │   └── index.ts
 │   ├── budget/
+│   │   ├── model/types.ts
+│   │   ├── api/index.ts      (createBudgetApi factory, useBudgets, BUDGET_KEYS)
+│   │   └── index.ts
 │   ├── family/
+│   │   ├── model/types.ts
+│   │   ├── api/index.ts      (createFamilyApi factory, useFamily, FAMILY_KEYS)
+│   │   └── index.ts
 │   ├── user/
+│   │   ├── model/types.ts   (AuthUser)
+│   │   ├── api/index.ts      (createUserApi factory)
+│   │   ├── lib/token-storage.ts
+│   │   └── index.ts
 │   └── sync-queue/
-├── shared/                 # FSD shared layer (공통 유틸)
-│   ├── api/
-│   ├── lib/
-│   ├── ui/
-│   └── config/
-└── supabase/
-    ├── migrations/
-    └── seed.sql
+│       ├── model/types.ts
+│       ├── api/index.ts      (createSyncQueueApi factory)
+│       └── index.ts
+└── shared/                 # FSD shared layer (공통 유틸)
+    ├── api/
+    │   ├── supabase.ts       (base Supabase client)
+    │   ├── auth/
+    │   │   ├── supabase.ts   (createAuthApi factory)
+    │   │   └── index.ts
+    │   ├── entry/
+    │   │   ├── sqlite.ts     (local DB operations)
+    │   │   ├── supabase.ts   (createEntryApi factory)
+    │   │   └── index.ts      (explicit exports, no export *)
+    │   ├── family/
+    │   ├── budget/
+    │   ├── category/
+    │   └── sync-queue/
+    ├── lib/
+    │   ├── db.ts             (SQLite getDb)
+    │   └── index.ts
+    └── config/
+        ├── constants.ts
+        ├── env.ts
+        └── index.ts
 ```
 
 ## 데이터베이스 설계

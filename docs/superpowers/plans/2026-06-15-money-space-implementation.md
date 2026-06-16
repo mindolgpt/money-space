@@ -1,5 +1,7 @@
 # Money Space Implementation Plan
 
+> **STATUS: PARTIALLY IMPLEMENTED** — Core foundation, auth, entry CRUD, and sync engine are implemented. Shared features (family-invite) are implemented. Budget manager, statistics, calendar are partial.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a next-gen account book app with SQLite+Supabase hybrid sync, couple sharing, and modern UI/UX.

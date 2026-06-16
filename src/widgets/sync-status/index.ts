@@ -1,1 +1,1 @@
-export { SyncStatus } from "./SyncStatus";
+export { SyncStatus } from '@/widgets/sync-status/SyncStatus'
