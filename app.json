@@ -18,7 +18,13 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.moneyspace.app",
+      "permissions": [
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE"
+      ],
+      "useNextNotificationsApi": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -26,11 +32,58 @@
     "plugins": [
       "expo-sqlite",
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "sounds": []
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "linking": {
+      "prefixes": [
+        "money-space://",
+        "https://money-space.app",
+        "https://*.money-space.app"
+      ],
+      "config": {
+        "screens": {
+          "auth": {
+            "path": "auth",
+            "screens": {
+              "login": "login",
+              "register": "register",
+              "reset-password": "reset-password"
+            }
+          },
+          "invite": {
+            "path": "invite",
+            "screens": {
+              "[code]": ":code"
+            }
+          },
+          "(tabs)": {
+            "path": "",
+            "screens": {
+              "index": "",
+              "statistics": "statistics",
+              "calendar": "calendar",
+              "shared": "shared",
+              "settings": "settings"
+            }
+          },
+          "details": {
+            "path": "details",
+            "screens": {
+              "[id]": ":id"
+            }
+          }
+        }
+      }
     }
   }
 }

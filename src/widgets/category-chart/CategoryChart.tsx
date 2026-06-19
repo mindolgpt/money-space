@@ -13,37 +13,69 @@ type Props = {
 
 type CategoryBarProps = {
   cat: string
+  catIcon: string
   amount: number
   total: number
   index: number
+  color: string
+  type: 'expense' | 'income'
 }
 
-function CategoryBar({ cat, amount, total, index }: CategoryBarProps) {
+const CATEGORY_COLORS = [
+  '#FF453A',
+  '#FF9F0A',
+  '#FFD60A',
+  '#30D158',
+  '#BF5AF2',
+  '#0A84FF',
+  '#FF375F',
+  '#64D2FF',
+]
+
+function CategoryBar({
+  cat,
+  catIcon,
+  amount,
+  total,
+  index,
+  color,
+  type,
+}: CategoryBarProps) {
+  const percentage = total > 0 ? Math.round((amount / total) * 100) : 0
+
   const barAnim = useAnimatedStyle(
     () => ({
       width: withDelay(
-        index * 80,
-        withSpring(`${(amount / total) * 100}%`, {
-          stiffness: 100,
+        index * 100,
+        withSpring(`${Math.min(percentage, 100)}%`, {
+          stiffness: 80,
           damping: 12,
         }),
       ),
     }),
-    [amount, total, index],
+    [amount, total, index, percentage],
   )
 
   return (
-    <View key={cat} className="flex-row items-center mb-2">
-      <View className="flex-1">
-        <View className="h-4 bg-blue-100 rounded-full overflow-hidden">
-          <Animated.View
-            style={barAnim}
-            className="h-full bg-blue-500 rounded-full"
-          />
-        </View>
+    <View className="flex-row items-center mb-4">
+      <View className="w-16 flex-row items-center">
+        <Text className="text-sm">{catIcon}</Text>
+        <Text className="text-xs text-secondary ml-1.5" numberOfLines={1}>
+          {cat}
+        </Text>
       </View>
-      <Text className="ml-2 text-sm w-20 text-right">
-        {((amount / total) * 100).toFixed(0)}%
+      <View className="flex-1 h-7 mx-2 bg-bg-tertiary rounded-lg overflow-hidden">
+        <Animated.View
+          style={[barAnim, { backgroundColor: color }]}
+          className="h-full rounded-lg"
+        />
+      </View>
+      <Text
+        className={`text-xs font-medium w-12 text-right ${
+          type === 'expense' ? 'amount-expense' : 'amount-income'
+        }`}
+      >
+        {percentage}%
       </Text>
     </View>
   )
@@ -52,30 +84,50 @@ function CategoryBar({ cat, amount, total, index }: CategoryBarProps) {
 export function CategoryChart({ entries, type }: Props) {
   const filtered = entries.filter((e) => e.type === type)
   const total = filtered.reduce((s, e) => s + e.amount, 0)
-  const grouped: Record<string, number> = {}
+
+  const grouped: Record<string, { amount: number; icon: string }> = {}
   for (const e of filtered) {
     const key = e.categoryId || '기타'
-    grouped[key] = (grouped[key] || 0) + e.amount
+    if (!grouped[key]) {
+      const icons: Record<string, string> = {
+        food: '🍽️',
+        shopping: '🛒',
+        transport: '🚗',
+        cafe: '☕',
+        entertainment: '🎬',
+        health: '💊',
+        salary: '💰',
+        etc: '📝',
+      }
+      grouped[key] = { amount: 0, icon: icons[e.categoryId || 'etc'] || '📝' }
+    }
+    grouped[key].amount += e.amount
   }
 
-  const sorted = Object.entries(grouped).sort(([, a], [, b]) => b - a)
+  const sorted = Object.entries(grouped).sort(([, a], [, b]) => b.amount - a.amount)
 
   return (
-    <View className="bg-white rounded-xl p-4 mx-4 mt-4">
-      <Text className="text-base font-bold mb-4">
+    <View className="card p-4 mx-4 mt-4">
+      <Text className="text-base font-semibold text-primary mb-4">
         {type === 'expense' ? '지출 카테고리' : '수입 카테고리'}
       </Text>
-      {sorted.map(([cat, amount], index) => (
-        <CategoryBar
-          key={cat}
-          cat={cat}
-          amount={amount}
-          total={total}
-          index={index}
-        />
-      ))}
-      {total === 0 && (
-        <Text className="text-gray-400 text-center py-4">내역이 없습니다</Text>
+      {sorted.length > 0 ? (
+        sorted.map(([cat, data], index) => (
+          <CategoryBar
+            key={cat}
+            cat={cat}
+            catIcon={data.icon}
+            amount={data.amount}
+            total={total}
+            index={index}
+            color={CATEGORY_COLORS[index % CATEGORY_COLORS.length]}
+            type={type}
+          />
+        ))
+      ) : (
+        <View className="py-8 items-center">
+          <Text className="text-tertiary text-sm">내역이 없습니다</Text>
+        </View>
       )}
     </View>
   )

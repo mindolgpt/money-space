@@ -92,5 +92,33 @@ export function createAuthApi() {
           : null,
       }
     },
+
+    resetPassword: async (email: string): Promise<void> => {
+      const { error } = await supabase.auth.resetPasswordForEmail(email)
+      if (error) throw error
+    },
+
+    updatePassword: async (newPassword: string): Promise<void> => {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      })
+      if (error) throw error
+    },
+
+    onAuthStateChange: (
+      callback: (event: string, session: AuthSession | null) => void,
+    ) => {
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((event, session) => {
+        callback(event, session
+          ? {
+              access_token: session.access_token,
+              refresh_token: session.refresh_token,
+            }
+          : null)
+      })
+      return { unsubscribe: () => subscription.unsubscribe() }
+    },
   }
 }

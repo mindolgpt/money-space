@@ -5,9 +5,19 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     }
   },
-  "include": ["src/**/*", "app/**/*"],
-  "exclude": ["src/test/**"]
+  "include": [
+    "src/**/*",
+    "app/**/*",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
+  ],
+  "exclude": [
+    "src/test/**"
+  ]
 }

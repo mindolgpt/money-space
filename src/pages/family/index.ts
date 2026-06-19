@@ -1,0 +1,1 @@
+export { FamilyManagerScreen } from '@/pages/family/ui/FamilyManagerScreen'

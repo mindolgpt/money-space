@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { createEntryApi } from '@/entities/entry'
 import type { SearchState } from '@/features/entry/search-entries/model/types'
 
 export const useSearchStore = create<SearchState>((set) => ({
@@ -7,10 +6,8 @@ export const useSearchStore = create<SearchState>((set) => ({
 
   query: '',
 
-  search: (query) => {
-    const entryApi = createEntryApi()
-    const results = entryApi.local.search(query)
-    set({ query, results })
+  search: (_query: string) => {
+    // deprecated: SearchSheet now uses useSearchEntries hook directly
   },
 
   clear: () => set({ results: [], query: '' }),

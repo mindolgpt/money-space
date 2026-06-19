@@ -1,7 +1,10 @@
-export type { Budget } from '@/entities/budget/model/types'
+export type { Budget, CreateBudgetInput, UpdateBudgetInput, BudgetProgress } from '@/entities/budget/model/types'
 export {
   createBudgetApi,
   useBudgets,
-  useUpsertBudget,
+  useBudgetProgress,
+  useCreateBudget,
+  useUpdateBudget,
+  useDeleteBudget,
   BUDGET_KEYS,
 } from '@/entities/budget/api'

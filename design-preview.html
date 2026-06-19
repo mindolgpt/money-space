@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Money Space</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: rgba(44, 44, 46, 0.8);
+      --text-primary: #FFFFFF;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --text-tertiary: rgba(255, 255, 255, 0.3);
+      --accent-blue: #0A84FF;
+      --accent-green: #30D158;
+      --accent-red: #FF453A;
+      --accent-orange: #FF9F0A;
+      --accent-yellow: #FFD60A;
+      --accent-purple: #BF5AF2;
+      --accent-pink: #FF375F;
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-shadow: rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .phone-frame {
+      width: 393px;
+      height: 852px;
+      background: var(--bg-primary);
+      border-radius: 47px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.1),
+        0 25px 80px -12px rgba(0,0,0,0.5),
+        0 25px 60px -15px rgba(0,0,0,0.4);
+    }
+
+    .dynamic-island {
+      width: 126px;
+      height: 37px;
+      background: #000;
+      border-radius: 20px;
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 84px;
+      background: rgba(28, 28, 30, 0.85);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border-top: 0.5px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding-top: 8px;
+      z-index: 50;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-secondary);
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 4px 12px;
+    }
+
+    .nav-item.active { color: var(--accent-blue); }
+    .nav-item svg { width: 24px; height: 24px; }
+
+    .nav-item .nav-indicator {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active .nav-indicator {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .tab-content {
+      display: none;
+      height: calc(100% - 140px);
+      overflow-y: auto;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border: 0.5px solid var(--glass-border);
+      border-radius: 20px;
+    }
+
+    .solid-card {
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      border: 0.5px solid rgba(255,255,255,0.05);
+    }
+
+    .amount {
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+    .amount-large {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+    .amount-green { color: var(--accent-green); }
+    .amount-red { color: var(--accent-red); }
+    .amount-orange { color: var(--accent-orange); }
+    .amount-blue { color: var(--accent-blue); }
+
+    .label-sm {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .entry-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+      transition: background 0.2s ease;
+    }
+    .entry-item:last-child { border-bottom: none; }
+    .entry-item:hover { background: rgba(255,255,255,0.03); }
+
+    .pill {
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .pill-active {
+      background: var(--accent-blue);
+      color: white;
+    }
+    .pill-inactive {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+
+    .fab {
+      position: absolute;
+      bottom: 100px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      background: var(--accent-blue);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(10, 132, 255, 0.4);
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      cursor: pointer;
+      z-index: 40;
+    }
+    .fab:hover { transform: scale(1.05); }
+    .fab:active { transform: scale(0.95); }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+
+    .modal-sheet {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-secondary);
+      border-radius: 24px 24px 0 0;
+      max-height: 85%;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+      z-index: 101;
+    }
+    .modal-overlay.active .modal-sheet { transform: translateY(0); }
+
+    .sheet-handle {
+      width: 36px;
+      height: 5px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      margin: 10px auto;
+    }
+
+    .input-field {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      color: var(--text-primary);
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    .input-field:focus {
+      outline: none;
+      background: rgba(255,255,255,0.1);
+    }
+    .input-field::placeholder { color: var(--text-tertiary); }
+
+    .progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .calendar-day:hover { background: rgba(255,255,255,0.1); }
+    .calendar-day.other-month { color: var(--text-tertiary); }
+    .calendar-day.today {
+      background: var(--accent-blue);
+      color: white;
+    }
+    .calendar-day.has-expense::after {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background: var(--accent-red);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 4px;
+    }
+
+    .toggle {
+      width: 51px;
+      height: 31px;
+      background: var(--bg-tertiary);
+      border-radius: 16px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .toggle.active { background: var(--accent-green); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 27px;
+      height: 27px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    }
+    .toggle.active::after { left: 22px; }
+
+    .chart-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .chart-label {
+      width: 70px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .chart-track {
+      flex: 1;
+      height: 28px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 0 10px;
+    }
+    .chart-fill {
+      height: 100%;
+      border-radius: 8px;
+      transition: width 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .badge-green {
+      background: rgba(48, 209, 88, 0.15);
+      color: var(--accent-green);
+    }
+    .badge-yellow {
+      background: rgba(255, 214, 10, 0.15);
+      color: var(--accent-yellow);
+    }
+    .badge-red {
+      background: rgba(255, 69, 58, 0.15);
+      color: var(--accent-red);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .animate-fade-in-up {
+      opacity: 0;
+      animation: fadeInUp 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+    .animate-scale-in {
+      opacity: 0;
+      animation: scaleIn 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+  </style>
+</head>
+<body>
+
+  <div class="phone-frame">
+
+    <div class="dynamic-island"></div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M1 4.5C1 3.67 1.67 3 2.5 3H3.5C4.33 3 5 3.67 5 4.5V10.5C5 11.33 4.33 12 3.5 12H2.5C1.67 12 1 11.33 1 10.5V4.5Z"/><path d="M6 3C6 2.17 6.67 1.5 7.5 1.5H8.5C9.33 1.5 10 2.17 10 3V10.5C10 11.33 9.33 12 8.5 12H7.5C6.67 12 6 11.33 6 10.5V3Z" opacity="0.4"/><path d="M11 1.5C11 0.67 11.67 0 12.5 0H13.5C14.33 0 15 0.67 15 1.5V10.5C15 11.33 14.33 12 13.5 12H12.5C11.67 12 11 11.33 11 10.5V1.5Z" opacity="0.4"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.5C8.55 2.5 9 2.05 9 1.5C9 0.95 8.55 0.5 8 0.5C7.45 0.5 7 0.95 7 1.5C7 2.05 7.45 2.5 8 2.5Z"/><path d="M4.22 3.59C4.06 3.38 3.78 3.25 3.47 3.25H1.11C0.57 3.25 0.11 3.66 0.06 4.18L0 4.5C0 5.33 0.67 6 1.5 6H2.11L2.89 10.68C2.95 11.23 3.44 11.65 4 11.65H12C12.55 11.65 13 11.2 13 10.65C13 10.5 12.97 10.36 12.91 10.23L11.08 6.32C10.96 6 10.68 5.75 10.32 5.67L7.85 5.12C7.56 5.06 7.29 4.93 7.07 4.74L5.7 3.55C5.52 3.39 5.31 3.3 5.09 3.25C4.87 3.2 4.64 3.2 4.41 3.27L4.22 3.59Z" opacity="0.4"/></svg>
+        <svg width="23" height="12" viewBox="0 0 23 12" fill="currentColor"><rect x="0.5" y="0.5" width="19" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="1.75" y="1.75" width="16.5" height="8.5" rx="1.25" fill="currentColor" opacity="0.4"/><path d="M21 4V8C21.83 7.67 22.5 6.92 22.5 6C22.5 5.08 21.83 4.33 21 4Z"/></svg>
+      </div>
+    </div>
+
+    <!-- ==================== HOME TAB ==================== -->
+    <div id="tab-home" class="tab-content active">
+      <div class="px-6 pt-2 pb-4">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-6 animate-fade-in-up">
+          <div>
+            <p class="label-sm">안녕하세요</p>
+            <h1 class="text-2xl font-semibold text-white">Money Space</h1>
+          </div>
+          <button onclick="openModal('search')" class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--glass-bg); border: 0.5px solid var(--glass-border);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+        </div>
+
+        <!-- Balance Card - Apple Wallet Style -->
+        <div class="glass-card p-5 mb-4 animate-fade-in-up delay-100" style="background: linear-gradient(135deg, rgba(10, 132, 255, 0.3) 0%, rgba(191, 90, 242, 0.3) 100%);">
+          <p class="label-sm mb-1">총 자산</p>
+          <h2 class="amount-large text-white mb-3">₩ 3,450,000</h2>
+          <div class="flex items-center gap-2">
+            <span class="badge badge-green">↑ 12.5%</span>
+            <span class="text-xs" style="color: var(--text-secondary);">지난달 대비</span>
+          </div>
+          <div style="position: absolute; top: 20px; right: 20px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; filter: blur(20px);"></div>
+        </div>
+
+        <!-- Monthly Summary -->
+        <div class="solid-card p-5 mb-4 animate-fade-in-up delay-200">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-semibold text-white">6월 요약</h3>
+            <button class="text-xs" style="color: var(--accent-blue);">상세</button>
+          </div>
+          <div style="display: flex; gap: 0;">
+            <div style="flex: 1; text-align: center; padding: 12px 0; border-right: 0.5px solid rgba(255,255,255,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2 mx-auto"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              <p class="label-sm">수입</p>
+              <p class="amount amount-green">2.45M</p>
+            </div>
+            <div style="flex: 1; text-align: center; padding: 12px 0; border-right: 0.5px solid rgba(255,255,255,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2 mx-auto"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+              <p class="label-sm">지출</p>
+              <p class="amount amount-red">1.83M</p>
+            </div>
+            <div style="flex: 1; text-align: center; padding: 12px 0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2 mx-auto"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <p class="label-sm">잔액</p>
+              <p class="amount" style="color: var(--accent-blue);">618K</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="animate-fade-in-up delay-300">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="font-semibold text-white">최근 거래</h3>
+            <button class="text-xs" style="color: var(--text-secondary);">전체 보기</button>
+          </div>
+          <div class="solid-card overflow-hidden">
+            <div class="entry-item">
+              <div class="icon-circle" style="background: rgba(255, 69, 58, 0.15); margin-right: 14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 1H21M3 6H21M3 11H21M3 16H21M3 21H21"/></svg>
+              </div>
+              <div style="flex: 1;">
+                <p class="font-medium text-white">CU 편의점</p>
+                <p class="text-xs" style="color: var(--text-secondary);">오늘 14:32 · 카드</p>
+              </div>
+              <p class="amount amount-red">-₩8,500</p>
+            </div>
+
+            <div class="entry-item">
+              <div class="icon-circle" style="background: rgba(48, 209, 88, 0.15); margin-right: 14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              </div>
+              <div style="flex: 1;">
+                <p class="font-medium text-white">급여</p>
+                <p class="text-xs" style="color: var(--text-secondary);">6월 1일 · 계좌</p>
+              </div>
+              <p class="amount amount-green">+₩2,000,000</p>
+            </div>
+
+            <div class="entry-item">
+              <div class="icon-circle" style="background: rgba(255, 159, 10, 0.15); margin-right: 14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+              </div>
+              <div style="flex: 1;">
+                <p class="font-medium text-white">스타벅스</p>
+                <p class="text-xs" style="color: var(--text-secondary);">6월 14일 · 카드</p>
+              </div>
+              <p class="amount amount-red">-₩6,200</p>
+            </div>
+
+            <div class="entry-item">
+              <div class="icon-circle" style="background: rgba(255, 214, 10, 0.15); margin-right: 14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <div style="flex: 1;">
+                <p class="font-medium text-white">교통비</p>
+                <p class="text-xs" style="color: var(--text-secondary);">6월 10일 · 카드</p>
+              </div>
+              <p class="amount amount-red">-₩45,000</p>
+            </div>
+
+            <div class="entry-item" style="border-bottom: none;">
+              <div class="icon-circle" style="background: rgba(191, 90, 242, 0.15); margin-right: 14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+              </div>
+              <div style="flex: 1;">
+                <p class="font-medium text-white">넷플릭스</p>
+                <p class="text-xs" style="color: var(--text-secondary);">6월 8일 · 카드</p>
+              </div>
+              <p class="amount amount-red">-₩17,000</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAB -->
+        <button onclick="openModal('entry')" class="fab">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== STATISTICS TAB ==================== -->
+    <div id="tab-statistics" class="tab-content">
+      <div class="px-6 pt-2 pb-4">
+        <h1 class="text-2xl font-semibold text-white mb-6 animate-fade-in-up">통계</h1>
+
+        <!-- Summary Card -->
+        <div class="glass-card p-5 mb-4 animate-fade-in-up delay-100">
+          <h3 class="font-semibold text-white mb-4">6월 분석</h3>
+          <div style="display: flex; gap: 0;">
+            <div style="flex: 1; text-align: center;">
+              <p class="label-sm">총 수입</p>
+              <p class="amount amount-green">2.45M</p>
+            </div>
+            <div style="flex: 1; text-align: center; border-left: 0.5px solid rgba(255,255,255,0.1);">
+              <p class="label-sm">총 지출</p>
+              <p class="amount amount-red">1.83M</p>
+            </div>
+            <div style="flex: 1; text-align: center; border-left: 0.5px solid rgba(255,255,255,0.1);">
+              <p class="label-sm">절감률</p>
+              <p class="amount amount-blue">25.2%</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expense Chart -->
+        <div class="solid-card p-5 mb-4 animate-fade-in-up delay-200">
+          <h3 class="font-semibold text-white mb-4">지출 카테고리</h3>
+
+          <div class="chart-bar">
+            <span class="chart-label">🍽️ 식비</span>
+            <div class="chart-track">
+              <div class="chart-fill" style="width: 0%; background: linear-gradient(90deg, #FF453A 0%, #FF6961 100%);" data-width="68%"></div>
+            </div>
+            <span class="text-xs" style="color: var(--accent-red); width: 40px; text-align: right;">35%</span>
+          </div>
+
+          <div class="chart-bar">
+            <span class="chart-label">🛒 쇼핑</span>
+            <div class="chart-track">
+              <div class="chart-fill" style="width: 0%; background: linear-gradient(90deg, #FF9F0A 0%, #FFB347 100%);" data-width="48%"></div>
+            </div>
+            <span class="text-xs" style="color: var(--accent-orange); width: 40px; text-align: right;">25%</span>
+          </div>
+
+          <div class="chart-bar">
+            <span class="chart-label">🚗 교통</span>
+            <div class="chart-track">
+              <div class="chart-fill" style="width: 0%; background: linear-gradient(90deg, #FFD60A 0%, #FFE066 100%);" data-width="38%"></div>
+            </div>
+            <span class="text-xs" style="color: var(--accent-yellow); width: 40px; text-align: right;">19%</span>
+          </div>
+
+          <div class="chart-bar">
+            <span class="chart-label">☕ 카페</span>
+            <div class="chart-track">
+              <div class="chart-fill" style="width: 0%; background: linear-gradient(90deg, #30D158 0%, #66D47A 100%);" data-width="28%"></div>
+            </div>
+            <span class="text-xs" style="color: var(--accent-green); width: 40px; text-align: right;">14%</span>
+          </div>
+
+          <div class="chart-bar" style="margin-bottom: 0;">
+            <span class="chart-label">🎬 여가</span>
+            <div class="chart-track">
+              <div class="chart-fill" style="width: 0%; background: linear-gradient(90deg, #BF5AF2 0%, #D17BF2 100%);" data-width="18%"></div>
+            </div>
+            <span class="text-xs" style="color: var(--accent-purple); width: 40px; text-align: right;">10%</span>
+          </div>
+        </div>
+
+        <!-- Income Chart -->
+        <div class="solid-card p-5 mb-6 animate-fade-in-up delay-300">
+          <h3 class="font-semibold text-white mb-4">수입 카테고리</h3>
+
+          <div class="chart-bar">
+            <span class="chart-label">💰 급여</span>
+            <div class="chart-track">
+              <div class="chart-fill" style="width: 0%; background: linear-gradient(90deg, #30D158 0%, #66D47A 100%);" data-width="82%"></div>
+            </div>
+            <span class="text-xs amount-green" style="width: 40px; text-align: right;">82%</span>
+          </div>
+
+          <div class="chart-bar">
+            <span class="chart-label">💵 용돈</span>
+            <div class="chart-track">
+              <div class="chart-fill" style="width: 0%; background: linear-gradient(90deg, #30D158 0%, #66D47A 100%);" data-width="12%"></div>
+            </div>
+            <span class="text-xs amount-green" style="width: 40px; text-align: right;">12%</span>
+          </div>
+
+          <div class="chart-bar" style="margin-bottom: 0;">
+            <span class="chart-label">🎁 기타</span>
+            <div class="chart-track">
+              <div class="chart-fill" style="width: 0%; background: linear-gradient(90deg, #30D158 0%, #66D47A 100%);" data-width="6%"></div>
+            </div>
+            <span class="text-xs amount-green" style="width: 40px; text-align: right;">6%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== CALENDAR TAB ==================== -->
+    <div id="tab-calendar" class="tab-content">
+      <div class="px-6 pt-2 pb-4">
+        <!-- Month Navigation -->
+        <div class="flex justify-between items-center mb-4 animate-fade-in-up">
+          <button class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--glass-bg); border: 0.5px solid var(--glass-border);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <h1 class="text-lg font-semibold text-white">2026년 6월</h1>
+          <button class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--glass-bg); border: 0.5px solid var(--glass-border);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+        <!-- Calendar -->
+        <div class="glass-card p-4 mb-4 animate-fade-in-up delay-100">
+          <!-- Day Headers -->
+          <div class="calendar-grid mb-2">
+            <div class="text-center text-xs font-medium py-2" style="color: var(--accent-red);">일</div>
+            <div class="text-center text-xs font-medium py-2" style="color: var(--text-secondary);">월</div>
+            <div class="text-center text-xs font-medium py-2" style="color: var(--text-secondary);">화</div>
+            <div class="text-center text-xs font-medium py-2" style="color: var(--text-secondary);">수</div>
+            <div class="text-center text-xs font-medium py-2" style="color: var(--text-secondary);">목</div>
+            <div class="text-center text-xs font-medium py-2" style="color: var(--text-secondary);">금</div>
+            <div class="text-center text-xs font-medium py-2" style="color: var(--accent-blue);">토</div>
+          </div>
+
+          <!-- Days -->
+          <div class="calendar-grid gap-1">
+            <div class="calendar-day other-month">29</div>
+            <div class="calendar-day other-month">30</div>
+            <div class="calendar-day other-month">31</div>
+
+            <div class="calendar-day has-expense">1</div>
+            <div class="calendar-day">2</div>
+            <div class="calendar-day has-expense">3</div>
+            <div class="calendar-day">4</div>
+
+            <div class="calendar-day has-expense">5</div>
+            <div class="calendar-day">6</div>
+            <div class="calendar-day">7</div>
+            <div class="calendar-day has-expense">8</div>
+            <div class="calendar-day">9</div>
+            <div class="calendar-day">10</div>
+            <div class="calendar-day">11</div>
+
+            <div class="calendar-day">12</div>
+            <div class="calendar-day">13</div>
+            <div class="calendar-day">14</div>
+            <div class="calendar-day has-expense">15</div>
+            <div class="calendar-day">16</div>
+            <div class="calendar-day">17</div>
+            <div class="calendar-day">18</div>
+
+            <div class="calendar-day">19</div>
+            <div class="calendar-day today">20</div>
+            <div class="calendar-day">21</div>
+            <div class="calendar-day">22</div>
+            <div class="calendar-day">23</div>
+            <div class="calendar-day">24</div>
+            <div class="calendar-day">25</div>
+
+            <div class="calendar-day">26</div>
+            <div class="calendar-day">27</div>
+            <div class="calendar-day">28</div>
+            <div class="calendar-day">29</div>
+            <div class="calendar-day">30</div>
+            <div class="calendar-day other-month">1</div>
+            <div class="calendar-day other-month">2</div>
+          </div>
+        </div>
+
+        <!-- Selected Day Detail -->
+        <div class="glass-card p-5 mb-6 animate-fade-in-up delay-200">
+          <h3 class="font-semibold text-white mb-4">6월 20일</h3>
+          <div style="text-align: center; padding: 20px 0;">
+            <p class="label-sm mb-2">오늘의 지출</p>
+            <p class="amount-large amount-green">₩ 0</p>
+          </div>
+          <div style="display: flex; justify-content: center; gap: 12px;">
+            <span class="badge badge-green">← 수입 있음</span>
+            <span class="badge badge-red">지출 있음 →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SHARED TAB ==================== -->
+    <div id="tab-shared" class="tab-content">
+      <div class="px-6 pt-2 pb-4">
+        <h1 class="text-2xl font-semibold text-white mb-4 animate-fade-in-up">가족 공유</h1>
+
+        <!-- Filter Pills -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px;" class="animate-fade-in-up delay-100">
+          <button class="pill pill-active">전체</button>
+          <button class="pill pill-inactive">개인</button>
+          <button class="pill pill-inactive">공유</button>
+        </div>
+
+        <!-- Family Members -->
+        <div class="glass-card p-4 mb-4 animate-fade-in-up delay-200">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="avatar" style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);">김</div>
+              <div>
+                <p class="font-semibold text-white">김철수</p>
+                <p class="text-xs" style="color: var(--text-secondary);">나</p>
+              </div>
+            </div>
+            <span class="badge badge-green">활성</span>
+          </div>
+        </div>
+
+        <!-- Shared Entries -->
+        <div class="animate-fade-in-up delay-300">
+          <h3 class="font-medium text-white mb-3">공유된 거래</h3>
+          <div class="solid-card overflow-hidden">
+            <div class="entry-item">
+              <div class="icon-circle" style="background: rgba(99, 102, 241, 0.15); margin-right: 14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              </div>
+              <div style="flex: 1;">
+                <p class="font-medium text-white">장보기 (아내)</p>
+                <p class="text-xs" style="color: var(--text-secondary);">오늘 10:30 · 현금</p>
+              </div>
+              <p class="amount amount-red">-₩85,000</p>
+            </div>
+
+            <div class="entry-item" style="border-bottom: none;">
+              <div class="icon-circle" style="background: rgba(191, 90, 242, 0.15); margin-right: 14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+              </div>
+              <div style="flex: 1;">
+                <p class="font-medium text-white">병원 (아들)</p>
+                <p class="text-xs" style="color: var(--text-secondary);">어제 15:00 · 카드</p>
+              </div>
+              <p class="amount amount-red">-₩25,000</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px 0;" class="animate-fade-in-up delay-400">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--glass-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <p class="text-sm mb-4" style="color: var(--text-secondary);">가족을 초대하여<br>함께 가계부를 관리하세요</p>
+          <button class="pill pill-active" style="padding: 12px 24px;">초대链接 만들기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SETTINGS TAB ==================== -->
+    <div id="tab-settings" class="tab-content">
+      <div class="px-6 pt-2 pb-4">
+        <h1 class="text-2xl font-semibold text-white mb-6 animate-fade-in-up">설정</h1>
+
+        <!-- Profile Card -->
+        <div class="glass-card p-5 mb-4 animate-fade-in-up delay-100">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div class="avatar" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); font-size: 20px;">김</div>
+            <div style="flex: 1;">
+              <p class="font-semibold text-white text-lg">김철수</p>
+              <p class="text-sm" style="color: var(--text-secondary);">user@example.com</p>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+
+          <div style="margin-top: 16px; padding-top: 16px; border-top: 0.5px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span class="text-sm" style="color: var(--text-secondary);">동기화 상태</span>
+              <span class="badge badge-yellow">3개 대기</span>
+            </div>
+            <button style="width: 100%; padding: 14px; background: rgba(255, 69, 58, 0.15); border: none; border-radius: 12px; color: var(--accent-red); font-weight: 600; cursor: pointer; transition: all 0.2s ease;">로그아웃</button>
+          </div>
+        </div>
+
+        <!-- Budget Management -->
+        <div class="animate-fade-in-up delay-200">
+          <h3 class="font-semibold text-white mb-3">예산 관리</h3>
+
+          <div class="solid-card p-4 mb-3">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span class="font-medium text-white">🍽️ 식비</span>
+              <span class="text-sm" style="color: var(--text-secondary);">450K / 500K</span>
+            </div>
+            <div class="progress-bar mb-2">
+              <div class="progress-fill" style="width: 90%; background: var(--accent-green);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;" class="text-xs">
+              <span style="color: var(--accent-green);">90% 사용</span>
+              <span style="color: var(--text-secondary);">남은 50,000원</span>
+            </div>
+          </div>
+
+          <div class="solid-card p-4 mb-3">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span class="font-medium text-white">🛒 쇼핑</span>
+              <span class="text-sm" style="color: var(--text-secondary);">320K / 400K</span>
+            </div>
+            <div class="progress-bar mb-2">
+              <div class="progress-fill" style="width: 80%; background: var(--accent-blue);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;" class="text-xs">
+              <span style="color: var(--accent-blue);">80% 사용</span>
+              <span style="color: var(--text-secondary);">남은 80,000원</span>
+            </div>
+          </div>
+
+          <div class="solid-card p-4 mb-3">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span class="font-medium text-white">🚗 교통</span>
+              <span class="text-sm" style="color: var(--text-secondary);">250K / 300K</span>
+            </div>
+            <div class="progress-bar mb-2">
+              <div class="progress-fill" style="width: 83%; background: var(--accent-orange);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;" class="text-xs">
+              <span style="color: var(--accent-orange);">83% 사용</span>
+              <span style="color: var(--text-secondary);">남은 50,000원</span>
+            </div>
+          </div>
+
+          <div class="solid-card p-4 mb-6">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span class="font-medium text-white">☕ 카페/음식</span>
+              <span class="text-sm" style="color: var(--text-secondary);">180K / 200K</span>
+            </div>
+            <div class="progress-bar mb-2">
+              <div class="progress-fill" style="width: 90%; background: var(--accent-red);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;" class="text-xs">
+              <span style="color: var(--accent-red);">90% 사용</span>
+              <span style="color: var(--text-secondary);">남은 20,000원</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== BOTTOM NAVIGATION ==================== -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="showTab('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>홈</span>
+        <div class="nav-indicator"></div>
+      </div>
+      <div class="nav-item" onclick="showTab('statistics')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>통계</span>
+        <div class="nav-indicator"></div>
+      </div>
+      <div class="nav-item" onclick="showTab('calendar')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>캘린더</span>
+        <div class="nav-indicator"></div>
+      </div>
+      <div class="nav-item" onclick="showTab('shared')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>공유</span>
+        <div class="nav-indicator"></div>
+      </div>
+      <div class="nav-item" onclick="showTab('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>설정</span>
+        <div class="nav-indicator"></div>
+      </div>
+    </nav>
+
+    <!-- ==================== ENTRY MODAL ==================== -->
+    <div id="modal-entry" class="modal-overlay" onclick="handleOverlayClick(event, 'entry')">
+      <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="sheet-handle"></div>
+
+        <div style="padding: 0 24px 32px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 class="text-xl font-semibold text-white">새 거래</h2>
+            <button onclick="closeModal('entry')" class="w-8 h-8 rounded-full flex items-center justify-center" style="background: var(--bg-tertiary);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <!-- Type Selector -->
+          <div style="display: flex; gap: 8px; margin-bottom: 24px;">
+            <button class="pill pill-active flex-1 text-center" id="type-expense" onclick="selectType('expense')">지출</button>
+            <button class="pill pill-inactive flex-1 text-center" id="type-income" onclick="selectType('income')">수입</button>
+            <button class="pill pill-inactive flex-1 text-center" id="type-saving" onclick="selectType('saving')">저축</button>
+          </div>
+
+          <!-- Amount -->
+          <div style="margin-bottom: 24px;">
+            <label class="text-sm mb-3 block" style="color: var(--text-secondary);">금액</label>
+            <div style="display: flex; align-items: center;">
+              <span class="text-2xl font-semibold mr-2" style="color: var(--text-secondary);">₩</span>
+              <input type="text" class="input-field text-2xl font-semibold" style="background: transparent; padding-left: 0;" placeholder="0" value="0">
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div style="margin-bottom: 24px;">
+            <label class="text-sm mb-3 block" style="color: var(--text-secondary);">카테고리</label>
+            <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
+              <button class="pill pill-active shrink-0" id="cat-food">🍽️ 식비</button>
+              <button class="pill pill-inactive shrink-0" id="cat-shopping">🛒 쇼핑</button>
+              <button class="pill pill-inactive shrink-0" id="cat-transport">🚗 교통</button>
+              <button class="pill pill-inactive shrink-0" id="cat-cafe">☕ 카페</button>
+              <button class="pill pill-inactive shrink-0" id="cat-entertainment">🎬 여가</button>
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div style="margin-bottom: 24px;">
+            <label class="text-sm mb-3 block" style="color: var(--text-secondary);">결제수단</label>
+            <div style="display: flex; gap: 8px;">
+              <button class="pill pill-inactive" id="method-cash">현금</button>
+              <button class="pill pill-active" id="method-card">카드</button>
+              <button class="pill pill-inactive" id="method-account">계좌</button>
+              <button class="pill pill-inactive" id="method-transfer">이체</button>
+            </div>
+          </div>
+
+          <!-- Note -->
+          <div style="margin-bottom: 24px;">
+            <label class="text-sm mb-3 block" style="color: var(--text-secondary);">메모</label>
+            <input type="text" class="input-field" placeholder="메모를 입력하세요">
+          </div>
+
+          <!-- Shared Toggle -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px;">
+            <div>
+              <p class="font-medium text-white">부부 공유</p>
+              <p class="text-xs" style="color: var(--text-secondary);">가족과 거래를 공유합니다</p>
+            </div>
+            <div class="toggle" id="shared-switch" onclick="toggleShared()"></div>
+          </div>
+
+          <!-- Submit -->
+          <button onclick="closeModal('entry')" style="width: 100%; padding: 16px; background: var(--accent-blue); border: none; border-radius: 14px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">저장하기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SEARCH MODAL ==================== -->
+    <div id="modal-search" class="modal-overlay" onclick="handleOverlayClick(event, 'search')">
+      <div class="modal-sheet" style="max-height: 70%;" onclick="event.stopPropagation()">
+        <div class="sheet-handle"></div>
+
+        <div style="padding: 0 24px 32px;">
+          <!-- Search Input -->
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+            <div style="flex: 1; position: relative;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" class="input-field" style="padding-left: 44px;" placeholder="검색 (메모, 금액)">
+            </div>
+            <button onclick="closeModal('search')" class="text-sm font-medium" style="color: var(--accent-blue);">취소</button>
+          </div>
+
+          <!-- Search Results -->
+          <div class="entry-item">
+            <div class="icon-circle" style="background: rgba(255, 69, 58, 0.15); margin-right: 14px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 1H21M3 6H21M3 11H21M3 16H21M3 21H21"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <p class="font-medium text-white">CU 편의점</p>
+              <p class="text-xs" style="color: var(--text-secondary);">2026-06-15</p>
+            </div>
+            <p class="amount amount-red">-₩8,500</p>
+          </div>
+
+          <div class="entry-item">
+            <div class="icon-circle" style="background: rgba(255, 69, 58, 0.15); margin-right: 14px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <p class="font-medium text-white">스타벅스</p>
+              <p class="text-xs" style="color: var(--text-secondary);">2026-06-14</p>
+            </div>
+            <p class="amount amount-red">-₩6,200</p>
+          </div>
+
+          <div class="entry-item" style="border-bottom: none;">
+            <div class="icon-circle" style="background: rgba(255, 214, 10, 0.15); margin-right: 14px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <p class="font-medium text-white">장보기</p>
+              <p class="text-xs" style="color: var(--text-secondary);">2026-06-05</p>
+            </div>
+            <p class="amount amount-red">-₩120,000</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Info Panel -->
+  <div style="width: 393px; padding: 24px; background: rgba(255,255,255,0.03); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px);">
+    <h2 style="font-size: 18px; font-weight: 600; color: white; margin-bottom: 16px;">Design System - Apple Glass</h2>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h3 style="font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Color Palette</h3>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 20px; height: 20px; border-radius: 6px; background: #0A84FF;"></div>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.7);">Blue (Primary)</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 20px; height: 20px; border-radius: 6px; background: #30D158;"></div>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.7);">Green (Income)</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 20px; height: 20px; border-radius: 6px; background: #FF453A;"></div>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.7);">Red (Expense)</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 20px; height: 20px; border-radius: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);"></div>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.7);">Glass BG</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Effects</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <span style="padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.7);">backdrop-filter</span>
+          <span style="padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.7);">blur(40px)</span>
+          <span style="padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.7);">saturation(180%)</span>
+          <span style="padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.7);">glass border</span>
+          <span style="padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.7);">gradient fill</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+      <h3 style="font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Components</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+        <span style="padding: 6px 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.7);">Glass Card</span>
+        <span style="padding: 6px 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.7);">Bottom Nav</span>
+        <span style="padding: 6px 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.7);">Modal Sheet</span>
+        <span style="padding: 6px 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.7);">Pill Button</span>
+        <span style="padding: 6px 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.7);">Progress Bar</span>
+        <span style="padding: 6px 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.7);">Calendar Grid</span>
+        <span style="padding: 6px 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.7);">Entry Item</span>
+        <span style="padding: 6px 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.7);">FAB</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabName) {
+      // Update nav items
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById('tab-' + tabName).classList.add('active');
+
+      // Animate chart bars
+      if (tabName === 'statistics') {
+        setTimeout(() => {
+          document.querySelectorAll('.chart-fill[data-width]').forEach(bar => {
+            bar.style.width = bar.dataset.width;
+          });
+        }, 200);
+      }
+    }
+
+    function openModal(modalName) {
+      document.getElementById('modal-' + modalName).classList.add('active');
+    }
+
+    function closeModal(modalName) {
+      document.getElementById('modal-' + modalName).classList.remove('active');
+    }
+
+    function handleOverlayClick(event, modalName) {
+      if (event.target.classList.contains('modal-overlay')) {
+        closeModal(modalName);
+      }
+    }
+
+    function selectType(type) {
+      ['expense', 'income', 'saving'].forEach(t => {
+        const btn = document.getElementById('type-' + t);
+        btn.classList.remove('pill-active');
+        btn.classList.add('pill-inactive');
+      });
+      const activeBtn = document.getElementById('type-' + type);
+      activeBtn.classList.remove('pill-inactive');
+      activeBtn.classList.add('pill-active');
+    }
+
+    function toggleShared() {
+      document.getElementById('shared-switch').classList.toggle('active');
+    }
+
+    // Initial animation
+    setTimeout(() => {
+      document.querySelectorAll('.chart-fill[data-width]').forEach(bar => {
+        bar.style.width = bar.dataset.width;
+      });
+    }, 600);
+  </script>
+</body>
+</html>

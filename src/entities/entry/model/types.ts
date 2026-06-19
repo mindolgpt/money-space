@@ -12,6 +12,9 @@ export type Entry = {
   note?: string
   date: string
   photoUrls?: string[]
+  latitude?: number
+  longitude?: number
+  locationName?: string
   isShared: boolean
   isRecurring: boolean
   recurringRule?: string

@@ -6,3 +6,14 @@ export type Budget = {
   amount: number
   month: string
 }
+
+export type CreateBudgetInput = Omit<Budget, 'id'>
+export type UpdateBudgetInput = { id: string; amount: number }
+
+export type BudgetProgress = {
+  budget: number
+  used: number
+  remaining: number
+  percent: number
+  isOverBudget: boolean
+}

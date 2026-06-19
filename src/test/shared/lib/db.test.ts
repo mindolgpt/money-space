@@ -8,7 +8,7 @@ describe('getDb', () => {
 
   it('creates entries table', () => {
     const db = getDb()
-    const result = db.execSync(
+    const result = db.getAllSync(
       "SELECT name FROM sqlite_master WHERE type='table' AND name='entries'",
     )
     expect(result.length).toBeGreaterThan(0)

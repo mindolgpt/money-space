@@ -1,1 +1,1 @@
-export { BudgetList } from '@/features/budget/budget-manager/ui/BudgetList'
+export { BudgetManager } from '@/features/budget/budget-manager/ui/BudgetManager'

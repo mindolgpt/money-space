@@ -1,7 +1,36 @@
-export type { AuthUser } from '@/entities/user/model/types'
-export { createUserApi } from '@/entities/user/api'
+export type {
+  AuthUser,
+  UserProfile,
+  UserSettings,
+  NotificationSettings,
+  SecuritySettings,
+  SyncSettings,
+} from '@/entities/user/model/types'
+export {
+  createUserApi,
+  useAuthUser,
+  useSignIn,
+  useSignUp,
+  useSignOut,
+  useResetPassword,
+  useUpdatePassword,
+  useUserProfile,
+  useUpdateProfile,
+  useUploadAvatar,
+  useUserSettings,
+  useUpdateSettings,
+  useDeleteAccount,
+  getLocalSettings,
+  upsertLocalSettings,
+  getDefaultSettings,
+  AUTH_KEYS,
+  USER_KEYS,
+} from '@/entities/user/api'
 export {
   storeTokens,
   getAccessToken,
   clearTokens,
+  getOnboardingStatus,
+  setOnboardingCompleted,
+  clearOnboardingStatus,
 } from '@/entities/user/lib/token-storage'

@@ -1,18 +1,52 @@
 import { useState } from 'react'
 import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { useAuthStore } from '@/features/auth/auth-manager'
 import { useInviteByEmail } from '@/entities/family'
+import { JoinFamilyModal } from '@/features/family/family-modal'
 
 type Props = {
   familyId: string
 }
 
 export function InviteScreen({ familyId }: Props) {
+  const { user } = useAuthStore()
   const [inviteEmail, setInviteEmail] = useState('')
+  const [showJoinModal, setShowJoinModal] = useState(false)
   const { mutateAsync: sendInvite, isPending } = useInviteByEmail()
 
   const handleSend = async () => {
     await sendInvite({ email: inviteEmail, familyId })
     setInviteEmail('')
+  }
+
+  if (!familyId && !user) {
+    return null
+  }
+
+  if (!familyId && user) {
+    return (
+      <View className="flex-1 bg-primary items-center justify-center p-6">
+        <View className="w-20 h-20 rounded-full bg-accent-blue/10 items-center justify-center mb-4">
+          <Text className="text-3xl">👨‍👩‍👧</Text>
+        </View>
+        <Text className="text-lg font-bold text-primary mb-2">
+          가족이 없습니다
+        </Text>
+        <Text className="text-sm text-secondary text-center mb-6">
+          초대 코드를 입력하여 가족에 참여하세요
+        </Text>
+        <TouchableOpacity
+          className="btn-primary py-3 px-8 rounded-xl"
+          onPress={() => setShowJoinModal(true)}
+        >
+          <Text className="text-white font-semibold">초대 코드 입력</Text>
+        </TouchableOpacity>
+
+        {showJoinModal && (
+          <JoinFamilyModal onClose={() => setShowJoinModal(false)} />
+        )}
+      </View>
+    )
   }
 
   return (

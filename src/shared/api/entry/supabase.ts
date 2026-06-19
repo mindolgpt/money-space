@@ -23,6 +23,9 @@ export function createEntryApi() {
         note: entry.note,
         date: entry.date,
         photo_urls: entry.photoUrls,
+        latitude: entry.latitude,
+        longitude: entry.longitude,
+        location_name: entry.locationName,
         is_shared: entry.isShared,
         is_recurring: entry.isRecurring,
         recurring_rule: entry.recurringRule,
@@ -44,8 +47,9 @@ export function createEntryApi() {
         old: Record<string, any>
       }) => void,
     ) => {
+      const channelName = `entries-changes-${userId}-${Date.now()}`
       return supabase
-        .channel('entries-changes')
+        .channel(channelName)
         .on(
           'postgres_changes',
           {
@@ -73,6 +77,9 @@ function mapRow(row: any) {
     note: row.note,
     date: row.date,
     photoUrls: row.photo_urls,
+    latitude: row.latitude,
+    longitude: row.longitude,
+    locationName: row.location_name,
     isShared: row.is_shared,
     isRecurring: row.is_recurring,
     recurringRule: row.recurring_rule,

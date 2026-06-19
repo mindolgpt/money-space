@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite'
 import { DB_NAME } from '@/shared/config'
+import { generateId } from '@/shared/lib/uuid'
 
 let db: SQLite.SQLiteDatabase | null = null
 
@@ -8,9 +9,58 @@ export function getDb(): SQLite.SQLiteDatabase {
     const instance = SQLite.openDatabaseSync(DB_NAME)
     instance.execSync('PRAGMA foreign_keys = ON')
     initTables(instance)
+    runMigrations(instance)
     db = instance
   }
   return db
+}
+
+function runMigrations(database: SQLite.SQLiteDatabase) {
+  const catColumns = database.getAllSync<{ name: string }>(
+    "PRAGMA table_info('categories')",
+  )
+  if (!catColumns.find((c: any) => c.name === 'is_system')) {
+    database.runSync(
+      'ALTER TABLE categories ADD COLUMN is_system INTEGER DEFAULT 0',
+    )
+  }
+
+  const famColumns = database.getAllSync<{ name: string }>(
+    "PRAGMA table_info('families')",
+  )
+  if (!famColumns.find((c: any) => c.name === 'invite_code')) {
+    database.runSync(
+      'ALTER TABLE families ADD COLUMN invite_code TEXT',
+    )
+  }
+
+  const usageColumns = database.getAllSync<{ name: string }>(
+    "PRAGMA table_info('category_usage')",
+  )
+  if (usageColumns.length === 0) {
+    database.runSync(
+      `CREATE TABLE IF NOT EXISTS category_usage (
+        user_id TEXT NOT NULL,
+        type TEXT NOT NULL CHECK(type IN ('income','expense','saving')),
+        category_id TEXT NOT NULL,
+        used_at TEXT DEFAULT (datetime('now')),
+        PRIMARY KEY (user_id, type)
+      )`,
+    )
+  }
+
+  const entryCols = database.getAllSync<{ name: string }>(
+    "PRAGMA table_info('entries')",
+  )
+  if (!entryCols.find((c: any) => c.name === 'latitude')) {
+    database.runSync('ALTER TABLE entries ADD COLUMN latitude REAL')
+  }
+  if (!entryCols.find((c: any) => c.name === 'longitude')) {
+    database.runSync('ALTER TABLE entries ADD COLUMN longitude REAL')
+  }
+  if (!entryCols.find((c: any) => c.name === 'location_name')) {
+    database.runSync('ALTER TABLE entries ADD COLUMN location_name TEXT')
+  }
 }
 
 function initTables(database: SQLite.SQLiteDatabase) {
@@ -40,6 +90,7 @@ function initTables(database: SQLite.SQLiteDatabase) {
       icon TEXT,
       type TEXT NOT NULL CHECK(type IN ('income','expense','saving')),
       is_shared INTEGER DEFAULT 0,
+      is_system INTEGER DEFAULT 0,
       sort_order INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now'))
     );
@@ -58,6 +109,7 @@ function initTables(database: SQLite.SQLiteDatabase) {
     CREATE TABLE IF NOT EXISTS families (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
+      invite_code TEXT,
       created_at TEXT DEFAULT (datetime('now'))
     );
 
@@ -79,6 +131,17 @@ function initTables(database: SQLite.SQLiteDatabase) {
       status TEXT DEFAULT 'pending',
       retry_count INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS user_settings (
+      user_id TEXT PRIMARY KEY,
+      theme TEXT DEFAULT 'light',
+      currency TEXT DEFAULT 'KRW',
+      language TEXT DEFAULT 'ko',
+      notifications TEXT DEFAULT '{}',
+      security TEXT DEFAULT '{}',
+      sync TEXT DEFAULT '{}',
+      updated_at TEXT DEFAULT (datetime('now'))
     );
   `)
 
@@ -113,8 +176,8 @@ function seedDefaultCategories(database: SQLite.SQLiteDatabase) {
 
   for (const cat of defaults) {
     database.runSync(
-      "INSERT INTO categories (id, user_id, name, icon, type, sort_order) VALUES (?, 'default', ?, ?, ?, ?)",
-      [crypto.randomUUID(), cat.name, cat.icon, cat.type, cat.sort],
+      "INSERT INTO categories (id, user_id, name, icon, type, is_system, sort_order) VALUES (?, 'system', ?, ?, ?, 1, ?)",
+      [generateId(), cat.name, cat.icon, cat.type, cat.sort],
     )
   }
 }

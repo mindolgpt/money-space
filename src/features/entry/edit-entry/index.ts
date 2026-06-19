@@ -1,1 +1,1 @@
-export {}
+export { EditEntryModal } from '@/features/entry/edit-entry/ui/EditEntryModal'

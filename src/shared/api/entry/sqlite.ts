@@ -1,13 +1,14 @@
 import { getDb } from '@/shared/lib'
-import { Entry, CreateEntryInput } from '@/entities/entry/model/types'
+import { generateId } from '@/shared/lib/uuid'
+import type { Entry, CreateEntryInput, EntryType, PaymentMethod } from '@/entities/entry'
 
 export function insertEntry(input: CreateEntryInput): Entry {
   const db = getDb()
-  const id = crypto.randomUUID()
+  const id = generateId()
   const now = new Date().toISOString()
   db.runSync(
-    `INSERT INTO entries (id, user_id, family_id, category_id, amount, type, payment_method, note, date, photo_urls, is_shared, is_recurring, recurring_rule, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO entries (id, user_id, family_id, category_id, amount, type, payment_method, note, date, photo_urls, latitude, longitude, location_name, is_shared, is_recurring, recurring_rule, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       id,
       input.userId,
@@ -19,6 +20,9 @@ export function insertEntry(input: CreateEntryInput): Entry {
       input.note ?? null,
       input.date,
       input.photoUrls ? JSON.stringify(input.photoUrls) : null,
+      input.latitude ?? null,
+      input.longitude ?? null,
+      input.locationName ?? null,
       input.isShared ? 1 : 0,
       input.isRecurring ? 1 : 0,
       input.recurringRule ?? null,
@@ -77,8 +81,8 @@ export function deleteEntry(id: string): void {
 export function upsertEntryFromRemote(row: Record<string, any>): void {
   getDb().runSync(
     `INSERT OR REPLACE INTO entries
-     (id, user_id, family_id, category_id, amount, type, payment_method, note, date, photo_urls, is_shared, is_recurring, recurring_rule, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+     (id, user_id, family_id, category_id, amount, type, payment_method, note, date, photo_urls, latitude, longitude, location_name, is_shared, is_recurring, recurring_rule, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       row.id,
       row.user_id,
@@ -90,6 +94,9 @@ export function upsertEntryFromRemote(row: Record<string, any>): void {
       row.note,
       row.date,
       row.photo_urls ? JSON.stringify(row.photo_urls) : null,
+      row.latitude ?? null,
+      row.longitude ?? null,
+      row.location_name ?? null,
       row.is_shared ? 1 : 0,
       row.is_recurring ? 1 : 0,
       row.recurring_rule,
@@ -99,11 +106,40 @@ export function upsertEntryFromRemote(row: Record<string, any>): void {
   )
 }
 
-export function searchEntries(query: string): Entry[] {
+export function searchEntries(userId: string, query: string): Entry[] {
+  if (!query.trim()) return []
   const db = getDb()
   const rows = db.getAllSync<Record<string, any>>(
-    'SELECT * FROM entries WHERE note LIKE ? OR CAST(amount AS TEXT) LIKE ? ORDER BY date DESC LIMIT 50',
-    [`%${query}%`, `%${query}%`],
+    `SELECT * FROM entries
+     WHERE user_id = ? AND (note LIKE ? OR CAST(amount AS TEXT) LIKE ?)
+     ORDER BY date DESC LIMIT 50`,
+    [userId, `%${query}%`, `%${query}%`],
+  )
+  return rows.map(rowToEntry)
+}
+
+export function getEntriesByDateRange(
+  userId: string,
+  startDate: string,
+  endDate: string,
+): Entry[] {
+  const db = getDb()
+  const rows = db.getAllSync<Record<string, any>>(
+    `SELECT * FROM entries
+     WHERE user_id = ? AND date >= ? AND date <= ?
+     ORDER BY date DESC`,
+    [userId, startDate, endDate],
+  )
+  return rows.map(rowToEntry)
+}
+
+export function getEntriesByFamilyId(familyId: string): Entry[] {
+  const db = getDb()
+  const rows = db.getAllSync<Record<string, any>>(
+    `SELECT * FROM entries
+     WHERE family_id = ? AND is_shared = 1
+     ORDER BY date DESC, created_at DESC`,
+    [familyId],
   )
   return rows.map(rowToEntry)
 }
@@ -115,11 +151,14 @@ function rowToEntry(row: Record<string, any>): Entry {
     familyId: row.family_id ?? undefined,
     categoryId: row.category_id ?? undefined,
     amount: row.amount,
-    type: row.type,
-    paymentMethod: row.payment_method ?? undefined,
+    type: row.type as EntryType,
+    paymentMethod: row.payment_method as PaymentMethod | undefined,
     note: row.note ?? undefined,
     date: row.date,
     photoUrls: row.photo_urls ? JSON.parse(row.photo_urls) : undefined,
+    latitude: row.latitude ?? undefined,
+    longitude: row.longitude ?? undefined,
+    locationName: row.location_name ?? undefined,
     isShared: Boolean(row.is_shared),
     isRecurring: Boolean(row.is_recurring),
     recurringRule: row.recurring_rule ?? undefined,

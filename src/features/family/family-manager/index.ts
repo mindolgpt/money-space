@@ -1,0 +1,1 @@
+export { FamilyManager } from '@/features/family/family-manager/ui/FamilyManager'
