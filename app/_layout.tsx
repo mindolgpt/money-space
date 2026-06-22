@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useThemeStore } from '@/shared/lib/theme-provider'
 import { ErrorBoundary } from '@/shared/ui'
 import { logger } from '@/shared/lib/logger'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 function RootLayoutContent() {
   const { isDark } = useThemeStore()
@@ -11,7 +12,9 @@ function RootLayoutContent() {
   return (
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
-      <Stack screenOptions={{ headerShown: false }} />
+      <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </SafeAreaView>
     </>
   )
 }

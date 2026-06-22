@@ -1,4 +1,5 @@
 import { View, Text } from 'react-native'
+import { AlertTriangle } from 'lucide-react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -52,11 +53,11 @@ export function BudgetVsActual({ budget, actualSpent, category }: Props) {
   if (!budget || budgetAmount === 0) {
     return (
       <View className="card p-4 mx-4 mt-4">
-        <Text className="text-base font-semibold text-primary mb-2">
+        <Text className="text-base font-semibold text-text-primary mb-2">
           예산 대비 지출
         </Text>
         <View className="py-6 items-center">
-          <Text className="text-tertiary text-sm">
+          <Text className="text-text-tertiary text-sm">
             설정된 예산이 없습니다
           </Text>
         </View>
@@ -66,25 +67,25 @@ export function BudgetVsActual({ budget, actualSpent, category }: Props) {
 
   return (
     <Animated.View style={containerAnim} className="card p-4 mx-4 mt-4">
-      <Text className="text-base font-semibold text-primary mb-2">
+      <Text className="text-base font-semibold text-text-primary mb-2">
         예산 대비 지출 {category && `(${category.icon || ''} ${category.name})`}
       </Text>
 
       <View className="flex-row justify-between mb-2">
         <View>
-          <Text className="text-xs text-secondary">예산</Text>
-          <Text className="text-sm font-medium text-primary">
+          <Text className="text-xs text-text-secondary">예산</Text>
+          <Text className="text-sm font-medium text-text-primary">
             {budgetAmount.toLocaleString()}원
           </Text>
         </View>
         <View className="items-center">
-          <Text className="text-xs text-secondary">지출</Text>
-          <Text className={`text-sm font-medium ${isOverBudget ? 'text-accent-red' : 'text-primary'}`}>
+          <Text className="text-xs text-text-secondary">지출</Text>
+          <Text className={`text-sm font-medium ${isOverBudget ? 'text-accent-red' : 'text-text-primary'}`}>
             {actualSpent.toLocaleString()}원
           </Text>
         </View>
         <View className="items-end">
-          <Text className="text-xs text-secondary">남은 금액</Text>
+          <Text className="text-xs text-text-secondary">남은 금액</Text>
           <Text className={`text-sm font-medium ${isOverBudget ? 'text-accent-red' : 'text-accent-green'}`}>
             {isOverBudget ? `초과 ${Math.abs(remaining).toLocaleString()}` : `${remaining.toLocaleString()}원`}
           </Text>
@@ -93,19 +94,20 @@ export function BudgetVsActual({ budget, actualSpent, category }: Props) {
 
       <View className="h-3 bg-bg-tertiary rounded-full overflow-hidden mb-2">
         <Animated.View
-          style={[barAnim, { backgroundColor: isOverBudget ? '#FF453A' : percent >= 80 ? '#FF9F0A' : percent >= 50 ? '#FFD60A' : '#30D158' }]}
+          style={[barAnim, { backgroundColor: isOverBudget ? '#FF3B30' : percent >= 80 ? '#FF9500' : percent >= 50 ? '#FFCC00' : '#34C759' }]}
           className="h-full rounded-full"
         />
       </View>
 
       <View className="flex-row justify-between">
-        <Text className={`text-xs ${isOverBudget ? 'text-accent-red' : 'text-tertiary'}`}>
+        <Text className={`text-xs ${isOverBudget ? 'text-accent-red' : 'text-text-tertiary'}`}>
           {Math.round(percent)}% 사용
         </Text>
         {isOverBudget && (
-          <Text className="text-xs text-accent-red font-medium">
-            ⚠️ 예산 초과
-          </Text>
+          <View className="flex-row items-center">
+            <AlertTriangle size={12} color="#FF3B30" />
+            <Text className="text-xs text-accent-red font-medium ml-1">예산 초과</Text>
+          </View>
         )}
       </View>
     </Animated.View>

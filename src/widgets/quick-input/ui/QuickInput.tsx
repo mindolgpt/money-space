@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { X, Zap } from 'lucide-react-native'
 import { EntryType, createEntryLocally } from '@/entities/entry'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useLastUsedCategory } from '@/entities/category'
@@ -69,12 +70,12 @@ export function QuickInput({ onEntryAdded }: Props) {
     return (
       <View className="px-4 mb-1">
         <TouchableOpacity
-          className="flex-row items-center justify-center py-3.5 rounded-2xl border-2 border-dashed border-gray-200 bg-white/50"
+          className="flex-row items-center justify-center py-3.5 rounded-2xl border-2 border-dashed border-border bg-white/50"
           onPress={() => setIsExpanded(true)}
           activeOpacity={0.7}
         >
-          <Text className="text-base mr-2">⚡</Text>
-          <Text className="text-sm font-medium text-gray-400">빠른 입력</Text>
+          <Zap size={16} color="#FF9500" className="mr-2" />
+          <Text className="text-sm font-medium text-text-secondary">빠른 입력</Text>
         </TouchableOpacity>
       </View>
     )
@@ -85,17 +86,17 @@ export function QuickInput({ onEntryAdded }: Props) {
       <Card>
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
-            <Text className="text-base mr-2">⚡</Text>
-            <Text className="text-sm font-semibold text-gray-900">빠른 입력</Text>
+            <Zap size={16} color="#FF9500" className="mr-2" />
+            <Text className="text-sm font-semibold text-text-primary">빠른 입력</Text>
           </View>
           <TouchableOpacity
-            className="w-6 h-6 rounded-full items-center justify-center bg-gray-100"
+            className="w-6 h-6 rounded-full items-center justify-center bg-bg-tertiary"
             onPress={() => {
               setAmount('')
               setIsExpanded(false)
             }}
           >
-            <Text className="text-xs text-gray-400">✕</Text>
+            <X size={14} color="#C7C7CC" />
           </TouchableOpacity>
         </View>
 
@@ -104,14 +105,14 @@ export function QuickInput({ onEntryAdded }: Props) {
             <TouchableOpacity
               key={t.key}
               className={`flex-1 py-2.5 rounded-xl items-center ${
-                type === t.key ? 'bg-blue-500' : 'bg-gray-100'
+                type === t.key ? 'bg-accent-blue' : 'bg-bg-tertiary'
               }`}
               onPress={() => setType(t.key)}
               activeOpacity={0.7}
             >
               <Text
                 className={`text-xs font-medium ${
-                  type === t.key ? 'text-white' : 'text-gray-500'
+                  type === t.key ? 'text-white' : 'text-text-secondary'
                 }`}
               >
                 {t.label}
@@ -121,17 +122,17 @@ export function QuickInput({ onEntryAdded }: Props) {
         </View>
 
         {lastCategory && (
-          <TouchableOpacity className="flex-row items-center bg-gray-50 rounded-xl px-3 py-2.5 mb-3">
+          <TouchableOpacity className="flex-row items-center bg-bg-tertiary rounded-xl px-3 py-2.5 mb-3">
             <Text className="text-base mr-2">{lastCategory.icon}</Text>
-            <Text className="text-sm text-gray-500 flex-1">{lastCategory.name}</Text>
-            <Text className="text-xs text-gray-300">마지막 사용</Text>
+            <Text className="text-sm text-text-secondary flex-1">{lastCategory.name}</Text>
+            <Text className="text-xs text-text-tertiary">마지막 사용</Text>
           </TouchableOpacity>
         )}
 
-        <View className="flex-row items-center bg-gray-50 rounded-xl px-4 py-3 mb-3">
-          <Text className="text-sm text-gray-400 mr-2">₩</Text>
+        <View className="flex-row items-center bg-bg-tertiary rounded-xl px-4 py-3 mb-3">
+          <Text className="text-sm text-text-secondary mr-2">₩</Text>
           <TextInput
-            className="flex-1 text-lg font-semibold text-gray-900"
+            className="flex-1 text-lg font-semibold text-text-primary"
             placeholder="0"
             keyboardType="numeric"
             value={amount}
@@ -142,7 +143,7 @@ export function QuickInput({ onEntryAdded }: Props) {
           {displayAmount ? (
             <Text
               className={`text-sm font-medium ${
-                type === 'income' ? 'text-emerald-500' : type === 'saving' ? 'text-blue-500' : 'text-red-500'
+                type === 'income' ? 'text-semantic-income' : type === 'saving' ? 'text-semantic-saving' : 'text-semantic-expense'
               }`}
             >
               {displayAmount}
@@ -152,7 +153,7 @@ export function QuickInput({ onEntryAdded }: Props) {
 
         <TouchableOpacity
           className={`py-3 rounded-xl items-center ${
-            amount && parseInt(amount, 10) > 0 && lastCategory ? 'bg-blue-500' : 'bg-gray-100'
+            amount && parseInt(amount, 10) > 0 && lastCategory ? 'bg-accent-blue' : 'bg-bg-tertiary'
           }`}
           onPress={handleQuickAdd}
           disabled={!amount || parseInt(amount, 10) === 0 || !lastCategory}
@@ -160,7 +161,7 @@ export function QuickInput({ onEntryAdded }: Props) {
         >
           <Text
             className={`text-sm font-semibold ${
-              amount && parseInt(amount, 10) > 0 && lastCategory ? 'text-white' : 'text-gray-300'
+              amount && parseInt(amount, 10) > 0 && lastCategory ? 'text-white' : 'text-text-tertiary'
             }`}
           >
             추가하기
@@ -168,7 +169,7 @@ export function QuickInput({ onEntryAdded }: Props) {
         </TouchableOpacity>
 
         {!lastCategory && (
-          <Text className="text-xs text-gray-300 text-center mt-2">
+          <Text className="text-xs text-text-tertiary text-center mt-2">
             먼저 카테고리를 선택한 후 기록이 필요합니다
           </Text>
         )}

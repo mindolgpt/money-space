@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { useQueryClient } from '@tanstack/react-query'
 import * as Haptics from 'expo-haptics'
+import { ChevronLeft, ChevronRight, FileText } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useUserSettings } from '@/entities/user'
 import { useBudgets, useCreateBudget, useUpdateBudget, useDeleteBudget, createBudgetApi, BUDGET_KEYS } from '@/entities/budget'
@@ -215,21 +216,21 @@ export function BudgetManager({ visible, onClose }: Props) {
       const percent = (used / budgetAmount) * 100
 
       if (percent >= 100) {
-        overBudget.push(`${cat.icon || '📝'} ${cat.name}`)
+        overBudget.push(cat.name)
       } else if (percent >= 80) {
-        nearBudget.push(`${cat.icon || '📝'} ${cat.name}`)
+        nearBudget.push(cat.name)
       }
     }
 
     if (overBudget.length > 0) {
       Alert.alert(
-        '⚠️ 예산 초과',
+        '예산 초과',
         `${overBudget.join(', ')}\n예산이 초과되었습니다. 지출을 조정해주세요.`,
         [{ text: '확인' }],
       )
     } else if (nearBudget.length > 0) {
       Alert.alert(
-        '⚡ 예산 임박',
+        '예산 임박',
         `${nearBudget.join(', ')}\n예산의 80% 이상을 사용했습니다.`,
         [{ text: '확인' }],
       )
@@ -239,11 +240,11 @@ export function BudgetManager({ visible, onClose }: Props) {
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View className="flex-1 bg-bg-primary">
-        <View className="px-4 pt-4 pb-3 border-b border-subtle">
+        <View className="px-4 pt-4 pb-3 border-b border-border">
           <View className="flex-row items-center justify-between mb-3">
-            <Text className="text-lg font-semibold text-primary">예산 설정</Text>
+            <Text className="text-lg font-semibold text-text-primary">예산 설정</Text>
             <TouchableOpacity onPress={onClose} className="p-2">
-              <Text className="text-base text-secondary">닫기</Text>
+              <Text className="text-base text-text-secondary">닫기</Text>
             </TouchableOpacity>
           </View>
 
@@ -252,10 +253,10 @@ export function BudgetManager({ visible, onClose }: Props) {
               onPress={() => onMonthChange('prev')}
               className="p-2"
             >
-              <Text className="text-lg text-accent-blue">◀</Text>
+              <ChevronLeft size={20} color="#007AFF" />
             </TouchableOpacity>
 
-            <Text className="text-base font-medium text-primary">
+            <Text className="text-base font-medium text-text-primary">
               {formatMonthDisplay(selectedMonth)}
             </Text>
 
@@ -263,7 +264,7 @@ export function BudgetManager({ visible, onClose }: Props) {
               onPress={() => onMonthChange('next')}
               className="p-2"
             >
-              <Text className="text-lg text-accent-blue">▶</Text>
+              <ChevronRight size={20} color="#007AFF" />
             </TouchableOpacity>
           </View>
         </View>
@@ -274,14 +275,14 @@ export function BudgetManager({ visible, onClose }: Props) {
             const amountStr = budgetAmounts[cat.id]?.toString() ?? ''
 
             return (
-              <View key={cat.id} className="card p-4 mb-3">
+              <View key={cat.id} className="bg-bg-secondary border border-border rounded-2xl p-4 mb-3">
                 <View className="flex-row items-center justify-between mb-2">
                   <View className="flex-row items-center">
-                    <Text className="text-base mr-2">{cat.icon || '📝'}</Text>
-                    <Text className="font-medium text-primary">{cat.name}</Text>
+                    <FileText size={16} color="#86868B" />
+                    <Text className="font-medium text-text-primary ml-2">{cat.name}</Text>
                   </View>
                   {progress.budget > 0 && (
-                    <Text className="text-xs text-secondary">
+                    <Text className="text-xs text-text-secondary">
                       {progress.budget.toLocaleString()}원 설정
                     </Text>
                   )}
@@ -289,21 +290,20 @@ export function BudgetManager({ visible, onClose }: Props) {
 
                 <View className="flex-row items-center mb-2">
                   <TextInput
-                    className="input flex-1 mr-2 py-3 text-base"
+                    className="flex-1 bg-bg-tertiary rounded-xl px-4 py-3 text-base text-text-primary mr-2"
                     placeholder="예산 금액"
-                    placeholderTextColor="#9CA3AF"
+                    placeholderTextColor="#C7C7CC"
                     keyboardType="numeric"
                     value={amountStr}
                     onChangeText={(v) => onBudgetAmountChange(cat.id, v)}
                   />
-                  <Text className="text-sm text-secondary">원</Text>
+                  <Text className="text-sm text-text-secondary">원</Text>
                 </View>
 
                 {progress.budget > 0 && (
                   <View className="pt-2">
                     <BudgetProgressBar
                       categoryName={cat.name}
-                      categoryIcon={cat.icon || '📝'}
                       spent={progress.used}
                       budget={progress.budget}
                     />
@@ -314,14 +314,14 @@ export function BudgetManager({ visible, onClose }: Props) {
           })}
         </ScrollView>
 
-        <View className="px-4 py-3 border-t border-subtle">
+        <View className="px-4 py-3 border-t border-border">
           <View className="flex-row gap-2">
             <TouchableOpacity
               className="flex-1 py-3.5 bg-bg-tertiary rounded-xl items-center"
               onPress={handleClearAll}
               disabled={budgets.length === 0}
             >
-              <Text className={`text-sm font-medium ${budgets.length === 0 ? 'text-tertiary' : 'text-accent-red'}`}>
+              <Text className={`text-sm font-medium ${budgets.length === 0 ? 'text-text-tertiary' : 'text-semantic-expense'}`}>
                 초기화
               </Text>
             </TouchableOpacity>
@@ -331,7 +331,7 @@ export function BudgetManager({ visible, onClose }: Props) {
               onPress={handleSave}
               disabled={isSubmitting}
             >
-              <Text className="text-white text-sm font-medium">
+              <Text className="text-white text-sm font-semibold">
                 {isSubmitting ? '저장 중...' : '저장'}
               </Text>
             </TouchableOpacity>

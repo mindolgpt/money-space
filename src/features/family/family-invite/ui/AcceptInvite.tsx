@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput } from 'react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useJoinFamily } from '@/entities/family'
 import { router } from 'expo-router'
+import { Button } from '@/shared/ui'
 
 export function AcceptInvite({ code: initialCode }: { code: string }) {
   const { user } = useAuthStore()
@@ -36,16 +37,17 @@ export function AcceptInvite({ code: initialCode }: { code: string }) {
   }
 
   return (
-    <View className="flex-1 justify-center items-center p-6">
-      <Text className="text-xl font-bold mb-4">가계부 초대</Text>
-      <Text className="text-gray-500 mb-6">
+    <View className="flex-1 justify-center items-center p-6 bg-bg-primary">
+      <Text className="text-2xl font-bold text-text-primary mb-2 tracking-tight">가계부 초대</Text>
+      <Text className="text-text-secondary mb-8">
         초대 코드를 입력하여 가족에 참여하세요
       </Text>
       <TextInput
-        className={`input text-center text-2xl tracking-[8px] mb-4 ${
-          error ? 'border-accent-red' : ''
+        className={`w-full bg-bg-tertiary rounded-xl text-center text-2xl tracking-[8px] p-4 text-text-primary mb-4 ${
+          error ? 'border border-semantic-expense' : ''
         }`}
         placeholder="ABCDEF"
+        placeholderTextColor="#C7C7CC"
         value={code}
         onChangeText={onCodeChange}
         autoCapitalize="characters"
@@ -53,17 +55,17 @@ export function AcceptInvite({ code: initialCode }: { code: string }) {
         editable={!isPending}
       />
       {error ? (
-        <Text className="text-accent-red text-xs mb-4">{error}</Text>
+        <Text className="text-semantic-expense text-xs mb-4 font-medium">{error}</Text>
       ) : null}
-      <TouchableOpacity
-        className="bg-blue-500 rounded-lg p-3 px-8 items-center"
+      <Button
+        variant="primary"
+        size="lg"
+        loading={isPending}
         onPress={handleAccept}
         disabled={isPending || code.length !== 6}
       >
-        <Text className="text-white font-bold">
-          {isPending ? '처리 중...' : '참여하기'}
-        </Text>
-      </TouchableOpacity>
+        {isPending ? '처리 중...' : '참여하기'}
+      </Button>
     </View>
   )
 }

@@ -5,6 +5,7 @@ import Animated, {
   withSpring,
   withDelay,
 } from 'react-native-reanimated'
+import { type LucideIcon, Utensils, ShoppingCart, Car, Coffee, Film, Pill, Wallet, FileText } from 'lucide-react-native'
 
 type Props = {
   entries: Entry[]
@@ -13,7 +14,7 @@ type Props = {
 
 type CategoryBarProps = {
   cat: string
-  catIcon: string
+  catIcon: LucideIcon
   amount: number
   total: number
   index: number
@@ -34,7 +35,7 @@ const CATEGORY_COLORS = [
 
 function CategoryBar({
   cat,
-  catIcon,
+  catIcon: IconComponent,
   amount,
   total,
   index,
@@ -59,8 +60,8 @@ function CategoryBar({
   return (
     <View className="flex-row items-center mb-4">
       <View className="w-16 flex-row items-center">
-        <Text className="text-sm">{catIcon}</Text>
-        <Text className="text-xs text-secondary ml-1.5" numberOfLines={1}>
+        <IconComponent size={16} color="#86868B" />
+        <Text className="text-xs text-text-secondary ml-1.5" numberOfLines={1}>
           {cat}
         </Text>
       </View>
@@ -85,21 +86,21 @@ export function CategoryChart({ entries, type }: Props) {
   const filtered = entries.filter((e) => e.type === type)
   const total = filtered.reduce((s, e) => s + e.amount, 0)
 
-  const grouped: Record<string, { amount: number; icon: string }> = {}
+  const grouped: Record<string, { amount: number; icon: LucideIcon }> = {}
   for (const e of filtered) {
     const key = e.categoryId || '기타'
     if (!grouped[key]) {
-      const icons: Record<string, string> = {
-        food: '🍽️',
-        shopping: '🛒',
-        transport: '🚗',
-        cafe: '☕',
-        entertainment: '🎬',
-        health: '💊',
-        salary: '💰',
-        etc: '📝',
+      const icons: Record<string, LucideIcon> = {
+        food: Utensils,
+        shopping: ShoppingCart,
+        transport: Car,
+        cafe: Coffee,
+        entertainment: Film,
+        health: Pill,
+        salary: Wallet,
+        etc: FileText,
       }
-      grouped[key] = { amount: 0, icon: icons[e.categoryId || 'etc'] || '📝' }
+      grouped[key] = { amount: 0, icon: icons[e.categoryId || 'etc'] || FileText }
     }
     grouped[key].amount += e.amount
   }
@@ -108,7 +109,7 @@ export function CategoryChart({ entries, type }: Props) {
 
   return (
     <View className="card p-4 mx-4 mt-4">
-      <Text className="text-base font-semibold text-primary mb-4">
+      <Text className="text-base font-semibold text-text-primary mb-4">
         {type === 'expense' ? '지출 카테고리' : '수입 카테고리'}
       </Text>
       {sorted.length > 0 ? (
@@ -126,7 +127,7 @@ export function CategoryChart({ entries, type }: Props) {
         ))
       ) : (
         <View className="py-8 items-center">
-          <Text className="text-tertiary text-sm">내역이 없습니다</Text>
+          <Text className="text-text-tertiary text-sm">내역이 없습니다</Text>
         </View>
       )}
     </View>

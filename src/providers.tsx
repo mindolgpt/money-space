@@ -3,6 +3,7 @@ import Constants from 'expo-constants'
 import { router } from 'expo-router'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { Lock } from 'lucide-react-native'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import {
@@ -107,17 +108,17 @@ function AuthRouter({ children }: { children: ReactNode }) {
 
   if (needsBiometric) {
     return (
-      <View className="flex-1 bg-primary items-center justify-center">
+      <View className="flex-1 bg-bg-primary items-center justify-center">
         <View className="w-20 h-20 rounded-full bg-accent-blue/20 items-center justify-center mb-6">
-          <Text className="text-3xl">🔒</Text>
+          <Lock size={40} color="#007AFF" />
         </View>
-        <Text className="text-xl font-semibold text-primary mb-2">
+        <Text className="text-xl font-semibold text-text-primary mb-2">
           생체 인증 필요
         </Text>
-        <Text className="text-sm text-secondary mb-8 text-center px-8">
+        <Text className="text-sm text-text-secondary mb-8 text-center px-8">
           계정 보안을 위해 생체 인증이 필요합니다
         </Text>
-        <ActivityIndicator size="large" color="#0A84FF" />
+        <ActivityIndicator size="large" color="#007AFF" />
         <TouchableOpacity
           className="mt-8 px-6 py-3 rounded-xl bg-accent-blue"
           onPress={async () => {

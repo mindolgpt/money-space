@@ -79,7 +79,7 @@ export function ProfileSettings() {
 
   return (
     <View>
-      <Text className="text-base font-semibold text-primary mb-4">
+      <Text className="text-base font-semibold text-text-primary mb-4">
         프로필
       </Text>
 
@@ -110,20 +110,20 @@ export function ProfileSettings() {
               )}
             </TouchableOpacity>
             <View className="flex-1 ml-4">
-              <Text className="font-semibold text-primary text-lg">
+              <Text className="font-semibold text-text-primary text-lg">
                 {profile?.name || user?.name || '사용자'}
               </Text>
-              <Text className="text-sm text-secondary">{user?.email}</Text>
+              <Text className="text-sm text-text-secondary">{user?.email}</Text>
               <Text className="text-xs text-accent-blue mt-1">프로필 사진 변경</Text>
             </View>
           </View>
 
           {/* Name Input */}
-          <Text className="text-sm text-secondary mb-2">이름</Text>
+          <Text className="text-sm text-text-secondary mb-2">이름</Text>
           <TextInput
             className="input mb-3"
             placeholder="이름을 입력하세요"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#C7C7CC"
             value={name}
             onChangeText={onNameChange}
           />
@@ -144,7 +144,7 @@ export function ProfileSettings() {
                 className={`font-semibold ${
                   isDirty && name.trim()
                     ? 'text-white'
-                    : 'text-tertiary'
+                    : 'text-text-tertiary'
                 }`}
               >
                 저장하기

@@ -82,7 +82,7 @@ export function CategoryPicker({
         <TextInput
           className="input mb-3"
           placeholder="카테고리 검색"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#C7C7CC"
           value={searchQuery}
           onChangeText={onSearchFilterChange}
         />
@@ -90,7 +90,7 @@ export function CategoryPicker({
 
       {filteredCategories.length === 0 ? (
         <View className="py-8 items-center">
-          <Text className="text-tertiary">
+          <Text className="text-text-tertiary">
             {searchQuery ? '검색 결과가 없습니다' : '카테고리가 없습니다'}
           </Text>
         </View>
@@ -149,7 +149,7 @@ function CategoryPickerItem({ category, isSelected, onPress, onLongPress }: Item
         <Text className="text-xl mb-1">{category.icon}</Text>
         <Text
           className={`text-xs font-medium ${
-            isSelected ? 'text-white' : 'text-secondary'
+            isSelected ? 'text-white' : 'text-text-secondary'
           }`}
           numberOfLines={1}
         >

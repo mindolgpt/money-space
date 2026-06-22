@@ -8,6 +8,7 @@ import {
   RefreshControl,
 } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
+import { Search, AlertTriangle, Wallet, Plus, TrendingUp } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useEntries } from '@/entities/entry'
 import { MonthlySummary } from '@/widgets/monthly-summary'
@@ -16,14 +17,12 @@ import { QuickInput } from '@/widgets/quick-input'
 import { SyncStatus } from '@/widgets/sync-status'
 import { EntryForm, useEntryFormStore } from '@/features/entry/add-entry'
 import { SearchSheet } from '@/features/entry/search-entries'
-import { useThemeStore } from '@/shared/lib/theme-provider'
 import { Card, AmountText } from '@/shared/ui'
 
 export function HomeScreen() {
   const { user } = useAuthStore()
   const { isOpen, open, close } = useEntryFormStore()
   const [isSearchOpen, setSearchOpen] = useState(false)
-  const { isDark } = useThemeStore()
   const now = new Date()
   const year = now.getFullYear()
   const month = now.getMonth() + 1
@@ -61,7 +60,7 @@ export function HomeScreen() {
   )
 
   return (
-    <View className="flex-1 bg-[#F5F5F7]">
+    <View className="flex-1 bg-bg-primary">
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 120 }}
@@ -74,28 +73,29 @@ export function HomeScreen() {
           />
         }
       >
+        {/* Header */}
         <View className="px-5 pt-6 pb-2">
           <View className="flex-row items-center justify-between">
             <View>
               {isLoading ? (
                 <View>
-                  <View className="h-3 w-16 bg-gray-200 rounded-full mb-1" />
-                  <View className="h-6 w-32 bg-gray-200 rounded-full" />
+                  <View className="h-3 w-16 bg-bg-tertiary rounded-full mb-1" />
+                  <View className="h-6 w-32 bg-bg-tertiary rounded-full" />
                 </View>
               ) : (
                 <>
-                  <Text className="text-sm text-gray-400">안녕하세요</Text>
-                  <Text className="text-xl font-bold text-gray-900">
+                  <Text className="text-[13px] text-text-secondary font-medium tracking-tight">안녕하세요</Text>
+                  <Text className="text-xl font-bold text-text-primary tracking-tight">
                     {user?.name ? `${user.name}님` : 'Money Space'}
                   </Text>
                 </>
               )}
             </View>
             <TouchableOpacity
-              className="w-9 h-9 rounded-full items-center justify-center bg-gray-100"
+              className="w-9 h-9 rounded-full items-center justify-center bg-bg-tertiary"
               onPress={() => setSearchOpen(true)}
             >
-              <Text className="text-base">🔍</Text>
+              <Search size={18} color="#86868B" />
             </TouchableOpacity>
           </View>
         </View>
@@ -106,46 +106,49 @@ export function HomeScreen() {
 
         {isError ? (
           <Card className="mx-4 items-center py-8">
-            <Text className="text-3xl mb-3">⚠️</Text>
-            <Text className="text-sm text-gray-400 mb-4">
+            <AlertTriangle size={32} color="#FF3B30" className="mb-3" />
+            <Text className="text-sm text-text-secondary mb-4">
               데이터를 불러오지 못했습니다
             </Text>
             <TouchableOpacity
-              className="bg-blue-500 py-2.5 px-6 rounded-xl"
+              className="bg-accent-blue py-2.5 px-6 rounded-xl"
               onPress={() => refetch()}
             >
-              <Text className="text-white text-sm font-medium">다시 시도</Text>
+              <Text className="text-white text-sm font-semibold">다시 시도</Text>
             </TouchableOpacity>
           </Card>
         ) : (
           <>
-            <View className="px-4 mb-3">
+            {/* Balance Card */}
+            <View className="px-4 mb-4">
               <Card variant="elevated" padded={false} className="overflow-hidden">
-                <View className="p-5">
-                  <Text className="text-xs font-medium text-gray-400 tracking-wider uppercase">총 자산</Text>
-                  <Text className="text-3xl font-bold text-gray-900 mt-1">
+                <View className="p-6">
+                  <Text className="text-xs font-semibold text-text-secondary tracking-widest uppercase">총 자산</Text>
+                  <Text className="text-[32px] font-bold text-text-primary mt-1 tracking-tight">
                     ₩{balance.toLocaleString()}
                   </Text>
                   <View className="flex-row items-center mt-2">
-                    <View className="px-2 py-0.5 rounded-full bg-emerald-50">
-                      <Text className="text-xs font-medium text-emerald-500">↑ 12.5%</Text>
+                    <View className="px-2 py-0.5 rounded-full bg-semantic-income/15">
+                      <TrendingUp size={12} color="#34C759" />
                     </View>
-                    <Text className="text-xs text-gray-400 ml-2">지난달 대비</Text>
+                    <Text className="text-xs text-text-secondary ml-2">이번달 현황</Text>
                   </View>
                 </View>
-                <View className="flex-row border-t border-[rgba(0,0,0,0.04)]">
-                  <View className="flex-1 items-center py-3 border-r border-[rgba(0,0,0,0.04)]">
-                    <Text className="text-xs text-gray-400 mb-0.5">수입</Text>
-                    <AmountText amount={income} type="income" className="text-sm" />
+                <View className="flex-row border-t border-border">
+                  <View className="flex-1 items-center py-4">
+                    <Text className="text-xs text-text-secondary mb-1 font-medium">수입</Text>
+                    <AmountText amount={income} type="income" className="text-[15px]" />
                   </View>
-                  <View className="flex-1 items-center py-3">
-                    <Text className="text-xs text-gray-400 mb-0.5">지출</Text>
-                    <AmountText amount={expense} type="expense" className="text-sm" />
+                  <View className="w-px bg-border" />
+                  <View className="flex-1 items-center py-4">
+                    <Text className="text-xs text-text-secondary mb-1 font-medium">지출</Text>
+                    <AmountText amount={expense} type="expense" className="text-[15px]" />
                   </View>
                 </View>
               </Card>
             </View>
 
+            {/* Monthly Stats */}
             <MonthlySummary
               year={year}
               month={month}
@@ -159,19 +162,21 @@ export function HomeScreen() {
             <RecentEntries entries={entries} />
 
             {!isLoading && entries.length === 0 && (
-              <View className="items-center py-12 px-8">
-                <Text className="text-4xl mb-4">💰</Text>
-                <Text className="text-base font-semibold text-gray-900 mb-1">
+              <View className="items-center py-16 px-8">
+                <View className="w-16 h-16 rounded-2xl bg-bg-tertiary items-center justify-center mb-5">
+                  <Wallet size={28} color="#86868B" />
+                </View>
+                <Text className="text-lg font-bold text-text-primary mb-1 tracking-tight">
                   첫 기록을 남겨보세요
                 </Text>
-                <Text className="text-sm text-gray-400 text-center mb-6">
+                <Text className="text-sm text-text-secondary text-center mb-6 leading-5">
                   FAB 버튼이나 빠른 입력으로{'\n'}오늘의 가계부를 시작하세요
                 </Text>
                 <TouchableOpacity
-                  className="bg-blue-500 py-3 px-8 rounded-xl"
+                  className="bg-accent-blue py-3.5 px-8 rounded-xl"
                   onPress={open}
                 >
-                  <Text className="text-white font-semibold">새 거래 추가</Text>
+                  <Text className="text-white font-semibold text-base">새 거래 추가</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -179,21 +184,23 @@ export function HomeScreen() {
         )}
       </ScrollView>
 
+      {/* Modals */}
       <Modal visible={isSearchOpen} animationType="slide">
-        <View className={`flex-1 ${isDark ? 'bg-gray-900' : 'bg-[#F5F5F7]'}`}>
+        <View className="flex-1 bg-bg-primary">
           <SearchSheet onClose={() => setSearchOpen(false)} />
         </View>
       </Modal>
 
       <Modal visible={isOpen} animationType="slide" presentationStyle="pageSheet">
-        <View className={`flex-1 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+        <View className="flex-1 bg-bg-secondary">
           <EntryForm onClose={close} />
         </View>
       </Modal>
 
+      {/* FAB */}
       <Animated.View style={fabAnim} className="absolute bottom-24 right-5">
         <TouchableOpacity
-          className="w-14 h-14 bg-blue-500 rounded-2xl items-center justify-center"
+          className="w-14 h-14 bg-accent-blue rounded-2xl items-center justify-center"
           style={{
             shadowColor: '#007AFF',
             shadowOffset: { width: 0, height: 6 },
@@ -203,7 +210,7 @@ export function HomeScreen() {
           }}
           onPress={open}
         >
-          <Text className="text-white text-2xl font-light">+</Text>
+          <Plus size={24} color="#FFFFFF" strokeWidth={3} />
         </TouchableOpacity>
       </Animated.View>
     </View>

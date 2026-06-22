@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle, withSpring, withTiming, withSequence } from
 import { useCategories, useDeleteCategory, useReorderCategories } from '@/entities/category'
 import type { Category, CategoryType } from '@/entities/category'
 import { CategoryCreateModal , CategoryEditModal } from '@/features/category/category-modal'
+import { X, ChevronUp, ChevronDown } from 'lucide-react-native'
 
 const TABS: { key: CategoryType; label: string }[] = [
   { key: 'income', label: '수입' },
@@ -84,13 +85,13 @@ export function CategoryManager({ onClose }: Props) {
   )
 
   return (
-    <View className="flex-1 bg-primary">
+    <View className="flex-1 bg-bg-primary">
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity onPress={onClose}>
           <Text className="text-accent-blue text-base">닫기</Text>
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-primary">카테고리 관리</Text>
+        <Text className="text-lg font-bold text-text-primary">카테고리 관리</Text>
         <View className="flex-row gap-2">
           {!isDragging ? (
             <TouchableOpacity
@@ -125,7 +126,7 @@ export function CategoryManager({ onClose }: Props) {
           >
             <Text
               className={`text-sm font-medium ${
-                selectedType === tab.key ? 'text-white' : 'text-secondary'
+                selectedType === tab.key ? 'text-white' : 'text-text-secondary'
               }`}
             >
               {tab.label}
@@ -153,7 +154,7 @@ export function CategoryManager({ onClose }: Props) {
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40 }}
         ListEmptyComponent={
           <View className="py-12 items-center">
-            <Text className="text-tertiary">카테고리가 없습니다</Text>
+            <Text className="text-text-tertiary">카테고리가 없습니다</Text>
           </View>
         }
       />
@@ -198,11 +199,11 @@ function CategoryItem({ category, onPress, onDelete, isDragging }: CategoryItemP
         <View className="flex-row items-center flex-1">
           <Text className="text-xl mr-3">{category.icon}</Text>
           <View className="flex-1">
-            <Text className="text-base font-medium text-primary">
+            <Text className="text-base font-medium text-text-primary">
               {category.name}
             </Text>
             {category.isSystem && (
-              <Text className="text-xs text-tertiary">시스템 카테고리</Text>
+              <Text className="text-xs text-text-tertiary">시스템 카테고리</Text>
             )}
           </View>
         </View>
@@ -212,10 +213,10 @@ function CategoryItem({ category, onPress, onDelete, isDragging }: CategoryItemP
               className="w-8 h-8 rounded-full bg-accent-red/10 items-center justify-center"
               onPress={onDelete}
             >
-              <Text className="text-accent-red text-sm">✕</Text>
+              <X size={16} color="#FF3B30" />
             </TouchableOpacity>
           )}
-          <Text className="text-tertiary">⋮⋮</Text>
+          <Text className="text-text-tertiary">⋮⋮</Text>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -247,7 +248,7 @@ function DraggableCategoryItem({ category, index, total, onMove }: DraggableCate
         <View className="flex-row items-center flex-1">
           <Text className="text-xl mr-3">{category.icon}</Text>
           <View className="flex-1">
-            <Text className="text-base font-medium text-primary">
+            <Text className="text-base font-medium text-text-primary">
               {category.name}
             </Text>
             <Text className="text-xs text-accent-blue">순서 변경 중...</Text>
@@ -259,14 +260,14 @@ function DraggableCategoryItem({ category, index, total, onMove }: DraggableCate
             onPress={() => onMove(-1)}
             disabled={index === 0}
           >
-            <Text className={`text-lg ${index === 0 ? 'text-tertiary' : 'text-accent-blue'}`}>▲</Text>
+            <ChevronUp size={20} color={index === 0 ? '#C7C7CC' : '#007AFF'} />
           </TouchableOpacity>
           <TouchableOpacity
             className={`w-9 h-9 rounded-full items-center justify-center ${index === total - 1 ? 'bg-bg-tertiary' : 'bg-accent-blue/20'}`}
             onPress={() => onMove(1)}
             disabled={index === total - 1}
           >
-            <Text className={`text-lg ${index === total - 1 ? 'text-tertiary' : 'text-accent-blue'}`}>▼</Text>
+            <ChevronDown size={20} color={index === total - 1 ? '#C7C7CC' : '#007AFF'} />
           </TouchableOpacity>
         </View>
       </View>

@@ -127,12 +127,12 @@ export function DataImport() {
 
   return (
     <View>
-      <Text className="text-base font-semibold text-primary mb-4">
+      <Text className="text-base font-semibold text-text-primary mb-4">
         데이터 가져오기
       </Text>
 
       <View className="card p-4 mb-4">
-        <Text className="text-sm text-secondary mb-3">
+        <Text className="text-sm text-text-secondary mb-3">
           CSV 또는 JSON 파일에서 데이터를 가져옵니다.
         </Text>
 

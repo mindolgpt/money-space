@@ -23,13 +23,13 @@ export function MonthlyComparisonChart({ data, maxValue }: Props) {
 
   return (
     <View className="card p-4 mx-4 mt-4">
-      <Text className="text-base font-semibold text-primary mb-4">
+      <Text className="text-base font-semibold text-text-primary mb-4">
         월별 비교
       </Text>
 
       {data.length === 0 ? (
         <View className="py-8 items-center">
-          <Text className="text-tertiary text-sm">데이터가 없습니다</Text>
+          <Text className="text-text-tertiary text-sm">데이터가 없습니다</Text>
         </View>
       ) : (
         <View className="flex-row items-end justify-between h-48 px-2">
@@ -49,15 +49,15 @@ export function MonthlyComparisonChart({ data, maxValue }: Props) {
       <View className="flex-row justify-center mt-4 gap-4">
         <View className="flex-row items-center">
           <View className="w-3 h-3 rounded-full bg-accent-green mr-1.5" />
-          <Text className="text-xs text-secondary">수입</Text>
+          <Text className="text-xs text-text-secondary">수입</Text>
         </View>
         <View className="flex-row items-center">
           <View className="w-3 h-3 rounded-full bg-accent-red mr-1.5" />
-          <Text className="text-xs text-secondary">지출</Text>
+          <Text className="text-xs text-text-secondary">지출</Text>
         </View>
         <View className="flex-row items-center">
           <View className="w-3 h-3 rounded-full bg-accent-blue mr-1.5" />
-          <Text className="text-xs text-secondary">저축</Text>
+          <Text className="text-xs text-text-secondary">저축</Text>
         </View>
       </View>
     </View>
@@ -101,16 +101,16 @@ function MonthBar({ month, income, expense, max, index }: MonthBarProps) {
       <View className="flex-row items-end justify-center gap-1 h-36 w-full px-1">
         <View className="w-5 h-full bg-bg-tertiary/50 rounded-t-lg relative overflow-hidden">
           <Animated.View
-            style={[incomeAnim, { backgroundColor: '#30D158', borderRadius: 4 }]}
+            style={[incomeAnim, { backgroundColor: '#34C759', borderRadius: 4 }]}
             className="absolute bottom-0 w-full"
           />
           <Animated.View
-            style={[expenseAnim, { backgroundColor: '#FF453A', borderRadius: 4 }]}
+            style={[expenseAnim, { backgroundColor: '#FF3B30', borderRadius: 4 }]}
             className="absolute bottom-0 w-full"
           />
         </View>
       </View>
-      <Text className="text-xs text-secondary mt-2">{month}</Text>
+      <Text className="text-xs text-text-secondary mt-2">{month}</Text>
     </View>
   )
 }

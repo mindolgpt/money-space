@@ -57,17 +57,17 @@ export function JoinFamilyModal({ onClose }: Props) {
 
   return (
     <Modal visible animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <View className="flex-1 bg-primary">
-        <View className="flex-row items-center justify-between px-4 py-3 border-b border-subtle">
+      <View className="flex-1 bg-bg-primary">
+        <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity onPress={onClose}>
             <Text className="text-accent-blue text-base">취소</Text>
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-primary">초대 코드 입력</Text>
+          <Text className="text-lg font-bold text-text-primary">초대 코드 입력</Text>
           <View style={{ width: 50 }} />
         </View>
 
         <View className="p-6">
-          <Text className="text-sm text-secondary mb-2">
+          <Text className="text-sm text-text-secondary mb-2">
             초대 코드 6자리를 입력하세요
           </Text>
           <TextInput
@@ -75,7 +75,7 @@ export function JoinFamilyModal({ onClose }: Props) {
               errorMessage ? 'border-accent-red' : isValidCode ? 'border-accent-green' : ''
             }`}
             placeholder="ABCDEF"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#C7C7CC"
             value={code}
             onChangeText={onCodeChange}
             autoCapitalize="characters"
@@ -87,7 +87,7 @@ export function JoinFamilyModal({ onClose }: Props) {
           ) : isValidCode ? (
             <Text className="text-accent-green text-xs mb-6">유효한 코드입니다</Text>
           ) : (
-            <Text className="text-xs text-tertiary mb-6">영문 대문자 + 숫자 6자리</Text>
+            <Text className="text-xs text-text-tertiary mb-6">영문 대문자 + 숫자 6자리</Text>
           )}
 
           <TouchableOpacity

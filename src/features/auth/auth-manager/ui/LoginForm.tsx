@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
 } from 'react-native'
+import { Globe, Smartphone, Wallet, Eye, EyeOff } from 'lucide-react-native'
 import { router } from 'expo-router'
 import { useAuthStore } from '@/features/auth/auth-manager/model/use-auth-store'
+import { Button } from '@/shared/ui'
 
 type FormErrors = {
   email?: string
@@ -100,25 +101,25 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-primary"
+      className="flex-1 bg-bg-primary"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View className="flex-1 justify-center px-6">
         {/* Logo/Title */}
-        <View className="items-center mb-10">
-          <View className="w-20 h-20 rounded-2xl bg-accent-blue items-center justify-center mb-4">
-            <Text className="text-3xl">💰</Text>
+        <View className="items-center mb-12">
+          <View className="w-20 h-20 rounded-2xl bg-accent-blue items-center justify-center mb-5">
+            <Wallet size={36} color="white" />
           </View>
-          <Text className="text-2xl font-bold text-primary">Money Space</Text>
-          <Text className="text-sm text-secondary mt-1">
+          <Text className="text-3xl font-bold text-text-primary tracking-tight">Money Space</Text>
+          <Text className="text-sm text-text-secondary mt-1.5">
             가계부를 함께 관리하세요
           </Text>
         </View>
 
         {/* General Error */}
         {errors.general ? (
-          <View className="bg-accent-red/10 rounded-xl p-3 mb-4">
-            <Text className="text-accent-red text-sm text-center">
+          <View className="bg-semantic-expense/10 rounded-xl p-3 mb-4">
+            <Text className="text-semantic-expense text-sm text-center font-medium">
               {errors.general}
             </Text>
           </View>
@@ -126,11 +127,13 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
 
         {/* Form */}
         <View className="mb-6">
-          <Text className="text-sm text-secondary mb-2">이메일</Text>
+          <Text className="text-sm text-text-secondary mb-2 font-medium">이메일</Text>
           <TextInput
-            className={`input mb-1 ${errors.email ? 'border-accent-red' : ''}`}
+            className={`w-full bg-bg-tertiary rounded-xl px-4 py-4 text-base text-text-primary mb-1 ${
+              errors.email ? 'border border-semantic-expense' : ''
+            }`}
             placeholder="example@email.com"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#C7C7CC"
             value={email}
             onChangeText={onEmailChange}
             autoCapitalize="none"
@@ -140,24 +143,24 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
             onSubmitEditing={() => passwordRef.current?.focus()}
           />
           {errors.email ? (
-            <Text className="text-accent-red text-xs mb-3 ml-1">
+            <Text className="text-semantic-expense text-xs mb-3 ml-1 font-medium">
               {errors.email}
             </Text>
           ) : (
             <View className="mb-3" />
           )}
 
-          <Text className="text-sm text-secondary mb-2">비밀번호</Text>
+          <Text className="text-sm text-text-secondary mb-2 font-medium">비밀번호</Text>
           <View
-            className={`flex-row items-center input mb-1 ${
-              errors.password ? 'border-accent-red' : ''
+            className={`flex-row items-center w-full bg-bg-tertiary rounded-xl px-4 py-4 mb-1 ${
+              errors.password ? 'border border-semantic-expense' : ''
             }`}
           >
             <TextInput
               ref={passwordRef}
-              className="flex-1 text-base text-primary"
+              className="flex-1 text-base text-text-primary"
               placeholder="비밀번호"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#C7C7CC"
               value={password}
               onChangeText={onPasswordChange}
               secureTextEntry={!showPassword}
@@ -169,13 +172,15 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
               className="p-2"
               onPress={() => setShowPassword((prev) => !prev)}
             >
-              <Text className="text-tertiary">
-                {showPassword ? '🙈' : '👁'}
-              </Text>
+              {showPassword ? (
+                <EyeOff size={20} color="#C7C7CC" />
+              ) : (
+                <Eye size={20} color="#C7C7CC" />
+              )}
             </TouchableOpacity>
           </View>
           {errors.password ? (
-            <Text className="text-accent-red text-xs mb-3 ml-1">
+            <Text className="text-semantic-expense text-xs mb-3 ml-1 font-medium">
               {errors.password}
             </Text>
           ) : (
@@ -187,46 +192,41 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
             className="items-end mb-6"
             onPress={() => router.push('/auth/reset-password' as any)}
           >
-            <Text className="text-accent-blue text-sm">비밀번호 찾기</Text>
+            <Text className="text-accent-blue text-sm font-semibold">비밀번호 찾기</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            className={`btn py-4 flex-row justify-center items-center ${
-              isLoading ? 'bg-accent-blue/60' : 'btn-primary'
-            }`}
+          <Button
+            variant="primary"
+            size="lg"
+            loading={isLoading}
             onPress={onLoginPress}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <ActivityIndicator color="white" className="mr-2" />
-            ) : null}
-            <Text className="text-white font-semibold text-base">
-              {isLoading ? '로그인 중...' : '로그인'}
-            </Text>
-          </TouchableOpacity>
+            {isLoading ? '로그인 중...' : '로그인'}
+          </Button>
 
           {/* Social Login */}
           <View className="mt-6">
             <View className="flex-row items-center mb-4">
-              <View className="flex-1 h-px bg-subtle" />
-              <Text className="text-xs text-tertiary mx-3">또는</Text>
-              <View className="flex-1 h-px bg-subtle" />
+              <View className="flex-1 h-px bg-border" />
+              <Text className="text-xs text-text-tertiary mx-3 font-medium">또는</Text>
+              <View className="flex-1 h-px bg-border" />
             </View>
 
             <TouchableOpacity
               className="flex-row items-center justify-center py-3.5 rounded-xl bg-bg-tertiary mb-3 opacity-50"
               disabled
             >
-              <Text className="text-lg mr-2">🇰🇷</Text>
-              <Text className="text-sm font-medium text-secondary">Google로 계속하기 (준비 중)</Text>
+              <Globe size={20} color="#86868B" />
+              <Text className="text-sm font-medium text-text-secondary ml-2">Google로 계속하기 (준비 중)</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               className="flex-row items-center justify-center py-3.5 rounded-xl bg-bg-tertiary opacity-50"
               disabled
             >
-              <Text className="text-lg mr-2">🍎</Text>
-              <Text className="text-sm font-medium text-secondary">Apple로 계속하기 (준비 중)</Text>
+              <Smartphone size={20} color="#86868B" />
+              <Text className="text-sm font-medium text-text-secondary ml-2">Apple로 계속하기 (준비 중)</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -237,9 +237,9 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
           onPress={onSwitch}
           disabled={isLoading}
         >
-          <Text className="text-secondary">
+          <Text className="text-text-secondary font-medium">
             계정이 없으신가요?{' '}
-            <Text className="text-accent-blue font-medium">회원가입</Text>
+            <Text className="text-accent-blue font-semibold">회원가입</Text>
           </Text>
         </TouchableOpacity>
       </View>

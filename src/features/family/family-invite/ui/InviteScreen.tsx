@@ -25,14 +25,14 @@ export function InviteScreen({ familyId }: Props) {
 
   if (!familyId && user) {
     return (
-      <View className="flex-1 bg-primary items-center justify-center p-6">
+      <View className="flex-1 bg-bg-primary items-center justify-center p-6">
         <View className="w-20 h-20 rounded-full bg-accent-blue/10 items-center justify-center mb-4">
           <Text className="text-3xl">👨‍👩‍👧</Text>
         </View>
-        <Text className="text-lg font-bold text-primary mb-2">
+        <Text className="text-lg font-bold text-text-primary mb-2">
           가족이 없습니다
         </Text>
-        <Text className="text-sm text-secondary text-center mb-6">
+        <Text className="text-sm text-text-secondary text-center mb-6">
           초대 코드를 입력하여 가족에 참여하세요
         </Text>
         <TouchableOpacity
@@ -52,11 +52,11 @@ export function InviteScreen({ familyId }: Props) {
   return (
     <View className="p-6">
       <Text className="text-lg font-bold mb-4">배우자 초대하기</Text>
-      <Text className="text-gray-500 mb-4">
+      <Text className="text-text-secondary mb-4">
         배우자의 이메일을 입력하면 초대장이 발송됩니다.
       </Text>
       <TextInput
-        className="border border-gray-300 rounded-lg p-3 mb-4"
+        className="border border-border rounded-lg p-3 mb-4"
         placeholder="배우자 이메일"
         value={inviteEmail}
         onChangeText={setInviteEmail}
@@ -64,7 +64,7 @@ export function InviteScreen({ familyId }: Props) {
         autoCapitalize="none"
       />
       <TouchableOpacity
-        className="bg-blue-500 rounded-lg p-3 items-center"
+        className="bg-accent-blue rounded-lg p-3 items-center"
         onPress={handleSend}
         disabled={isPending}
       >

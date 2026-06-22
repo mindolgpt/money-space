@@ -58,20 +58,20 @@ export function DeleteAccount() {
 
   return (
     <View>
-      <Text className="text-base font-semibold text-primary mb-4">
+      <Text className="text-base font-semibold text-text-primary mb-4">
         계정 삭제
       </Text>
 
       <View className="card p-4 mb-4 border border-accent-red/20">
-        <Text className="text-sm text-secondary mb-2 leading-5">
+        <Text className="text-sm text-text-secondary mb-2 leading-5">
           계정을 삭제하면 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.
         </Text>
 
-        <Text className="text-sm text-secondary mb-2">비밀번호 확인</Text>
+        <Text className="text-sm text-text-secondary mb-2">비밀번호 확인</Text>
         <TextInput
           className={`input mb-1 ${passwordError ? 'border-accent-red' : ''}`}
           placeholder="현재 비밀번호"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#C7C7CC"
           value={password}
           onChangeText={onPasswordChange}
           secureTextEntry

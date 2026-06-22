@@ -1,17 +1,19 @@
 import { View, Text, ScrollView, TouchableOpacity, Pressable } from 'react-native'
 import { useState } from 'react'
 import { router } from 'expo-router'
+import { ChevronLeft, ChevronRight, Film, Pill, Wallet, FileText } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
-import { useEntries } from '@/entities/entry'
+import { useEntries, type Entry } from '@/entities/entry'
 import { useCategories } from '@/entities/category'
-import type { Entry } from '@/entities/entry'
 
 const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토']
 type ViewMode = 'month' | 'week'
 
-const CATEGORY_ICONS: Record<string, string> = {
-  food: '🍽️', shopping: '🛒', transport: '🚗', cafe: '☕',
-  entertainment: '🎬', health: '💊', salary: '💰', etc: '📝',
+const CATEGORY_LUCIDE_ICONS: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
+  entertainment: Film,
+  health: Pill,
+  salary: Wallet,
+  etc: FileText,
 }
 
 export function CalendarScreen() {
@@ -26,14 +28,13 @@ export function CalendarScreen() {
 
   const getCategoryName = (id?: string) => {
     if (!id) return '기타'
-    const cat = categories.find((c) => c.id === id)
-    return cat?.name ?? '기타'
+    return categories.find((c) => c.id === id)?.name ?? '기타'
   }
 
-  const getCategoryIcon = (id?: string) => {
-    if (!id) return CATEGORY_ICONS.etc
+  const getCategoryIconComponent = (id?: string) => {
+    if (!id) return CATEGORY_LUCIDE_ICONS.etc
     const cat = categories.find((c) => c.id === id)
-    return CATEGORY_ICONS[cat?.icon ?? 'etc'] ?? '📝'
+    return CATEGORY_LUCIDE_ICONS[cat?.icon ?? 'etc'] ?? FileText
   }
 
   const daysInMonth = new Date(year, month, 0).getDate()
@@ -89,27 +90,28 @@ export function CalendarScreen() {
 
   return (
     <ScrollView
-      className="flex-1 bg-primary"
+      className="flex-1 bg-bg-primary"
       contentContainerStyle={{ paddingBottom: 100 }}
       showsVerticalScrollIndicator={false}
     >
+      {/* Header */}
       <View className="px-5 pt-4 mb-3">
-        <Text className="text-xl font-semibold text-primary">달력</Text>
+        <Text className="text-xl font-bold text-text-primary tracking-tight">달력</Text>
       </View>
 
       {/* Month Summary */}
-      <View className="card-glass mx-4 p-4 mb-3">
+      <View className="bg-bg-secondary mx-4 rounded-2xl border border-border p-4 mb-3">
         <View className="flex-row">
           <View className="flex-1 items-center">
-            <Text className="text-xs text-secondary">수입</Text>
-            <Text className="font-semibold amount-income mt-1">{formatAmount(monthIncome)}</Text>
+            <Text className="text-xs text-text-secondary font-medium">수입</Text>
+            <Text className="font-semibold text-semantic-income mt-1">{formatAmount(monthIncome)}</Text>
           </View>
-          <View className="flex-1 items-center border-l border-subtle">
-            <Text className="text-xs text-secondary">지출</Text>
-            <Text className="font-semibold amount-expense mt-1">{formatAmount(monthExpense)}</Text>
+          <View className="flex-1 items-center">
+            <Text className="text-xs text-text-secondary font-medium">지출</Text>
+            <Text className="font-semibold text-semantic-expense mt-1">{formatAmount(monthExpense)}</Text>
           </View>
-          <View className="flex-1 items-center border-l border-subtle">
-            <Text className="text-xs text-secondary">저축</Text>
+          <View className="flex-1 items-center">
+            <Text className="text-xs text-text-secondary font-medium">저축</Text>
             <Text className="font-semibold text-accent-blue mt-1">{formatAmount(monthSaving)}</Text>
           </View>
         </View>
@@ -119,44 +121,44 @@ export function CalendarScreen() {
       <View className="flex-row items-center justify-between mx-4 mb-3">
         <View className="flex-row items-center gap-2">
           <TouchableOpacity className="px-3 h-9 rounded-full items-center justify-center bg-accent-blue" onPress={goToToday}>
-            <Text className="text-sm text-white font-medium">오늘</Text>
+            <Text className="text-sm text-white font-semibold">오늘</Text>
           </TouchableOpacity>
         </View>
-        <Text className="text-lg font-semibold text-primary">{year}년 {month}월</Text>
+        <Text className="text-lg font-semibold text-text-primary">{year}년 {month}월</Text>
         <View className="flex-row items-center gap-2">
           <TouchableOpacity className="w-10 h-10 rounded-full items-center justify-center bg-bg-tertiary" onPress={() => changeMonth(-1)}>
-            <Text className="text-base">◀</Text>
+            <ChevronLeft size={20} color="#86868B" />
           </TouchableOpacity>
           <TouchableOpacity className="w-10 h-10 rounded-full items-center justify-center bg-bg-tertiary" onPress={() => changeMonth(1)}>
-            <Text className="text-base">▶</Text>
+            <ChevronRight size={20} color="#86868B" />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* View Mode Toggle */}
       <View className="flex-row justify-center mb-3">
-        <View className="flex-row bg-bg-tertiary rounded-full p-1">
+        <View className="flex-row bg-bg-tertiary rounded-full p-0.5">
           <TouchableOpacity
-            className={`px-4 py-1.5 rounded-full ${viewMode === 'month' ? 'bg-accent-blue' : ''}`}
+            className={`px-4 py-1.5 rounded-full ${viewMode === 'month' ? 'bg-bg-secondary shadow-sm' : ''}`}
             onPress={() => setViewMode('month')}
           >
-            <Text className={`text-sm font-medium ${viewMode === 'month' ? 'text-white' : 'text-secondary'}`}>월간</Text>
+            <Text className={`text-sm font-medium ${viewMode === 'month' ? 'text-text-primary' : 'text-text-secondary'}`}>월간</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className={`px-4 py-1.5 rounded-full ${viewMode === 'week' ? 'bg-accent-blue' : ''}`}
+            className={`px-4 py-1.5 rounded-full ${viewMode === 'week' ? 'bg-bg-secondary shadow-sm' : ''}`}
             onPress={() => setViewMode('week')}
           >
-            <Text className={`text-sm font-medium ${viewMode === 'week' ? 'text-white' : 'text-secondary'}`}>주간</Text>
+            <Text className={`text-sm font-medium ${viewMode === 'week' ? 'text-text-primary' : 'text-text-secondary'}`}>주간</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Calendar Grid */}
-      <View className="card-glass mx-4 p-4 mb-4">
+      <View className="bg-bg-secondary mx-4 rounded-2xl border border-border p-4 mb-4">
         <View className="flex-row mb-2">
           {WEEK_DAYS.map((day, index) => (
             <View key={day} className="flex-1 items-center py-2">
-              <Text className={`text-xs font-medium ${index === 0 ? 'text-accent-red' : index === 6 ? 'text-accent-blue' : 'text-secondary'}`}>
+              <Text className={`text-xs font-medium ${index === 0 ? 'text-semantic-expense' : index === 6 ? 'text-accent-blue' : 'text-text-secondary'}`}>
                 {day}
               </Text>
             </View>
@@ -182,15 +184,15 @@ export function CalendarScreen() {
                   className="w-[14.28%] aspect-square items-center justify-center"
                   onPress={() => setSelectedDay(isSelected ? null : day)}
                 >
-                  <View className={`w-10 h-10 rounded-full items-center justify-center ${isToday ? 'bg-accent-blue' : isSelected ? 'bg-bg-tertiary' : ''}`}>
-                    <Text className={`text-base font-medium ${isToday ? 'text-white' : hasExpense || hasIncome ? 'text-primary' : 'text-secondary'}`}>
+                  <View className={`w-9 h-9 rounded-full items-center justify-center ${isToday ? 'bg-accent-blue' : isSelected ? 'bg-bg-tertiary' : ''}`}>
+                    <Text className={`text-base font-medium ${isToday ? 'text-white' : hasExpense || hasIncome ? 'text-text-primary' : 'text-text-secondary'}`}>
                       {day}
                     </Text>
                   </View>
                   {(hasExpense || hasIncome) && !isToday && (
                     <View className="absolute bottom-1 flex-row gap-0.5">
-                      {hasExpense && <View className="w-1 h-1 rounded-full bg-accent-red" />}
-                      {hasIncome && <View className="w-1 h-1 rounded-full bg-accent-green" />}
+                      {hasExpense && <View className="w-1 h-1 rounded-full bg-semantic-expense" />}
+                      {hasIncome && <View className="w-1 h-1 rounded-full bg-semantic-income" />}
                     </View>
                   )}
                 </Pressable>
@@ -227,14 +229,14 @@ export function CalendarScreen() {
                       }
                     }}
                   >
-                    <View className={`w-12 h-12 rounded-full items-center justify-center ${isToday ? 'bg-accent-blue' : isSelected ? 'bg-bg-tertiary' : ''}`}>
-                      <Text className={`text-sm font-medium ${isToday ? 'text-white' : isCurrentMonth ? 'text-primary' : 'text-tertiary'}`}>
+                    <View className={`w-9 h-9 rounded-full items-center justify-center ${isToday ? 'bg-accent-blue' : isSelected ? 'bg-bg-tertiary' : ''}`}>
+                      <Text className={`text-sm font-medium ${isToday ? 'text-white' : isCurrentMonth ? 'text-text-primary' : 'text-text-tertiary'}`}>
                         {weekDate.getDate()}
                       </Text>
                     </View>
                     <View className="flex-row gap-0.5 mt-1">
-                      {weekDayExpense > 0 && <View className="w-1.5 h-1.5 rounded-full bg-accent-red" />}
-                      {weekDayIncome > 0 && <View className="w-1.5 h-1.5 rounded-full bg-accent-green" />}
+                      {weekDayExpense > 0 && <View className="w-1.5 h-1.5 rounded-full bg-semantic-expense" />}
+                      {weekDayIncome > 0 && <View className="w-1.5 h-1.5 rounded-full bg-semantic-income" />}
                     </View>
                   </Pressable>
                 )
@@ -246,53 +248,58 @@ export function CalendarScreen() {
 
       {/* Selected Day Detail */}
       {selectedDay && (
-        <View className="card-glass mx-4 p-5 mb-4">
-          <Text className="text-base font-semibold text-primary mb-4">{month}월 {selectedDay}일</Text>
+        <View className="bg-bg-secondary mx-4 rounded-2xl border border-border p-5 mb-4">
+          <Text className="text-base font-semibold text-text-primary mb-4">{month}월 {selectedDay}일</Text>
 
           <View className="flex-row gap-3 mb-4">
             <View className="flex-1 items-center py-3 rounded-xl bg-bg-tertiary">
-              <Text className="text-xs text-secondary mb-1">지출</Text>
-              <Text className="font-semibold amount-expense">{selectedDayExpense > 0 ? `₩ ${selectedDayExpense.toLocaleString()}` : '-'}</Text>
+              <Text className="text-xs text-text-secondary mb-1 font-medium">지출</Text>
+              <Text className="font-semibold text-semantic-expense">{selectedDayExpense > 0 ? `₩ ${selectedDayExpense.toLocaleString()}` : '-'}</Text>
             </View>
             <View className="flex-1 items-center py-3 rounded-xl bg-bg-tertiary">
-              <Text className="text-xs text-secondary mb-1">수입</Text>
-              <Text className="font-semibold amount-income">{selectedDayIncome > 0 ? `₩ ${selectedDayIncome.toLocaleString()}` : '-'}</Text>
+              <Text className="text-xs text-text-secondary mb-1 font-medium">수입</Text>
+              <Text className="font-semibold text-semantic-income">{selectedDayIncome > 0 ? `₩ ${selectedDayIncome.toLocaleString()}` : '-'}</Text>
             </View>
           </View>
 
           {selectedDayEntries.length > 0 ? (
-            <View className="border-t border-subtle pt-3">
-              <Text className="text-xs text-secondary mb-2">내역 ({selectedDayEntries.length})</Text>
-              {selectedDayEntries.map((entry) => (
-                <Pressable
-                  key={entry.id}
-                  className="flex-row justify-between items-center py-2.5"
-                  onPress={() => goToDetail(entry)}
-                >
-                  <View className="flex-row items-center gap-2 flex-1">
-                    <Text className="text-base">{getCategoryIcon(entry.categoryId)}</Text>
-                    <View className="flex-1">
-                      <Text className="text-sm text-primary" numberOfLines={1}>{getCategoryName(entry.categoryId)}</Text>
-                      {entry.note ? (
-                        <Text className="text-xs text-secondary" numberOfLines={1}>{entry.note}</Text>
-                      ) : null}
+            <View className="border-t border-border pt-3">
+              <Text className="text-xs text-text-secondary mb-2 font-medium">내역 ({selectedDayEntries.length})</Text>
+              {selectedDayEntries.map((entry) => {
+                const IconComp = getCategoryIconComponent(entry.categoryId)
+                return (
+                  <Pressable
+                    key={entry.id}
+                    className="flex-row justify-between items-center py-2.5"
+                    onPress={() => goToDetail(entry)}
+                  >
+                    <View className="flex-row items-center gap-2 flex-1">
+                      <View className="w-5 h-5 items-center justify-center">
+                        <IconComp size={16} color="#86868B" />
+                      </View>
+                      <View className="flex-1">
+                        <Text className="text-sm text-text-primary" numberOfLines={1}>{getCategoryName(entry.categoryId)}</Text>
+                        {entry.note ? (
+                          <Text className="text-xs text-text-secondary" numberOfLines={1}>{entry.note}</Text>
+                        ) : null}
+                      </View>
                     </View>
-                  </View>
-                  <Text className={`text-sm font-medium ml-2 ${entry.type === 'income' ? 'amount-income' : 'amount-expense'}`}>
-                    {entry.type === 'income' ? '+' : '-'}₩{entry.amount.toLocaleString()}
-                  </Text>
-                </Pressable>
-              ))}
+                    <Text className={`text-sm font-medium ml-2 ${entry.type === 'income' ? 'text-semantic-income' : 'text-semantic-expense'}`}>
+                      {entry.type === 'income' ? '+' : '-'}₩{entry.amount.toLocaleString()}
+                    </Text>
+                  </Pressable>
+                )
+              })}
             </View>
           ) : (
             <View className="py-6 items-center">
-              <Text className="text-tertiary text-sm">내역이 없습니다</Text>
+              <Text className="text-text-tertiary text-sm">내역이 없습니다</Text>
             </View>
           )}
         </View>
       )}
 
-      <Text className="text-center text-xs text-tertiary mb-4">
+      <Text className="text-center text-xs text-text-tertiary mb-4">
         ● 빨강: 지출  ● 초록: 수입
       </Text>
     </ScrollView>

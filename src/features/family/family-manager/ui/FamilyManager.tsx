@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { View, Text, TouchableOpacity, FlatList, Alert, Share } from 'react-native'
+import { X } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useFamilies, useFamilyMembers, useLeaveFamily, useRemoveMember, useUpdateMemberRole, useGenerateInviteCode } from '@/entities/family'
 import { useFamilyEntries } from '@/entities/entry'
@@ -114,12 +115,12 @@ export function FamilyManager({ onClose }: Props) {
   }, [selectedFamily, user, updateRole])
 
   return (
-    <View className="flex-1 bg-primary">
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-subtle">
+    <View className="flex-1 bg-bg-primary">
+      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
         <TouchableOpacity onPress={onClose}>
           <Text className="text-accent-blue text-base">닫기</Text>
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-primary">가족 관리</Text>
+        <Text className="text-lg font-bold text-text-primary">가족 관리</Text>
         <View style={{ width: 50 }} />
       </View>
 
@@ -135,7 +136,7 @@ export function FamilyManager({ onClose }: Props) {
           className="flex-1 py-3 rounded-xl bg-bg-tertiary items-center"
           onPress={() => setShowJoinModal(true)}
         >
-          <Text className="text-secondary font-medium text-sm">초대 코드 입력</Text>
+          <Text className="text-text-secondary font-medium text-sm">초대 코드 입력</Text>
         </TouchableOpacity>
       </View>
 
@@ -145,7 +146,7 @@ export function FamilyManager({ onClose }: Props) {
         keyExtractor={(f) => f.id}
         contentContainerStyle={{ paddingHorizontal: 16 }}
         ListHeaderComponent={
-          <Text className="text-sm text-secondary mb-2">내 가족</Text>
+          <Text className="text-sm text-text-secondary mb-2">내 가족</Text>
         }
         renderItem={({ item }) => (
           <FamilyCard
@@ -156,8 +157,8 @@ export function FamilyManager({ onClose }: Props) {
         )}
         ListEmptyComponent={
           <View className="py-8 items-center">
-            <Text className="text-tertiary">가족이 없습니다</Text>
-            <Text className="text-xs text-tertiary mt-1">
+            <Text className="text-text-tertiary">가족이 없습니다</Text>
+            <Text className="text-xs text-text-tertiary mt-1">
               가족을 생성하거나 초대 코드를 입력하세요
             </Text>
           </View>
@@ -186,7 +187,7 @@ export function FamilyManager({ onClose }: Props) {
           )}
 
           {/* Members Section */}
-          <Text className="text-sm text-secondary mb-2">
+          <Text className="text-sm text-text-secondary mb-2">
             멤버 ({members.length})
           </Text>
           {members.map((member) => (
@@ -201,12 +202,12 @@ export function FamilyManager({ onClose }: Props) {
           ))}
 
           {/* Shared Transactions Section */}
-          <Text className="text-sm text-secondary mb-2 mt-4">
+          <Text className="text-sm text-text-secondary mb-2 mt-4">
             공유 거래 ({familyEntries.length})
           </Text>
           {familyEntries.length === 0 ? (
             <View className="py-4 items-center">
-              <Text className="text-tertiary text-sm">공유된 거래가 없습니다</Text>
+              <Text className="text-text-tertiary text-sm">공유된 거래가 없습니다</Text>
             </View>
           ) : (
             familyEntries.slice(0, 10).map((entry) => (
@@ -216,7 +217,7 @@ export function FamilyManager({ onClose }: Props) {
               >
                 <View className="flex-1">
                   <View className="flex-row items-center gap-2">
-                    <Text className="text-xs text-secondary">
+                    <Text className="text-xs text-text-secondary">
                       {entry.date}
                     </Text>
                     <View className={`px-1.5 py-0.5 rounded ${
@@ -234,7 +235,7 @@ export function FamilyManager({ onClose }: Props) {
                     </View>
                   </View>
                   {entry.note && (
-                    <Text className="text-sm text-primary mt-0.5" numberOfLines={1}>
+                    <Text className="text-sm text-text-primary mt-0.5" numberOfLines={1}>
                       {entry.note}
                     </Text>
                   )}
@@ -286,8 +287,8 @@ function FamilyCard({ family, isSelected, onPress }: FamilyCardProps) {
         <Text className="text-lg">👨‍👩‍👧</Text>
       </View>
       <View className="flex-1">
-        <Text className="font-medium text-primary">{family.name}</Text>
-        <Text className="text-xs text-tertiary">
+        <Text className="font-medium text-text-primary">{family.name}</Text>
+        <Text className="text-xs text-text-tertiary">
           {family.inviteCode ? `초대코드: ${family.inviteCode}` : ''}
         </Text>
       </View>
@@ -316,7 +317,7 @@ function MemberItem({ member, isAdmin, isSelf, onRemove, onRoleChange }: MemberI
         <Text className="text-sm">{isSelf ? '👤' : '👥'}</Text>
       </View>
       <View className="flex-1">
-        <Text className="text-sm font-medium text-primary">
+        <Text className="text-sm font-medium text-text-primary">
           {member.userName ?? member.userEmail ?? member.userId.slice(0, 8)}
           {isSelf ? ' (나)' : ''}
         </Text>
@@ -334,7 +335,7 @@ function MemberItem({ member, isAdmin, isSelf, onRemove, onRoleChange }: MemberI
             className="w-7 h-7 rounded-full bg-accent-blue/10 items-center justify-center"
             onPress={onRemove}
           >
-            <Text className="text-accent-red text-xs">✕</Text>
+            <X size={16} color="#FF3B30" />
           </TouchableOpacity>
         </View>
       )}

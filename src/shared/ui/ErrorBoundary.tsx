@@ -1,5 +1,6 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
+import { AlertTriangle } from 'lucide-react-native'
 import { logger } from '@/shared/lib/logger'
 
 interface Props {
@@ -44,22 +45,24 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <View style={styles.container}>
-          <View style={styles.iconContainer}>
-            <Text style={styles.icon}>⚠️</Text>
+        <View className="flex-1 justify-center items-center p-6 bg-bg-primary">
+          <View className="w-16 h-16 rounded-2xl bg-accent-orange/15 items-center justify-center mb-4">
+            <AlertTriangle size={32} color="#FF9500" />
           </View>
-          <Text style={styles.title}>문제가 발생했습니다</Text>
-          <Text style={styles.message}>
+          <Text className="text-xl font-bold text-text-primary mb-2 tracking-tight">문제가 발생했습니다</Text>
+          <Text className="text-sm text-text-secondary text-center mb-4 leading-5">
             예상치 못한 오류가 발생했습니다.
           </Text>
-          <Text style={styles.errorDetail}>
-            {this.state.error?.message}
-          </Text>
+          {this.state.error?.message ? (
+            <Text className="text-xs text-text-tertiary text-center mb-6 font-mono">
+              {this.state.error.message}
+            </Text>
+          ) : null}
           <TouchableOpacity
-            style={styles.retryButton}
+            className="px-8 py-3.5 bg-accent-blue rounded-xl"
             onPress={this.handleRetry}
           >
-            <Text style={styles.retryText}>다시 시도</Text>
+            <Text className="text-white font-semibold text-base">다시 시도</Text>
           </TouchableOpacity>
         </View>
       )
@@ -68,49 +71,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#F8F9FA',
-  },
-  iconContainer: {
-    marginBottom: 16,
-  },
-  icon: {
-    fontSize: 48,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#0A0A0A',
-    marginBottom: 8,
-  },
-  message: {
-    fontSize: 14,
-    color: '#6B7280',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  errorDetail: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    textAlign: 'center',
-    marginBottom: 24,
-    fontFamily: 'monospace',
-  },
-  retryButton: {
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    backgroundColor: '#0A84FF',
-    borderRadius: 12,
-  },
-  retryText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-})

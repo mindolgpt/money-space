@@ -67,12 +67,12 @@ export function InviteFamilyModal({ familyId, familyName, onClose }: Props) {
 
   return (
     <Modal visible animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <View className="flex-1 bg-primary">
-        <View className="flex-row items-center justify-between px-4 py-3 border-b border-subtle">
+      <View className="flex-1 bg-bg-primary">
+        <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity onPress={onClose}>
             <Text className="text-accent-blue text-base">닫기</Text>
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-primary">초대하기</Text>
+          <Text className="text-lg font-bold text-text-primary">초대하기</Text>
           <View style={{ width: 50 }} />
         </View>
 
@@ -81,27 +81,27 @@ export function InviteFamilyModal({ familyId, familyName, onClose }: Props) {
             <Text className="text-4xl">🎉</Text>
           </View>
 
-          <Text className="text-xl font-bold text-primary mb-2">
+          <Text className="text-xl font-bold text-text-primary mb-2">
             {familyName}
           </Text>
-          <Text className="text-sm text-secondary text-center mb-8">
+          <Text className="text-sm text-text-secondary text-center mb-8">
             아래 코드를 공유하여 가족을 초대하세요
           </Text>
 
           {isPending && !inviteCode ? (
-            <ActivityIndicator size="large" color="#0A84FF" />
+            <ActivityIndicator size="large" color="#007AFF" />
           ) : inviteCode ? (
             <>
               <TouchableOpacity
                 className="bg-bg-tertiary px-12 py-4 rounded-2xl mb-6"
                 onPress={onCopyCode}
               >
-                <Text className="text-3xl font-bold text-primary tracking-[6px]">
+                <Text className="text-3xl font-bold text-text-primary tracking-[6px]">
                   {inviteCode}
                 </Text>
               </TouchableOpacity>
 
-              <Text className="text-xs text-tertiary mb-8">
+              <Text className="text-xs text-text-tertiary mb-8">
                 코드를 탭하여 복사
               </Text>
 

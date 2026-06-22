@@ -1,4 +1,5 @@
 import { Text, type TextProps } from 'react-native'
+import { cn } from '@/shared/lib/cn'
 
 type AmountTextProps = TextProps & {
   amount: number
@@ -9,10 +10,10 @@ type AmountTextProps = TextProps & {
 
 export function AmountText({ amount, type = 'neutral', showSign = true, locale = 'ko-KR', className = '', style, ...props }: AmountTextProps) {
   const colorMap = {
-    income: 'text-emerald-500',
-    expense: 'text-red-500',
-    saving: 'text-blue-500',
-    neutral: 'text-gray-900',
+    income: 'text-semantic-income',
+    expense: 'text-semantic-expense',
+    saving: 'text-semantic-saving',
+    neutral: 'text-text-primary',
   }
 
   const prefix = showSign
@@ -22,7 +23,7 @@ export function AmountText({ amount, type = 'neutral', showSign = true, locale =
     : ''
 
   return (
-    <Text className={`font-semibold ${colorMap[type]} ${className}`} style={style} {...props}>
+    <Text className={cn('font-semibold tabular-nums', colorMap[type], className)} style={style} {...props}>
       {prefix}₩{amount.toLocaleString(locale)}
     </Text>
   )

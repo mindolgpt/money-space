@@ -72,7 +72,7 @@ export function NotificationSettings() {
 
   return (
     <View>
-      <Text className="text-base font-semibold text-primary mb-4">
+      <Text className="text-base font-semibold text-text-primary mb-4">
         알림 설정
       </Text>
 
@@ -80,13 +80,13 @@ export function NotificationSettings() {
         {NOTIFICATION_ITEMS.map((item) => (
           <View
             key={item.key}
-            className="flex-row items-center justify-between py-3 border-b border-subtle last:border-b-0"
+            className="flex-row items-center justify-between py-3 border-b border-border last:border-b-0"
           >
             <View className="flex-1 mr-4">
-              <Text className="text-sm font-medium text-primary">
+              <Text className="text-sm font-medium text-text-primary">
                 {item.label}
               </Text>
-              <Text className="text-xs text-tertiary mt-0.5">
+              <Text className="text-xs text-text-tertiary mt-0.5">
                 {item.description}
               </Text>
             </View>
@@ -94,8 +94,8 @@ export function NotificationSettings() {
               value={settings.notifications[item.key]}
               onValueChange={(v) => onToggleChange(item.key, v)}
               trackColor={{
-                false: '#F1F3F5',
-                true: '#30D158',
+                false: '#E8E8ED',
+                true: '#34C759',
               }}
               thumbColor="white"
             />

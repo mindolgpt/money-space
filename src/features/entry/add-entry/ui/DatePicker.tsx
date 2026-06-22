@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native'
+import { Calendar } from 'lucide-react-native'
 
 type Props = {
   value: string
@@ -47,27 +48,26 @@ export function DatePicker({ value, onChange }: Props) {
   return (
     <>
       <TouchableOpacity className="mb-4" onPress={openPicker}>
-        <Text className="text-sm text-secondary mb-2">날짜</Text>
+        <Text className="text-sm text-text-secondary mb-2 font-medium">날짜</Text>
         <View className="flex-row items-center bg-bg-tertiary rounded-xl px-4 py-3">
-          <Text className="text-lg mr-2">📅</Text>
-          <Text className="text-base text-primary">{formatDisplay(value)}</Text>
+          <Calendar size={20} color="#86868B" />
+          <Text className="text-base text-text-primary ml-2">{formatDisplay(value)}</Text>
         </View>
       </TouchableOpacity>
 
       <Modal visible={showModal} animationType="slide" presentationStyle="pageSheet">
-        <View className="flex-1 bg-primary">
-          <View className="flex-row items-center justify-between px-4 py-3 border-b border-subtle">
+        <View className="flex-1 bg-bg-primary">
+          <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
             <TouchableOpacity onPress={() => setShowModal(false)}>
-              <Text className="text-accent-blue text-base">취소</Text>
+              <Text className="text-accent-blue text-base font-semibold">취소</Text>
             </TouchableOpacity>
-            <Text className="text-lg font-bold text-primary">날짜 선택</Text>
+            <Text className="text-lg font-bold text-text-primary">날짜 선택</Text>
             <TouchableOpacity onPress={confirm}>
-              <Text className="text-accent-blue text-base">확인</Text>
+              <Text className="text-accent-blue text-base font-semibold">확인</Text>
             </TouchableOpacity>
           </View>
 
           <View className="flex-row flex-1">
-            {/* Year */}
             <ScrollView className="flex-1">
               {years.map((y) => (
                 <TouchableOpacity
@@ -75,14 +75,13 @@ export function DatePicker({ value, onChange }: Props) {
                   className={`py-3 items-center ${selectedYear === y ? 'bg-accent-blue/10' : ''}`}
                   onPress={() => setSelectedYear(y)}
                 >
-                  <Text className={`text-sm ${selectedYear === y ? 'text-accent-blue font-medium' : 'text-secondary'}`}>
+                  <Text className={`text-sm ${selectedYear === y ? 'text-accent-blue font-semibold' : 'text-text-secondary'}`}>
                     {y}년
                   </Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
 
-            {/* Month */}
             <ScrollView className="flex-1">
               {months.map((m) => (
                 <TouchableOpacity
@@ -90,14 +89,13 @@ export function DatePicker({ value, onChange }: Props) {
                   className={`py-3 items-center ${selectedMonth === m ? 'bg-accent-blue/10' : ''}`}
                   onPress={() => setSelectedMonth(m)}
                 >
-                  <Text className={`text-sm ${selectedMonth === m ? 'text-accent-blue font-medium' : 'text-secondary'}`}>
+                  <Text className={`text-sm ${selectedMonth === m ? 'text-accent-blue font-semibold' : 'text-text-secondary'}`}>
                     {m}월
                   </Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
 
-            {/* Day */}
             <ScrollView className="flex-1">
               {days.map((d) => (
                 <TouchableOpacity
@@ -105,7 +103,7 @@ export function DatePicker({ value, onChange }: Props) {
                   className={`py-3 items-center ${selectedDay === d ? 'bg-accent-blue/10' : ''}`}
                   onPress={() => setSelectedDay(d)}
                 >
-                  <Text className={`text-sm ${selectedDay === d ? 'text-accent-blue font-medium' : 'text-secondary'}`}>
+                  <Text className={`text-sm ${selectedDay === d ? 'text-accent-blue font-semibold' : 'text-text-secondary'}`}>
                     {d}일
                   </Text>
                 </TouchableOpacity>

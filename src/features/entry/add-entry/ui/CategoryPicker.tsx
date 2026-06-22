@@ -1,5 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
+import { Utensils, ShoppingCart, Car, Coffee, Film, Pill, Wallet, FileText, Gift } from 'lucide-react-native'
 import { useCategories } from '@/entities/category'
 
 type Props = {
@@ -14,16 +15,16 @@ type CategoryItemProps = {
   onSelect: (id: string) => void
 }
 
-const CATEGORY_ICONS: Record<string, string> = {
-  food: '🍽️',
-  shopping: '🛒',
-  transport: '🚗',
-  cafe: '☕',
-  entertainment: '🎬',
-  health: '💊',
-  salary: '💰',
-  gift: '🎁',
-  etc: '📝',
+const CATEGORY_ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
+  food: Utensils,
+  shopping: ShoppingCart,
+  transport: Car,
+  cafe: Coffee,
+  entertainment: Film,
+  health: Pill,
+  salary: Wallet,
+  gift: Gift,
+  etc: FileText,
 }
 
 function CategoryItem({ item, selectedId, onSelect }: CategoryItemProps) {
@@ -50,11 +51,14 @@ function CategoryItem({ item, selectedId, onSelect }: CategoryItemProps) {
         onPress={() => onSelect(item.id)}
       >
         <Text className="text-sm mr-1.5">
-          {CATEGORY_ICONS[item.id] || '📝'}
+          {(() => {
+            const Icon = CATEGORY_ICON_MAP[item.id] || FileText
+            return <Icon size={16} color={selectedId === item.id ? '#FFFFFF' : '#86868B'} />
+          })()}
         </Text>
         <Text
           className={`text-sm font-medium ${
-            selectedId === item.id ? 'text-white' : 'text-secondary'
+            selectedId === item.id ? 'text-white' : 'text-text-secondary'
           }`}
         >
           {item.name}
@@ -69,7 +73,7 @@ export function CategoryPicker({ type, selectedId, onSelect }: Props) {
 
   return (
     <View className="mb-4">
-      <Text className="text-sm text-secondary mb-2">카테고리</Text>
+      <Text className="text-sm text-text-secondary mb-2">카테고리</Text>
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}

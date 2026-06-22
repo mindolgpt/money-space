@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import * as Haptics from 'expo-haptics'
+import { Wallet, BarChart3, Users, RefreshCw, Bell } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useCategories } from '@/entities/category'
 import { useUpdateSettings } from '@/entities/user'
@@ -19,7 +20,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 interface OnboardingSlide {
   id: string
-  icon: string
+  icon: React.ReactNode
   title: string
   description: string
 }
@@ -27,25 +28,25 @@ interface OnboardingSlide {
 const SLIDES: OnboardingSlide[] = [
   {
     id: '1',
-    icon: '💰',
+    icon: <Wallet size={64} color="#007AFF" />,
     title: '가계부 관리',
     description: '수입, 지출, 저축을 한눈에 관리하세요',
   },
   {
     id: '2',
-    icon: '📊',
+    icon: <BarChart3 size={64} color="#F59E0B" />,
     title: '예산 설정',
     description: '카테고리별 예산 한도를 설정하고 지출을 컨트롤하세요',
   },
   {
     id: '3',
-    icon: '👨‍👩‍👧‍👦',
+    icon: <Users size={64} color="#10B981" />,
     title: '가족 공유',
     description: '가족과 가계부를 공유하고 함께 관리하세요',
   },
   {
     id: '4',
-    icon: '🔄',
+    icon: <RefreshCw size={64} color="#3B82F6" />,
     title: '자동 동기화',
     description: '오프라인에서도 기록하고 온라인에서 자동으로 동기화됩니다',
   },
@@ -166,12 +167,12 @@ export default function OnboardingScreen() {
             style={{ width: SCREEN_WIDTH }}
           >
             <View className="w-32 h-32 rounded-full bg-bg-tertiary items-center justify-center mb-8">
-              <Text className="text-6xl">{slide.icon}</Text>
+              {slide.icon}
             </View>
-            <Text className="text-2xl font-bold text-primary mb-4 text-center">
+            <Text className="text-2xl font-bold text-text-primary mb-4 text-center">
               {slide.title}
             </Text>
-            <Text className="text-base text-secondary text-center px-4">
+            <Text className="text-base text-text-secondary text-center px-4">
               {slide.description}
             </Text>
           </View>
@@ -195,7 +196,7 @@ export default function OnboardingScreen() {
             className="flex-1 py-4 bg-bg-tertiary rounded-xl items-center"
             onPress={handleSkip}
           >
-            <Text className="text-secondary font-medium">건너뛰기</Text>
+            <Text className="text-text-secondary font-medium">건너뛰기</Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="flex-2 py-4 bg-accent-blue rounded-xl items-center px-8"
@@ -214,12 +215,12 @@ export default function OnboardingScreen() {
     <View className="flex-1 px-6 justify-center">
       <View className="items-center mb-8">
         <View className="w-24 h-24 rounded-full bg-bg-tertiary items-center justify-center mb-6">
-          <Text className="text-5xl">🔔</Text>
+          <Bell size={40} color="#86868B" />
         </View>
-        <Text className="text-2xl font-bold text-primary mb-3 text-center">
+        <Text className="text-2xl font-bold text-text-primary mb-3 text-center">
           알림 설정
         </Text>
-        <Text className="text-base text-secondary text-center px-4">
+        <Text className="text-base text-text-secondary text-center px-4">
           예산이 초과될 때 알림을 받아보시겠습니까?
         </Text>
       </View>
@@ -235,7 +236,7 @@ export default function OnboardingScreen() {
           className="py-4 bg-bg-tertiary rounded-xl items-center"
           onPress={handleSkipNotification}
         >
-          <Text className="text-secondary font-medium">나중에 설정</Text>
+          <Text className="text-text-secondary font-medium">나중에 설정</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -245,23 +246,23 @@ export default function OnboardingScreen() {
     <ScrollView className="flex-1 px-6 py-8">
       <View className="items-center mb-8">
         <View className="w-20 h-20 rounded-full bg-bg-tertiary items-center justify-center mb-4">
-          <Text className="text-4xl">💵</Text>
+          <Wallet size={36} color="#86868B" />
         </View>
-        <Text className="text-xl font-bold text-primary mb-2 text-center">
+        <Text className="text-xl font-bold text-text-primary mb-2 text-center">
           첫 예산 설정
         </Text>
-        <Text className="text-sm text-secondary text-center">
+        <Text className="text-sm text-text-secondary text-center">
           한 달 예산을 입력하시면 지출을 더 잘 관리할 수 있어요
         </Text>
       </View>
 
-      <View className="card p-5 mb-4">
-        <Text className="text-sm text-secondary mb-2">월 예산 금액</Text>
+      <View className="bg-bg-secondary border border-border rounded-2xl p-5 mb-4">
+        <Text className="text-sm text-text-secondary mb-2">월 예산 금액</Text>
         <View className="flex-row items-center">
           <TextInput
-            className="input flex-1 text-lg py-3"
+            className="flex-1 bg-bg-tertiary rounded-xl px-4 py-3 text-lg text-text-primary"
             placeholder="예) 1000000"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#C7C7CC"
             keyboardType="numeric"
             value={budgetInput}
             onChangeText={(text) => {
@@ -269,15 +270,15 @@ export default function OnboardingScreen() {
               setBudgetInput(numeric ? parseInt(numeric, 10).toLocaleString() : '')
             }}
           />
-          <Text className="text-base text-secondary ml-2">원</Text>
+          <Text className="text-base text-text-secondary ml-2">원</Text>
         </View>
       </View>
 
       <View className="mb-4">
-        <Text className="text-base font-semibold text-primary mb-3">
+        <Text className="text-base font-semibold text-text-primary mb-3">
           주요 카테고리 선택 (선택)
         </Text>
-        <Text className="text-xs text-secondary mb-3">
+        <Text className="text-xs text-text-secondary mb-3">
           빠른 입력을 위해 자주 사용할 카테고리를 선택하세요
         </Text>
         <View className="flex-row flex-wrap gap-2">
@@ -295,7 +296,7 @@ export default function OnboardingScreen() {
                 className={`text-sm ${
                   selectedCategories.includes(cat.id)
                     ? 'text-white font-medium'
-                    : 'text-primary'
+                    : 'text-text-primary'
                 }`}
               >
                 {cat.icon} {cat.name}
@@ -314,14 +315,14 @@ export default function OnboardingScreen() {
         </Text>
       </TouchableOpacity>
 
-      <Text className="text-xs text-tertiary text-center mt-4">
+      <Text className="text-xs text-text-text-tertiary text-center mt-4">
         예산과 카테고리는 나중에 설정에서도 변경할 수 있어요
       </Text>
     </ScrollView>
   )
 
   return (
-    <View className="flex-1 bg-bg-primary pt-12">
+    <View className="flex-1 bg-bg-primary">
       {step === 'slides' && renderSlides()}
       {step === 'permission' && renderPermission()}
       {step === 'budget' && renderBudget()}

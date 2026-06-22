@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity } from 'react-native'
+import { RefreshCw, Check, Clock } from 'lucide-react-native'
 import { useSyncStatus } from '@/entities/sync-queue'
 import { useManualSync } from '@/features/sync/sync-engine'
 
@@ -13,9 +14,9 @@ export function SyncStatus() {
   if (!isOnline) {
     return (
       <View className="mt-2">
-        <View className="badge" style={{ backgroundColor: 'rgba(255, 149, 0, 0.15)' }}>
+        <View className="px-2.5 py-1 rounded-full bg-accent-orange/15 self-start">
           <Text className="text-accent-orange text-xs font-medium">
-            📡 오프라인
+            오프라인
           </Text>
         </View>
       </View>
@@ -25,10 +26,13 @@ export function SyncStatus() {
   if (isSyncing) {
     return (
       <View className="mt-2">
-        <View className="badge" style={{ backgroundColor: 'rgba(10, 132, 255, 0.15)' }}>
-          <Text className="text-accent-blue text-xs font-medium">
-            🔄 동기화 중...
-          </Text>
+        <View className="px-2.5 py-1 rounded-full bg-accent-blue/15 self-start">
+          <View className="flex-row items-center gap-1">
+            <RefreshCw size={12} color="#007AFF" />
+            <Text className="text-accent-blue text-xs font-medium">
+              동기화 중...
+            </Text>
+          </View>
         </View>
       </View>
     )
@@ -37,10 +41,13 @@ export function SyncStatus() {
   if (pendingCount === 0) {
     return (
       <View className="mt-2">
-        <View className="badge" style={{ backgroundColor: 'rgba(52, 199, 89, 0.15)' }}>
-          <Text className="text-accent-green text-xs font-medium">
-            ✓ 동기화 완료
-          </Text>
+        <View className="px-2.5 py-1 rounded-full bg-accent-green/15 self-start">
+          <View className="flex-row items-center gap-1">
+            <Check size={12} color="#34C759" />
+            <Text className="text-accent-green text-xs font-medium">
+              동기화 완료
+            </Text>
+          </View>
         </View>
       </View>
     )
@@ -48,17 +55,20 @@ export function SyncStatus() {
 
   return (
     <View className="mt-2 flex-row items-center gap-2">
-      <View className="badge badge-yellow flex-1">
-        <Text className="text-xs font-medium">
-          ⏳ {pendingCount}개 동기화 대기
-        </Text>
+      <View className="px-2.5 py-1 rounded-full bg-accent-yellow/15 flex-1 self-start">
+        <View className="flex-row items-center gap-1">
+          <Clock size={12} color="#FF9500" />
+          <Text className="text-xs font-medium text-accent-orange">
+            {pendingCount}개 동기화 대기
+          </Text>
+        </View>
       </View>
       <TouchableOpacity
         className="py-1.5 px-3 rounded-lg bg-accent-blue/10"
         onPress={() => manualSync()}
         disabled={isPending}
       >
-        <Text className="text-xs font-medium text-accent-blue">
+        <Text className="text-xs font-semibold text-accent-blue">
           {isPending ? '...' : '동기화'}
         </Text>
       </TouchableOpacity>

@@ -7,8 +7,9 @@ import {
   Switch,
   ScrollView,
   Alert,
-  ActivityIndicator,
 } from 'react-native'
+import { X } from 'lucide-react-native'
+import { Button } from '@/shared/ui'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useCreateEntry, EntryType, PaymentMethod, CreateEntryInput } from '@/entities/entry'
 import { useSetLastUsedCategory } from '@/entities/category'
@@ -187,7 +188,7 @@ export function EntryForm({ onClose, onSuccess }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-primary">
+    <View className="flex-1 bg-bg-primary">
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 40 }}
@@ -195,14 +196,14 @@ export function EntryForm({ onClose, onSuccess }: Props) {
         keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
-        <View className="flex-row items-center justify-between px-4 py-3 border-b border-subtle">
+        <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity
             className="w-8 h-8 rounded-full items-center justify-center"
             onPress={onModalClose}
           >
-            <Text className="text-lg">✕</Text>
+            <X size={20} color="#86868B" />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-primary">새 거래</Text>
+          <Text className="text-lg font-bold text-text-primary">새 거래</Text>
           <View style={{ width: 32 }} />
         </View>
 
@@ -222,7 +223,7 @@ export function EntryForm({ onClose, onSuccess }: Props) {
               >
                 <Text
                   className={`text-sm font-medium ${
-                    form.type === t.key ? 'text-white' : 'text-secondary'
+                    form.type === t.key ? 'text-text-inverse' : 'text-text-secondary'
                   }`}
                 >
                   {t.label}
@@ -285,13 +286,13 @@ export function EntryForm({ onClose, onSuccess }: Props) {
           {/* Note */}
           <View className="mb-4">
             <View className="flex-row justify-between mb-2">
-              <Text className="text-sm text-secondary">메모</Text>
-              <Text className="text-xs text-tertiary">{form.note.length}/500</Text>
+              <Text className="text-sm text-text-secondary">메모</Text>
+              <Text className="text-xs text-text-tertiary">{form.note.length}/500</Text>
             </View>
             <TextInput
               className="input min-h-[80px]"
               placeholder="메모를 입력하세요"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#C7C7CC"
               value={form.note}
               onChangeText={(t) => {
                 if (t.length <= 500) onFieldChange('note', t)
@@ -303,54 +304,47 @@ export function EntryForm({ onClose, onSuccess }: Props) {
           </View>
 
           {/* Shared Toggle */}
-          <View className="flex-row items-center justify-between mb-4 py-3 border-b border-subtle">
+          <View className="flex-row items-center justify-between mb-4 py-3 border-b border-border">
             <View>
-              <Text className="text-sm font-medium text-primary">가족 공유</Text>
-              <Text className="text-xs text-tertiary mt-0.5">
+              <Text className="text-sm font-medium text-text-primary">가족 공유</Text>
+              <Text className="text-xs text-text-tertiary mt-0.5">
                 가족과 거래를 공유합니다
               </Text>
             </View>
             <Switch
               value={form.isShared}
               onValueChange={(v) => onFieldChange('isShared', v)}
-              trackColor={{ false: '#F1F3F5', true: '#30D158' }}
+              trackColor={{ false: '#E8E8ED', true: '#34C759' }}
               thumbColor="white"
             />
           </View>
 
           {/* Recurring Toggle */}
-          <View className="flex-row items-center justify-between mb-6 py-3 border-b border-subtle">
+          <View className="flex-row items-center justify-between mb-6 py-3 border-b border-border">
             <View>
-              <Text className="text-sm font-medium text-primary">반복 설정</Text>
-              <Text className="text-xs text-tertiary mt-0.5">
+              <Text className="text-sm font-medium text-text-primary">반복 설정</Text>
+              <Text className="text-xs text-text-tertiary mt-0.5">
                 매월 자동으로 기록
               </Text>
             </View>
             <Switch
               value={form.isRecurring}
               onValueChange={(v) => onFieldChange('isRecurring', v)}
-              trackColor={{ false: '#F1F3F5', true: '#30D158' }}
+              trackColor={{ false: '#E8E8ED', true: '#34C759' }}
               thumbColor="white"
             />
           </View>
 
           {/* Save Button */}
-          <TouchableOpacity
-            className={`btn py-4 flex-row justify-center items-center ${
-              isPending || !form.amount || !form.categoryId
-                ? 'bg-accent-blue/60'
-                : 'btn-primary'
-            }`}
+          <Button
+            variant="primary"
+            size="lg"
+            loading={isPending}
             onPress={onSave}
             disabled={isPending || !form.amount || !form.categoryId}
           >
-            {isPending ? (
-              <ActivityIndicator color="white" className="mr-2" />
-            ) : null}
-            <Text className="text-white font-semibold text-base">
-              {isPending ? '저장 중...' : '저장하기'}
-            </Text>
-          </TouchableOpacity>
+            {isPending ? '저장 중...' : '저장하기'}
+          </Button>
         </View>
       </ScrollView>
     </View>

@@ -7,9 +7,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  ActivityIndicator,
 } from 'react-native'
+import { Wallet, Eye, EyeOff, Check } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager/model/use-auth-store'
+import { Button } from '@/shared/ui'
 
 type FormErrors = {
   name?: string
@@ -38,10 +39,10 @@ function evaluatePasswordStrength(password: string): PasswordStrength {
   if (/[0-9]/.test(password)) score++
   if (/[^a-zA-Z0-9]/.test(password)) score++
 
-  if (score <= 1) return { score, label: '취약', color: 'text-accent-red' }
+  if (score <= 1) return { score, label: '취약', color: 'text-semantic-expense' }
   if (score <= 3) return { score, label: '보통', color: 'text-accent-yellow' }
-  if (score <= 4) return { score, label: '강함', color: 'text-accent-green' }
-  return { score, label: '매우 강함', color: 'text-accent-green' }
+  if (score <= 4) return { score, label: '강함', color: 'text-semantic-income' }
+  return { score, label: '매우 강함', color: 'text-semantic-income' }
 }
 
 export function RegisterForm({
@@ -179,7 +180,7 @@ export function RegisterForm({
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-primary"
+      className="flex-1 bg-bg-primary"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
@@ -187,22 +188,22 @@ export function RegisterForm({
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="flex-1 justify-center px-6 pt-20">
+        <View className="flex-1 justify-center px-6 pt-16">
           {/* Logo/Title */}
           <View className="items-center mb-10">
             <View className="w-20 h-20 rounded-2xl bg-accent-blue items-center justify-center mb-4">
-              <Text className="text-3xl">💰</Text>
+              <Wallet size={36} color="white" />
             </View>
-            <Text className="text-2xl font-bold text-primary">회원가입</Text>
-            <Text className="text-sm text-secondary mt-1">
+            <Text className="text-3xl font-bold text-text-primary tracking-tight">회원가입</Text>
+            <Text className="text-sm text-text-secondary mt-1.5">
               Money Space 시작하기
             </Text>
           </View>
 
           {/* General Error */}
           {errors.general ? (
-            <View className="bg-accent-red/10 rounded-xl p-3 mb-4">
-              <Text className="text-accent-red text-sm text-center">
+            <View className="bg-semantic-expense/10 rounded-xl p-3 mb-4">
+              <Text className="text-semantic-expense text-sm text-center font-medium">
                 {errors.general}
               </Text>
             </View>
@@ -211,11 +212,13 @@ export function RegisterForm({
           {/* Form */}
           <View className="mb-6">
             {/* Name */}
-            <Text className="text-sm text-secondary mb-2">이름</Text>
+            <Text className="text-sm text-text-secondary mb-2 font-medium">이름</Text>
             <TextInput
-              className={`input mb-1 ${errors.name ? 'border-accent-red' : ''}`}
+              className={`w-full bg-bg-tertiary rounded-xl px-4 py-4 text-base text-text-primary mb-1 ${
+                errors.name ? 'border border-semantic-expense' : ''
+              }`}
               placeholder="김철수"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#C7C7CC"
               value={name}
               onChangeText={onNameChange}
               editable={!isLoading}
@@ -223,20 +226,20 @@ export function RegisterForm({
               onSubmitEditing={() => emailRef.current?.focus()}
             />
             {errors.name ? (
-              <Text className="text-accent-red text-xs mb-3 ml-1">
-                {errors.name}
-              </Text>
+              <Text className="text-semantic-expense text-xs mb-3 ml-1 font-medium">{errors.name}</Text>
             ) : (
               <View className="mb-3" />
             )}
 
             {/* Email */}
-            <Text className="text-sm text-secondary mb-2">이메일</Text>
+            <Text className="text-sm text-text-secondary mb-2 font-medium">이메일</Text>
             <TextInput
               ref={emailRef}
-              className={`input mb-1 ${errors.email ? 'border-accent-red' : ''}`}
+              className={`w-full bg-bg-tertiary rounded-xl px-4 py-4 text-base text-text-primary mb-1 ${
+                errors.email ? 'border border-semantic-expense' : ''
+              }`}
               placeholder="example@email.com"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#C7C7CC"
               value={email}
               onChangeText={onEmailChange}
               autoCapitalize="none"
@@ -246,25 +249,23 @@ export function RegisterForm({
               onSubmitEditing={() => passwordRef.current?.focus()}
             />
             {errors.email ? (
-              <Text className="text-accent-red text-xs mb-3 ml-1">
-                {errors.email}
-              </Text>
+              <Text className="text-semantic-expense text-xs mb-3 ml-1 font-medium">{errors.email}</Text>
             ) : (
               <View className="mb-3" />
             )}
 
             {/* Password */}
-            <Text className="text-sm text-secondary mb-2">비밀번호</Text>
+            <Text className="text-sm text-text-secondary mb-2 font-medium">비밀번호</Text>
             <View
-              className={`flex-row items-center input mb-1 ${
-                errors.password ? 'border-accent-red' : ''
+              className={`flex-row items-center w-full bg-bg-tertiary rounded-xl px-4 py-4 mb-1 ${
+                errors.password ? 'border border-semantic-expense' : ''
               }`}
             >
               <TextInput
                 ref={passwordRef}
-                className="flex-1 text-base text-primary"
+                className="flex-1 text-base text-text-primary"
                 placeholder="비밀번호 (8자 이상)"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor="#C7C7CC"
                 value={password}
                 onChangeText={onPasswordChange}
                 secureTextEntry={!showPassword}
@@ -276,9 +277,11 @@ export function RegisterForm({
                 className="p-2"
                 onPress={() => setShowPassword((prev) => !prev)}
               >
-                <Text className="text-tertiary">
-                  {showPassword ? '🙈' : '👁'}
-                </Text>
+                {showPassword ? (
+                  <EyeOff size={20} color="#C7C7CC" />
+                ) : (
+                  <Eye size={20} color="#C7C7CC" />
+                )}
               </TouchableOpacity>
             </View>
 
@@ -297,34 +300,30 @@ export function RegisterForm({
                     />
                   ))}
                 </View>
-                <Text
-                  className={`text-xs ${passwordStrength.color}`}
-                >
+                <Text className={`text-xs font-medium ${passwordStrength.color}`}>
                   {passwordStrength.label}
                 </Text>
               </View>
             ) : null}
 
             {errors.password ? (
-              <Text className="text-accent-red text-xs mb-3 ml-1">
-                {errors.password}
-              </Text>
+              <Text className="text-semantic-expense text-xs mb-3 ml-1 font-medium">{errors.password}</Text>
             ) : (
               <View className="mb-3" />
             )}
 
             {/* Confirm Password */}
-            <Text className="text-sm text-secondary mb-2">비밀번호 확인</Text>
+            <Text className="text-sm text-text-secondary mb-2 font-medium">비밀번호 확인</Text>
             <View
-              className={`flex-row items-center input mb-1 ${
-                errors.confirmPassword ? 'border-accent-red' : ''
+              className={`flex-row items-center w-full bg-bg-tertiary rounded-xl px-4 py-4 mb-1 ${
+                errors.confirmPassword ? 'border border-semantic-expense' : ''
               }`}
             >
               <TextInput
                 ref={confirmPasswordRef}
-                className="flex-1 text-base text-primary"
+                className="flex-1 text-base text-text-primary"
                 placeholder="비밀번호 다시 입력"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor="#C7C7CC"
                 value={confirmPassword}
                 onChangeText={onConfirmPasswordChange}
                 secureTextEntry={!showConfirmPassword}
@@ -336,15 +335,15 @@ export function RegisterForm({
                 className="p-2"
                 onPress={() => setShowConfirmPassword((prev) => !prev)}
               >
-                <Text className="text-tertiary">
-                  {showConfirmPassword ? '🙈' : '👁'}
-                </Text>
+                {showConfirmPassword ? (
+                  <EyeOff size={20} color="#C7C7CC" />
+                ) : (
+                  <Eye size={20} color="#C7C7CC" />
+                )}
               </TouchableOpacity>
             </View>
             {errors.confirmPassword ? (
-              <Text className="text-accent-red text-xs mb-4 ml-1">
-                {errors.confirmPassword}
-              </Text>
+              <Text className="text-semantic-expense text-xs mb-4 ml-1 font-medium">{errors.confirmPassword}</Text>
             ) : (
               <View className="mb-4" />
             )}
@@ -362,31 +361,24 @@ export function RegisterForm({
                     : 'border-border'
                 }`}
               >
-                {isTermsAgreed ? (
-                  <Text className="text-white text-xs">✓</Text>
-                ) : null}
+                {isTermsAgreed ? <Check size={12} color="white" /> : null}
               </View>
-              <Text className="text-sm text-secondary flex-1">
+              <Text className="text-sm text-text-secondary flex-1 leading-5">
                 이용약관 및{' '}
-                <Text className="text-accent-blue">개인정보 처리방침</Text>에
+                <Text className="text-accent-blue font-semibold">개인정보 처리방침</Text>에
                 동의합니다
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              className={`btn py-4 flex-row justify-center items-center ${
-                isLoading ? 'bg-accent-blue/60' : 'btn-primary'
-              }`}
+            <Button
+              variant="primary"
+              size="lg"
+              loading={isLoading}
               onPress={onSignUpPress}
               disabled={isLoading}
             >
-              {isLoading ? (
-                <ActivityIndicator color="white" className="mr-2" />
-              ) : null}
-              <Text className="text-white font-semibold text-base">
-                {isLoading ? '처리 중...' : '회원가입'}
-              </Text>
-            </TouchableOpacity>
+              {isLoading ? '처리 중...' : '회원가입'}
+            </Button>
           </View>
 
           {/* Login Link */}
@@ -395,9 +387,9 @@ export function RegisterForm({
             onPress={onSwitch}
             disabled={isLoading}
           >
-            <Text className="text-secondary">
+            <Text className="text-text-secondary font-medium">
               이미 계정이 있으신가요?{' '}
-              <Text className="text-accent-blue font-medium">로그인</Text>
+              <Text className="text-accent-blue font-semibold">로그인</Text>
             </Text>
           </TouchableOpacity>
         </View>

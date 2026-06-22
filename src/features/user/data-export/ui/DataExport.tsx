@@ -89,12 +89,12 @@ export function DataExport() {
 
   return (
     <View>
-      <Text className="text-base font-semibold text-primary mb-4">
+      <Text className="text-base font-semibold text-text-primary mb-4">
         데이터 내보내기
       </Text>
 
       <View className="card p-4 mb-4">
-        <Text className="text-sm text-secondary mb-3">포맷 선택</Text>
+        <Text className="text-sm text-text-secondary mb-3">포맷 선택</Text>
         <View className="flex-row gap-2 mb-4">
           <TouchableOpacity
             className={`flex-1 py-3 rounded-xl items-center ${
@@ -104,7 +104,7 @@ export function DataExport() {
           >
             <Text
               className={`text-sm font-medium ${
-                selectedFormat === 'csv' ? 'text-white' : 'text-secondary'
+                selectedFormat === 'csv' ? 'text-white' : 'text-text-secondary'
               }`}
             >
               CSV
@@ -118,7 +118,7 @@ export function DataExport() {
           >
             <Text
               className={`text-sm font-medium ${
-                selectedFormat === 'json' ? 'text-white' : 'text-secondary'
+                selectedFormat === 'json' ? 'text-white' : 'text-text-secondary'
               }`}
             >
               JSON
@@ -126,7 +126,7 @@ export function DataExport() {
           </TouchableOpacity>
         </View>
 
-        <Text className="text-xs text-tertiary mb-4">
+        <Text className="text-xs text-text-tertiary mb-4">
           {entryCount > 0
             ? `총 ${entryCount}개의 기록이 내보내집니다.`
             : '데이터를 불러오는 중...'}

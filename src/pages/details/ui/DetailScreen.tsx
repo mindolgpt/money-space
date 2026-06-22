@@ -9,19 +9,21 @@ import {
   Share,
   Image,
   Pressable,
-  Linking,
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
+import { X, ArrowLeft, Trash2, Share2, Edit3 } from 'lucide-react-native'
 import { useEntry, useDeleteEntry } from '@/entities/entry'
 import { useCategory } from '@/entities/category'
 import { EditEntryModal } from '@/features/entry/edit-entry'
-import { Card, Badge, IconCircle } from '@/shared/ui'
+import { Card, Badge } from '@/shared/ui'
 
 function DetailRow({ label, value, isLink }: { label: string; value: string; isLink?: boolean }) {
   return (
-    <View className="flex-row py-3.5 px-4 border-b border-[rgba(0,0,0,0.04)]">
-      <Text className="text-sm text-gray-400 w-20">{label}</Text>
-      <Text className={`text-sm flex-1 ${isLink ? 'text-blue-500 underline' : 'text-gray-900'}`} numberOfLines={isLink ? 1 : undefined}>{value}</Text>
+    <View className="flex-row py-3.5 px-0">
+      <Text className="text-sm text-text-secondary w-20">{label}</Text>
+      <Text className={`text-sm flex-1 ${isLink ? 'text-accent-blue underline' : 'text-text-primary'}`} numberOfLines={isLink ? 1 : undefined}>
+        {value}
+      </Text>
     </View>
   )
 }
@@ -60,18 +62,18 @@ export function DetailScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 bg-white items-center justify-center">
-        <Text className="text-gray-300">로딩 중...</Text>
+      <View className="flex-1 bg-bg-primary items-center justify-center">
+        <Text className="text-text-tertiary">로딩 중...</Text>
       </View>
     )
   }
 
   if (!entry) {
     return (
-      <View className="flex-1 bg-white items-center justify-center">
-        <Text className="text-gray-300 mb-4">내역을 찾을 수 없습니다</Text>
+      <View className="flex-1 bg-bg-primary items-center justify-center">
+        <Text className="text-text-tertiary mb-4">내역을 찾을 수 없습니다</Text>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text className="text-blue-500 font-medium">뒤로 가기</Text>
+          <Text className="text-accent-blue font-semibold">뒤로 가기</Text>
         </TouchableOpacity>
       </View>
     )
@@ -83,100 +85,125 @@ export function DetailScreen() {
     : null
 
   return (
-    <View className="flex-1 bg-[#F5F5F7]">
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-        <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-[rgba(0,0,0,0.06)]">
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text className="text-blue-500 text-base font-medium">← 뒤로</Text>
-          </TouchableOpacity>
-          <Text className="font-semibold text-gray-900">내역 상세</Text>
-          <TouchableOpacity onPress={() => setShowEditModal(true)}>
-            <Text className="text-blue-500 text-base font-medium">수정</Text>
-          </TouchableOpacity>
+    <View className="flex-1 bg-bg-primary">
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-4 py-3 bg-bg-secondary border-b border-border">
+        <TouchableOpacity onPress={() => router.back()}>
+          <ArrowLeft size={22} color="#007AFF" />
+        </TouchableOpacity>
+        <Text className="font-semibold text-text-primary">내역 상세</Text>
+        <TouchableOpacity onPress={() => setShowEditModal(true)}>
+          <Edit3 size={20} color="#007AFF" />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+        {/* Amount Card */}
+        <View className="items-center py-10 px-4">
+          <Badge
+            variant={entry.type === 'income' ? 'green' : entry.type === 'saving' ? 'blue' : 'red'}
+            label={typeLabel}
+          />
+          <Text className="text-[40px] font-bold text-text-primary mt-4 tracking-tight">
+            ₩{entry.amount.toLocaleString()}
+          </Text>
+          {entry.note ? (
+            <Text className="text-sm text-text-secondary mt-2 text-center leading-5">{entry.note}</Text>
+          ) : null}
         </View>
 
-        <View className="items-center py-8 px-4">
-          <IconCircle icon={category?.icon ?? '📝'} variant={entry.type === 'income' ? 'green' : entry.type === 'saving' ? 'blue' : 'red'} size="lg" />
-          <View className="mt-3">
-            <Text className={`text-3xl font-bold ${entry.type === 'income' ? 'text-emerald-500' : entry.type === 'saving' ? 'text-blue-500' : 'text-red-500'}`}>
-              {entry.type === 'income' ? '+' : entry.type === 'saving' ? '' : '-'}₩{entry.amount.toLocaleString()}
-            </Text>
-          </View>
-          <View className="flex-row items-center gap-2 mt-4">
-            <Badge variant={entry.type === 'income' ? 'green' : entry.type === 'saving' ? 'blue' : 'red'} label={typeLabel} />
-            {entry.isShared && <Badge variant="blue" label="공유" />}
-            {entry.isRecurring && <Badge variant="purple" label="반복" />}
-          </View>
-        </View>
+        {/* Details Card */}
+        <View className="mx-4">
+          <Card padded={false}>
+            <View className="p-4">
+              <Text className="text-sm font-semibold text-text-primary mb-2 tracking-tight">상세 정보</Text>
+              <DetailRow label="날짜" value={entry.date} />
+              <View className="h-px bg-border" />
+              <DetailRow label="카테고리" value={category?.name ?? '기타'} />
+              <View className="h-px bg-border" />
+              {paymentLabel ? (
+                <>
+                  <DetailRow label="결제수단" value={paymentLabel} />
+                  <View className="h-px bg-border" />
+                </>
+              ) : null}
+              {entry.locationName ? (
+                <>
+                  <DetailRow label="장소" value={entry.locationName} />
+                  <View className="h-px bg-border" />
+                </>
+              ) : null}
+              <DetailRow label="공유" value={entry.isShared ? '공유 중' : '나만 보기'} />
+            </View>
 
-        <View className="px-4 mb-4">
-          <Card padded={false} className="divide-y divide-[rgba(0,0,0,0.04)]">
-            <DetailRow label="날짜" value={entry.date} />
-            {category && <DetailRow label="카테고리" value={`${category.icon} ${category.name}`} />}
-            {paymentLabel && <DetailRow label="결제수단" value={paymentLabel} />}
-            {entry.note ? (
-              <View className="py-3.5 px-4">
-                <Text className="text-sm text-gray-400 mb-1">메모</Text>
-                <Text className="text-sm text-gray-900">{entry.note}</Text>
+            {/* Photos */}
+            {entry.photoUrls && entry.photoUrls.length > 0 && (
+              <View className="px-4 pb-4">
+                <View className="h-px bg-border mb-3" />
+                <Text className="text-sm font-semibold text-text-primary mb-3 tracking-tight">사진</Text>
+                <View className="flex-row gap-2">
+                  {entry.photoUrls.map((url, index) => (
+                    <Pressable key={index} onPress={() => setPhotoIndex(index)}>
+                      <Image
+                        source={{ uri: url }}
+                        className="w-20 h-20 rounded-xl"
+                        resizeMode="cover"
+                      />
+                    </Pressable>
+                  ))}
+                </View>
               </View>
-            ) : null}
-            {entry.latitude != null && entry.longitude != null && (
-              <TouchableOpacity className="flex-row py-3.5 px-4 items-center" onPress={() => { Linking.openURL(`https://maps.google.com/maps?q=${entry.latitude},${entry.longitude}`) }}>
-                <Text className="text-sm text-gray-400 w-20">위치</Text>
-                <Text className="text-sm text-blue-500 underline flex-1" numberOfLines={1}>
-                  {entry.locationName ?? `${entry.latitude!.toFixed(4)}, ${entry.longitude!.toFixed(4)}`}
-                </Text>
-              </TouchableOpacity>
             )}
-            <DetailRow label="생성일" value={new Date(entry.createdAt).toLocaleDateString('ko-KR')} />
-            <DetailRow label="수정일" value={new Date(entry.updatedAt).toLocaleDateString('ko-KR')} />
           </Card>
         </View>
 
-        {entry.photoUrls && entry.photoUrls.length > 0 && (
-          <View className="px-4 mb-4">
-            <Text className="text-sm text-gray-400 mb-2">사진 ({entry.photoUrls.length})</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {entry.photoUrls.map((url, i) => (
-                <Pressable key={i} onPress={() => setPhotoIndex(i)}>
-                  <Image source={{ uri: url }} className="w-24 h-24 rounded-xl mr-2 bg-gray-100" />
-                </Pressable>
-              ))}
-            </ScrollView>
-          </View>
-        )}
-
-        <View className="flex-row gap-3 px-4">
-          <TouchableOpacity className="flex-1 py-3 rounded-xl bg-blue-500 items-center" onPress={() => setShowEditModal(true)}>
-            <Text className="text-white font-medium text-sm">수정</Text>
+        {/* Action Buttons */}
+        <View className="flex-row gap-3 px-4 mt-6">
+          <TouchableOpacity
+            className="flex-1 flex-row items-center justify-center py-3.5 rounded-xl bg-bg-secondary border border-border"
+            onPress={onShare}
+          >
+            <Share2 size={18} color="#86868B" />
+            <Text className="text-sm font-semibold text-text-primary ml-2">공유</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-1 py-3 rounded-xl bg-gray-100 items-center" onPress={onShare}>
-            <Text className="text-gray-500 font-medium text-sm">공유</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="py-3 px-5 rounded-xl bg-red-50 items-center" onPress={onDelete}>
-            <Text className="text-red-500 font-medium text-sm">삭제</Text>
+          <TouchableOpacity
+            className="flex-1 flex-row items-center justify-center py-3.5 rounded-xl bg-semantic-expense/10"
+            onPress={onDelete}
+          >
+            <Trash2 size={18} color="#FF3B30" />
+            <Text className="text-sm font-semibold text-semantic-expense ml-2">삭제</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
 
-      {showEditModal && (
-        <Modal visible animationType="slide">
-          <EditEntryModal entryId={entry.id} onClose={() => setShowEditModal(false)} onSuccess={() => refetch()} />
-        </Modal>
-      )}
+      {/* Photo Modal */}
+      <Modal visible={photoIndex !== null} transparent animationType="fade">
+        <Pressable
+          className="flex-1 bg-black/90 items-center justify-center"
+          onPress={() => setPhotoIndex(null)}
+        >
+          {photoIndex !== null && entry?.photoUrls?.[photoIndex] && (
+            <Image
+              source={{ uri: entry.photoUrls[photoIndex] }}
+              className="w-full h-[50%]"
+              resizeMode="contain"
+            />
+          )}
+          <TouchableOpacity
+            className="absolute top-16 right-6 w-10 h-10 rounded-full bg-white/20 items-center justify-center"
+            onPress={() => setPhotoIndex(null)}
+          >
+            <X size={20} color="white" />
+          </TouchableOpacity>
+        </Pressable>
+      </Modal>
 
-      {photoIndex !== null && (
-        <Modal visible transparent animationType="fade" onRequestClose={() => setPhotoIndex(null)}>
-          <Pressable className="flex-1 bg-black/90 items-center justify-center" onPress={() => setPhotoIndex(null)}>
-            {entry.photoUrls?.[photoIndex] && (
-              <Image source={{ uri: entry.photoUrls[photoIndex] }} className="w-full h-full resize-contain" />
-            )}
-            <TouchableOpacity className="absolute top-12 right-4" onPress={() => setPhotoIndex(null)}>
-              <Text className="text-white text-xl">✕</Text>
-            </TouchableOpacity>
-          </Pressable>
-        </Modal>
-      )}
+      <EditEntryModal
+        visible={showEditModal}
+        entry={entry}
+        onClose={() => setShowEditModal(false)}
+        onSaved={() => refetch()}
+      />
     </View>
   )
 }

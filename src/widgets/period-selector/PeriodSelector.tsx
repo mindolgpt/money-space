@@ -34,7 +34,7 @@ export function PeriodSelector({ selected, onChange }: Props) {
         >
           <Text
             className={`text-sm font-medium ${
-              selected === key ? 'text-white' : 'text-secondary'
+              selected === key ? 'text-white' : 'text-text-secondary'
             }`}
           >
             {label}

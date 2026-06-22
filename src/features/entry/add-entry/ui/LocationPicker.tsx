@@ -53,10 +53,10 @@ export function LocationPicker({ latitude, longitude, locationName, onChange }: 
   const hasLocation = latitude != null && longitude != null
 
   return (
-    <View className="mb-4 py-3 border-b border-subtle">
+    <View className="mb-4 py-3 border-b border-border">
       <View className="flex-row items-center justify-between">
         <View className="flex-1">
-          <Text className="text-sm font-medium text-primary">위치</Text>
+          <Text className="text-sm font-medium text-text-primary">위치</Text>
           {hasLocation ? (
             <TouchableOpacity onPress={openInMaps}>
               <Text className="text-xs text-accent-blue mt-0.5 underline" numberOfLines={1}>
@@ -64,11 +64,11 @@ export function LocationPicker({ latitude, longitude, locationName, onChange }: 
               </Text>
             </TouchableOpacity>
           ) : (
-            <Text className="text-xs text-tertiary mt-0.5">거래 위치를 추가합니다</Text>
+            <Text className="text-xs text-text-tertiary mt-0.5">거래 위치를 추가합니다</Text>
           )}
         </View>
         {loading ? (
-          <ActivityIndicator size="small" color="#0A84FF" />
+          <ActivityIndicator size="small" color="#007AFF" />
         ) : hasLocation ? (
           <TouchableOpacity onPress={removeLocation} className="p-2">
             <Text className="text-accent-red text-sm">삭제</Text>

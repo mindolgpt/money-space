@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import { X } from 'lucide-react-native'
 
 type Props = {
   photoUrls: string[]
@@ -95,7 +96,7 @@ export function PhotoPicker({ photoUrls, onAddPhoto, onRemovePhoto }: Props) {
 
   return (
     <View className="mb-4">
-      <Text className="text-sm text-secondary mb-2">사진 ({photoUrls.length}/5)</Text>
+      <Text className="text-sm text-text-secondary mb-2">사진 ({photoUrls.length}/5)</Text>
 
       <View className="flex-row flex-wrap gap-2">
         {photoUrls.map((uri, index) => (
@@ -109,21 +110,21 @@ export function PhotoPicker({ photoUrls, onAddPhoto, onRemovePhoto }: Props) {
               className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-accent-red items-center justify-center"
               onPress={() => onRemove(index)}
             >
-              <Text className="text-white text-xs font-bold">✕</Text>
+              <X size={12} color="white" />
             </TouchableOpacity>
           </View>
         ))}
 
         {photoUrls.length < 5 && (
           <TouchableOpacity
-            className="w-20 h-20 rounded-xl border-2 border-dashed border-subtle items-center justify-center"
+            className="w-20 h-20 rounded-xl border-2 border-dashed border-border items-center justify-center"
             onPress={showOptions}
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator size="small" color="#0A84FF" />
+              <ActivityIndicator size="small" color="#007AFF" />
             ) : (
-              <Text className="text-2xl text-tertiary">+</Text>
+              <Text className="text-2xl text-text-tertiary">+</Text>
             )}
           </TouchableOpacity>
         )}

@@ -36,9 +36,9 @@ export function PieChart({ data, title, colors = DEFAULT_COLORS }: Props) {
   if (data.length === 0 || total === 0) {
     return (
       <View className="card p-4 mx-4 mt-4">
-        <Text className="text-base font-semibold text-primary mb-4">{title}</Text>
+        <Text className="text-base font-semibold text-text-primary mb-4">{title}</Text>
         <View className="py-8 items-center">
-          <Text className="text-tertiary text-sm">데이터가 없습니다</Text>
+          <Text className="text-text-tertiary text-sm">데이터가 없습니다</Text>
         </View>
       </View>
     )
@@ -69,13 +69,13 @@ export function PieChart({ data, title, colors = DEFAULT_COLORS }: Props) {
                 className="w-3 h-3 rounded-full mr-2"
                 style={{ backgroundColor: colors[index % colors.length] }}
               />
-              <Text className="flex-1 text-sm text-primary">
+              <Text className="flex-1 text-sm text-text-primary">
                 {item.icon && `${item.icon} `}{item.label}
               </Text>
-              <Text className="text-xs text-secondary">
+              <Text className="text-xs text-text-secondary">
                 {percentage}%
               </Text>
-              <Text className="text-xs text-tertiary ml-2 w-20 text-right">
+              <Text className="text-xs text-text-tertiary ml-2 w-20 text-right">
                 {item.value.toLocaleString()}원
               </Text>
             </Animated.View>
@@ -83,7 +83,7 @@ export function PieChart({ data, title, colors = DEFAULT_COLORS }: Props) {
         )
       })}
       {data.length > 6 && (
-        <Text className="text-xs text-tertiary text-center mt-2">
+        <Text className="text-xs text-text-tertiary text-center mt-2">
           외 {data.length - 6}개
         </Text>
       )}
@@ -92,18 +92,18 @@ export function PieChart({ data, title, colors = DEFAULT_COLORS }: Props) {
 
   return (
     <View className="card p-4 mx-4 mt-4">
-      <Text className="text-base font-semibold text-primary mb-4">{title}</Text>
+      <Text className="text-base font-semibold text-text-primary mb-4">{title}</Text>
 
       <View className="items-center py-4">
         <View
           className="w-40 h-40 rounded-full overflow-hidden relative"
-          style={{ backgroundColor: '#F1F3F5' }}
+          style={{ backgroundColor: '#E8E8ED' }}
         >
           <View className="absolute inset-0 justify-center items-center">
-            <Text className="text-2xl font-bold text-primary">
+            <Text className="text-2xl font-bold text-text-primary">
               {total.toLocaleString()}
             </Text>
-            <Text className="text-xs text-secondary">원</Text>
+            <Text className="text-xs text-text-secondary">원</Text>
           </View>
         </View>
       </View>

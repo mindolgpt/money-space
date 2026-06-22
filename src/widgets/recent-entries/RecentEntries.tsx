@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native'
 import { router } from 'expo-router'
+import { type LucideIcon, Utensils, ShoppingCart, Car, Coffee, Film, Pill, Wallet, FileText, Edit3, Trash2 } from 'lucide-react-native'
 import { removeEntryLocally, type Entry } from '@/entities/entry'
 
 type Props = {
@@ -125,21 +126,27 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
     )
   }
 
-  const getCategoryIcon = (categoryId?: string) => {
-    const icons: Record<string, string> = {
-      food: '🍽️', shopping: '🛒', transport: '🚗', cafe: '☕',
-      entertainment: '🎬', health: '💊', salary: '💰', etc: '📝',
+  const getCategoryIcon = (categoryId?: string): LucideIcon => {
+    const icons: Record<string, LucideIcon> = {
+      food: Utensils,
+      shopping: ShoppingCart,
+      transport: Car,
+      cafe: Coffee,
+      entertainment: Film,
+      health: Pill,
+      salary: Wallet,
+      etc: FileText,
     }
-    return icons[categoryId || 'etc'] || '📝'
+    return icons[categoryId || 'etc'] || FileText
   }
 
   const getCategoryColor = (categoryId?: string) => {
     const colors: Record<string, string> = {
-      food: 'bg-red-50', shopping: 'bg-orange-50', transport: 'bg-yellow-50',
-      cafe: 'bg-amber-50', entertainment: 'bg-purple-50', health: 'bg-emerald-50',
-      salary: 'bg-emerald-50', etc: 'bg-gray-100',
+      food: 'bg-semantic-expense/10', shopping: 'bg-accent-orange/10', transport: 'bg-accent-yellow/10',
+      cafe: 'bg-accent-orange/10', entertainment: 'bg-accent-purple/10', health: 'bg-semantic-income/10',
+      salary: 'bg-semantic-income/10', etc: 'bg-bg-tertiary',
     }
-    return colors[categoryId || 'etc'] || 'bg-gray-100'
+    return colors[categoryId || 'etc'] || 'bg-bg-tertiary'
   }
 
   return (
@@ -151,14 +158,14 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
             className="w-20 bg-accent-blue items-center justify-center"
             onPress={handleEdit}
           >
-            <Text className="text-white text-sm">✎</Text>
+            <Edit3 size={16} color="white" />
             <Text className="text-white text-xs mt-1">수정</Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="w-20 bg-accent-red items-center justify-center"
             onPress={handleDelete}
           >
-            <Text className="text-white text-sm">🗑</Text>
+            <Trash2 size={16} color="white" />
             <Text className="text-white text-xs mt-1">삭제</Text>
           </TouchableOpacity>
         </View>
@@ -168,7 +175,7 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
             className="w-20 bg-accent-red items-center justify-center"
             onPress={handleDelete}
           >
-            <Text className="text-white text-sm">🗑</Text>
+            <Trash2 size={16} color="white" />
             <Text className="text-white text-xs mt-1">삭제</Text>
           </TouchableOpacity>
         </View>
@@ -182,21 +189,24 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
             activeOpacity={0.7}
             onPress={handlePress}
           >
-            <View className="flex-row items-center py-3.5 px-4 border-b border-[rgba(0,0,0,0.04)] bg-white">
+            <View className="flex-row items-center py-3.5 px-4 border-b border-border bg-bg-secondary">
               <View className={`w-10 h-10 rounded-xl items-center justify-center mr-3 ${getCategoryColor(item.categoryId)}`}>
-                <Text className="text-base">{getCategoryIcon(item.categoryId)}</Text>
+                {(() => {
+                  const IconComponent = getCategoryIcon(item.categoryId)
+                  return <IconComponent size={16} color="#86868B" />
+                })()}
               </View>
               <View className="flex-1">
-                <Text className="text-sm font-medium text-gray-900">
+                <Text className="text-sm font-medium text-text-primary">
                   {item.note || '내역'}
                 </Text>
-                <Text className="text-xs text-gray-300 mt-0.5">
+                <Text className="text-xs text-text-tertiary mt-0.5">
                   {item.date} · {item.paymentMethod || '카드'}
                 </Text>
               </View>
               <Text
                 className={`text-sm font-bold ${
-                  item.type === 'income' ? 'text-emerald-500' : item.type === 'saving' ? 'text-blue-500' : 'text-red-500'
+                  item.type === 'income' ? 'text-semantic-income' : item.type === 'saving' ? 'text-semantic-saving' : 'text-semantic-expense'
                 }`}
               >
                 {item.type === 'income' ? '+' : '-'}
@@ -216,20 +226,20 @@ export function RecentEntries({ entries }: Props) {
   return (
     <View className="px-4 mt-2 mb-4">
       <View className="flex-row items-center justify-between mb-3">
-        <Text className="text-base font-semibold text-gray-900">최근 거래</Text>
+        <Text className="text-base font-semibold text-text-primary">최근 거래</Text>
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/(tabs)/calendar' } as any)}
         >
-          <Text className="text-sm text-blue-500 font-medium">전체 보기</Text>
+          <Text className="text-sm text-semantic-saving font-medium">전체 보기</Text>
         </TouchableOpacity>
       </View>
       {displayEntries.length === 0 ? (
-        <View className="bg-white rounded-2xl py-8 items-center border border-[rgba(0,0,0,0.06)]">
-          <Text className="text-3xl mb-2">📝</Text>
-          <Text className="text-sm text-gray-300">첫 기록을 남겨보세요</Text>
+        <View className="bg-bg-secondary rounded-2xl py-8 items-center border border-border">
+          <FileText size={32} color="#C7C7CC" className="mb-2" />
+          <Text className="text-sm text-text-tertiary">첫 기록을 남겨보세요</Text>
         </View>
       ) : (
-        <View className="bg-white rounded-2xl overflow-hidden border border-[rgba(0,0,0,0.06)]">
+        <View className="bg-bg-secondary rounded-2xl overflow-hidden border border-border">
           <FlatList
             data={displayEntries}
             keyExtractor={(item) => item.id}

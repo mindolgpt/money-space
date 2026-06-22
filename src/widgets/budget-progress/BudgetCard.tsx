@@ -7,6 +7,7 @@ import Animated, {
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import * as Haptics from 'expo-haptics'
+import { FileText } from 'lucide-react-native'
 import type { Budget } from '@/entities/budget'
 import { useDeleteBudget, BUDGET_KEYS } from '@/entities/budget'
 import { BudgetProgress } from '@/widgets/budget-progress/BudgetProgress'
@@ -22,7 +23,6 @@ type Props = {
 export function BudgetCard({
   budget,
   categoryName,
-  categoryIcon = '📝',
   spent,
   onEdit,
 }: Props) {
@@ -96,17 +96,16 @@ export function BudgetCard({
         >
           <View className="flex-row items-center justify-between mb-1">
             <View className="flex-row items-center">
-              <Text className="text-base mr-2">{categoryIcon}</Text>
-              <Text className="font-medium text-primary">{categoryName}</Text>
+              <FileText size={16} color="#86868B" className="mr-2" />
+              <Text className="font-medium text-text-primary">{categoryName}</Text>
             </View>
-            <Text className="text-xs text-secondary">
+            <Text className="text-xs text-text-secondary">
               {budget.amount.toLocaleString()}원
             </Text>
           </View>
 
           <BudgetProgress
             categoryName={categoryName}
-            categoryIcon={categoryIcon}
             spent={spent}
             budget={budget.amount}
           />

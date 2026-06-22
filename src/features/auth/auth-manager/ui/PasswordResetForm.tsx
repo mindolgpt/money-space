@@ -59,7 +59,7 @@ export function PasswordResetForm() {
   if (isSuccess) {
     return (
       <KeyboardAvoidingView
-        className="flex-1 bg-primary"
+        className="flex-1 bg-bg-primary"
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <View className="flex-1 justify-center px-6">
@@ -67,7 +67,7 @@ export function PasswordResetForm() {
             <View className="w-20 h-20 rounded-2xl bg-accent-green/10 items-center justify-center mb-4">
               <Text className="text-3xl">✉️</Text>
             </View>
-            <Text className="text-2xl font-bold text-primary mb-2">
+            <Text className="text-2xl font-bold text-text-primary mb-2">
               이메일 전송 완료
             </Text>
             <Text className="text-sm text-secondary text-center leading-5">
@@ -89,7 +89,7 @@ export function PasswordResetForm() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-primary"
+      className="flex-1 bg-bg-primary"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View className="flex-1 justify-center px-6">
@@ -98,7 +98,7 @@ export function PasswordResetForm() {
           <View className="w-20 h-20 rounded-2xl bg-accent-blue/10 items-center justify-center mb-4">
             <Text className="text-3xl">🔑</Text>
           </View>
-          <Text className="text-2xl font-bold text-primary mb-2">
+          <Text className="text-2xl font-bold text-text-primary mb-2">
             비밀번호 찾기
           </Text>
           <Text className="text-sm text-secondary text-center leading-5">
@@ -120,7 +120,7 @@ export function PasswordResetForm() {
           <TextInput
             className={`input mb-6 ${error ? 'border-accent-red' : ''}`}
             placeholder="example@email.com"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#C7C7CC"
             value={email}
             onChangeText={onEmailChange}
             autoCapitalize="none"

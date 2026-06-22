@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useEffect } from 'react'
 import * as Haptics from 'expo-haptics'
+import { AlertTriangle, FileText } from 'lucide-react-native'
 
 type Props = {
   categoryName: string
@@ -19,7 +20,6 @@ type Props = {
 
 export function BudgetProgress({
   categoryName,
-  categoryIcon = '📝',
   spent,
   budget,
   onPress,
@@ -78,16 +78,16 @@ export function BudgetProgress({
       <Animated.View style={containerAnim}>
         <View className="flex-row justify-between items-center mb-2">
           <View className="flex-row items-center">
-            <Text className="text-sm mr-1.5">{categoryIcon}</Text>
-            <Text className="text-sm font-medium text-primary">
+            <FileText size={16} color="#86868B" className="mr-1.5" />
+            <Text className="text-sm font-medium text-text-primary">
               {categoryName}
             </Text>
             {isOver && (
-              <Text className="ml-1.5 text-xs text-accent-red">⚠️</Text>
+              <AlertTriangle size={12} color="#FF3B30" className="ml-1.5" />
             )}
           </View>
           <Text
-            className={`text-sm ${isOver ? 'text-accent-red' : 'text-secondary'}`}
+            className={`text-sm ${isOver ? 'text-accent-red' : 'text-text-secondary'}`}
           >
             {spent.toLocaleString()} / {budget.toLocaleString()}원
           </Text>
@@ -99,10 +99,10 @@ export function BudgetProgress({
           />
         </View>
         <View className="flex-row justify-between mt-1.5">
-          <Text className={`text-xs ${isOver ? 'text-accent-red' : 'text-tertiary'}`}>
+          <Text className={`text-xs ${isOver ? 'text-accent-red' : 'text-text-tertiary'}`}>
             {percentage}% 사용
           </Text>
-          <Text className="text-xs text-tertiary">
+          <Text className="text-xs text-text-tertiary">
             {isOver
               ? `초과 ${Math.abs(remaining).toLocaleString()}원`
               : `남은 ${remaining.toLocaleString()}원`}

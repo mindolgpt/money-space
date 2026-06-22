@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native'
+import { X } from 'lucide-react-native'
 import { useEntry, useUpdateEntry, useDeleteEntry, EntryType, PaymentMethod, UpdateEntryInput } from '@/entities/entry'
 import { AmountInput } from '@/features/entry/add-entry/ui/AmountInput'
 import { CategoryPicker } from '@/features/entry/add-entry/ui/CategoryPicker'
@@ -134,8 +135,8 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-primary">
-        <ActivityIndicator size="large" color="#0A84FF" />
+      <View className="flex-1 items-center justify-center bg-bg-primary">
+        <ActivityIndicator size="large" color="#007AFF" />
       </View>
     )
   }
@@ -143,7 +144,7 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
   const isPending = isUpdating || isDeleting
 
   return (
-    <View className="flex-1 bg-primary">
+    <View className="flex-1 bg-bg-primary">
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 40 }}
@@ -151,14 +152,14 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
         keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
-        <View className="flex-row items-center justify-between px-4 py-3 border-b border-subtle">
+        <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity
             className="w-8 h-8 rounded-full items-center justify-center"
             onPress={onClose}
           >
-            <Text className="text-lg">✕</Text>
+            <X size={20} color="#86868B" />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-primary">거래 수정</Text>
+          <Text className="text-lg font-bold text-text-primary">거래 수정</Text>
           <TouchableOpacity onPress={onDelete}>
             <Text className="text-accent-red text-base">삭제</Text>
           </TouchableOpacity>
@@ -177,7 +178,7 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
               >
                 <Text
                   className={`text-sm font-medium ${
-                    type === t.key ? 'text-white' : 'text-secondary'
+                    type === t.key ? 'text-white' : 'text-text-secondary'
                   }`}
                 >
                   {t.label}
@@ -224,13 +225,13 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
           {/* Note */}
           <View className="mb-4">
             <View className="flex-row justify-between mb-2">
-              <Text className="text-sm text-secondary">메모</Text>
-              <Text className="text-xs text-tertiary">{note.length}/500</Text>
+              <Text className="text-sm text-text-secondary">메모</Text>
+              <Text className="text-xs text-text-tertiary">{note.length}/500</Text>
             </View>
             <TextInput
               className="input min-h-[80px]"
               placeholder="메모를 입력하세요"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#C7C7CC"
               value={note}
               onChangeText={(t) => {
                 if (t.length <= 500) setNote(t)
@@ -242,33 +243,33 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
           </View>
 
           {/* Shared Toggle */}
-          <View className="flex-row items-center justify-between mb-4 py-3 border-b border-subtle">
+          <View className="flex-row items-center justify-between mb-4 py-3 border-b border-border">
             <View>
-              <Text className="text-sm font-medium text-primary">가족 공유</Text>
-              <Text className="text-xs text-tertiary mt-0.5">
+              <Text className="text-sm font-medium text-text-primary">가족 공유</Text>
+              <Text className="text-xs text-text-tertiary mt-0.5">
                 가족과 거래를 공유합니다
               </Text>
             </View>
             <Switch
               value={isShared}
               onValueChange={setIsShared}
-              trackColor={{ false: '#F1F3F5', true: '#30D158' }}
+              trackColor={{ false: '#E8E8ED', true: '#34C759' }}
               thumbColor="white"
             />
           </View>
 
           {/* Recurring Toggle */}
-          <View className="flex-row items-center justify-between mb-6 py-3 border-b border-subtle">
+          <View className="flex-row items-center justify-between mb-6 py-3 border-b border-border">
             <View>
-              <Text className="text-sm font-medium text-primary">반복 설정</Text>
-              <Text className="text-xs text-tertiary mt-0.5">
+              <Text className="text-sm font-medium text-text-primary">반복 설정</Text>
+              <Text className="text-xs text-text-tertiary mt-0.5">
                 매월 자동으로 기록
               </Text>
             </View>
             <Switch
               value={isRecurring}
               onValueChange={setIsRecurring}
-              trackColor={{ false: '#F1F3F5', true: '#30D158' }}
+              trackColor={{ false: '#E8E8ED', true: '#34C759' }}
               thumbColor="white"
             />
           </View>

@@ -8,15 +8,70 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native'
+import {
+  CreditCard,
+  Shield,
+  PartyPopper,
+  Wallet,
+  Gift,
+  Briefcase,
+  Building2,
+  TrendingUp,
+  Utensils,
+  Bus,
+  Home,
+  Smartphone,
+  Pill,
+  BookOpen,
+  Film,
+  ShoppingBag,
+  User,
+  Coffee,
+  Gamepad2,
+  Shirt,
+  Baby,
+  Cat,
+  Plane,
+  Music,
+  Laptop,
+  Camera,
+  Mic,
+  Trophy,
+  Car,
+  Dumbbell,
+  Smile,
+  Palette,
+  type LucideIcon,
+} from 'lucide-react-native'
 import { useCreateCategory } from '@/entities/category'
 import type { CategoryType } from '@/entities/category'
 
-const ICONS = [
-  '🍽️', '🚌', '🏠', '📱', '🏥', '📚', '🎬', '🛍️',
-  '💳', '🛡️', '🎊', '💰', '🎁', '💼', '🏦', '📈',
-  '👴', '☕', '🎮', '👕', '👶', '🐱', '✈️', '🎵',
-  '💻', '📷', '🎤', '⚽', '🚗', '🏋️', '🧘', '🎨',
+const ICON_DATA: { icon: string | LucideIcon; key: string }[] = [
+  { icon: Utensils, key: '🍽️' }, { icon: Bus, key: '🚌' }, { icon: Home, key: '🏠' }, { icon: Smartphone, key: '📱' },
+  { icon: Pill, key: '🏥' }, { icon: BookOpen, key: '📚' }, { icon: Film, key: '🎬' }, { icon: ShoppingBag, key: '🛍️' },
+  { icon: CreditCard, key: '💳' }, { icon: Shield, key: '🛡️' }, { icon: PartyPopper, key: '🎊' }, { icon: Wallet, key: '💰' },
+  { icon: Gift, key: '🎁' }, { icon: Briefcase, key: '💼' }, { icon: Building2, key: '🏦' }, { icon: TrendingUp, key: '📈' },
+  { icon: User, key: '👴' }, { icon: Coffee, key: '☕' }, { icon: Gamepad2, key: '🎮' }, { icon: Shirt, key: '👕' },
+  { icon: Baby, key: '👶' }, { icon: Cat, key: '🐱' }, { icon: Plane, key: '✈️' }, { icon: Music, key: '🎵' },
+  { icon: Laptop, key: '💻' }, { icon: Camera, key: '📷' }, { icon: Mic, key: '🎤' }, { icon: Trophy, key: '⚽' },
+  { icon: Car, key: '🚗' }, { icon: Dumbbell, key: '🏋️' }, { icon: Smile, key: '🧘' }, { icon: Palette, key: '🎨' },
 ]
+
+const ICONS = ICON_DATA.map(d => d.key)
+
+const getIconComponent = (iconKey: string): LucideIcon | string => {
+  const found = ICON_DATA.find(d => d.key === iconKey)
+  return found ? found.icon : iconKey
+}
+
+const renderIcon = (iconKey: string, size: number) => {
+  const icon = getIconComponent(iconKey)
+  if (typeof icon === 'function') {
+    const IconComponent = icon as LucideIcon
+    return <IconComponent size={size} color="#86868B" />
+  }
+  return <Text className="text-lg">{icon}</Text>
+}
 
 type Props = {
   type: CategoryType
@@ -63,19 +118,19 @@ export function CategoryCreateModal({ type, onClose }: Props) {
 
   return (
     <Modal visible animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <View className="flex-1 bg-primary">
+      <View className="flex-1 bg-bg-primary">
         {/* Header */}
-        <View className="flex-row items-center justify-between px-4 py-3 border-b border-subtle">
+        <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity onPress={onClose}>
             <Text className="text-accent-blue text-base">취소</Text>
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-primary">카테고리 추가</Text>
+          <Text className="text-lg font-bold text-text-primary">카테고리 추가</Text>
           <View style={{ width: 50 }} />
         </View>
 
         <ScrollView contentContainerStyle={{ padding: 16 }}>
           {/* Icon Picker */}
-          <Text className="text-sm text-secondary mb-2">아이콘 선택</Text>
+          <Text className="text-sm text-text-secondary mb-2">아이콘 선택</Text>
           <View className="flex-row flex-wrap gap-2 mb-6">
             {ICONS.map((icon) => (
               <TouchableOpacity
@@ -85,17 +140,17 @@ export function CategoryCreateModal({ type, onClose }: Props) {
                 }`}
                 onPress={() => onIconSelect(icon)}
               >
-                <Text className="text-lg">{icon}</Text>
+                {renderIcon(icon, 20)}
               </TouchableOpacity>
             ))}
           </View>
 
           {/* Name Input */}
-          <Text className="text-sm text-secondary mb-2">카테고리명</Text>
+          <Text className="text-sm text-text-secondary mb-2">카테고리명</Text>
           <TextInput
             className={`input mb-1 ${nameError ? 'border-accent-red' : ''}`}
             placeholder="카테고리명 (최대 20자)"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#C7C7CC"
             value={name}
             onChangeText={onNameChange}
             maxLength={20}
@@ -105,7 +160,7 @@ export function CategoryCreateModal({ type, onClose }: Props) {
             {nameError ? (
               <Text className="text-accent-red text-xs">{nameError}</Text>
             ) : null}
-            <Text className="text-xs text-tertiary ml-auto">{name.length}/20</Text>
+            <Text className="text-xs text-text-tertiary ml-auto">{name.length}/20</Text>
           </View>
 
           {/* Save Button */}
