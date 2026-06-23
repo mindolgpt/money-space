@@ -12,6 +12,7 @@ import { BudgetManager } from '@/features/budget/budget-manager'
 import { SyncStatus } from '@/widgets/sync-status'
 import { useThemeStore } from '@/shared/lib/theme-provider'
 import { Card, Toggle } from '@/shared/ui'
+import { colors } from '@/shared/lib/colors'
 import Constants from 'expo-constants'
 
 type Section = 'profile' | 'theme' | 'notifications' | 'security' | 'budget' | 'export' | 'import' | 'account'
@@ -53,15 +54,15 @@ export function SettingsScreen() {
 
   const SectionToggle = ({ section, label }: { section: Section; label: string }) => (
     <TouchableOpacity
-      className="flex-row items-center justify-between px-5 py-4 bg-bg-secondary rounded-2xl border border-border"
+      className="flex-row items-center justify-between px-5 py-4 bg-bg-secondary rounded-lg border border-border"
       onPress={() => toggleSection(section)}
       activeOpacity={0.7}
     >
       <Text className="text-base font-semibold text-text-primary tracking-tight">{label}</Text>
       {expandedSection === section ? (
-        <ChevronDown size={20} color="#C7C7CC" />
+        <ChevronDown size={20} color={colors.textTertiary} />
       ) : (
-        <ChevronRight size={20} color="#C7C7CC" />
+        <ChevronRight size={20} color={colors.textTertiary} />
       )}
     </TouchableOpacity>
   )
@@ -117,7 +118,7 @@ export function SettingsScreen() {
         {expandedSection === 'budget' && (
           <View className="px-1 mb-2">
             <TouchableOpacity
-              className="py-3.5 rounded-xl items-center bg-accent-blue"
+              className="py-3.5 rounded-lg items-center bg-accent-green"
               onPress={() => setBudgetModalVisible(true)}
             >
               <Text className="text-white font-semibold">예산 설정하기</Text>
@@ -135,7 +136,7 @@ export function SettingsScreen() {
         {expandedSection === 'account' && (
           <View className="px-1 mb-2 gap-2">
             <TouchableOpacity
-              className="py-3.5 rounded-xl items-center bg-semantic-expense/10"
+              className="py-3.5 rounded-lg items-center bg-semantic-expense/10"
               onPress={handleSignOut}
               disabled={isSigningOut}
             >

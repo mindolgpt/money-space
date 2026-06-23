@@ -11,6 +11,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import * as Haptics from 'expo-haptics'
 import { ChevronLeft, ChevronRight, FileText } from 'lucide-react-native'
+import { colors } from '@/shared/lib/colors'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useUserSettings } from '@/entities/user'
 import { useBudgets, useCreateBudget, useUpdateBudget, useDeleteBudget, createBudgetApi, BUDGET_KEYS } from '@/entities/budget'
@@ -253,7 +254,7 @@ export function BudgetManager({ visible, onClose }: Props) {
               onPress={() => onMonthChange('prev')}
               className="p-2"
             >
-              <ChevronLeft size={20} color="#007AFF" />
+              <ChevronLeft size={20} color={colors.accentGreen} />
             </TouchableOpacity>
 
             <Text className="text-base font-medium text-text-primary">
@@ -264,7 +265,7 @@ export function BudgetManager({ visible, onClose }: Props) {
               onPress={() => onMonthChange('next')}
               className="p-2"
             >
-              <ChevronRight size={20} color="#007AFF" />
+              <ChevronRight size={20} color={colors.accentGreen} />
             </TouchableOpacity>
           </View>
         </View>
@@ -278,7 +279,7 @@ export function BudgetManager({ visible, onClose }: Props) {
               <View key={cat.id} className="bg-bg-secondary border border-border rounded-2xl p-4 mb-3">
                 <View className="flex-row items-center justify-between mb-2">
                   <View className="flex-row items-center">
-                    <FileText size={16} color="#86868B" />
+                    <FileText size={16} color={colors.textTertiary} />
                     <Text className="font-medium text-text-primary ml-2">{cat.name}</Text>
                   </View>
                   {progress.budget > 0 && (
@@ -292,7 +293,7 @@ export function BudgetManager({ visible, onClose }: Props) {
                   <TextInput
                     className="flex-1 bg-bg-tertiary rounded-xl px-4 py-3 text-base text-text-primary mr-2"
                     placeholder="예산 금액"
-                    placeholderTextColor="#C7C7CC"
+                    placeholderTextColor={colors.textTertiary}
                     keyboardType="numeric"
                     value={amountStr}
                     onChangeText={(v) => onBudgetAmountChange(cat.id, v)}
@@ -317,8 +318,8 @@ export function BudgetManager({ visible, onClose }: Props) {
         <View className="px-4 py-3 border-t border-border">
           <View className="flex-row gap-2">
             <TouchableOpacity
-              className="flex-1 py-3.5 bg-bg-tertiary rounded-xl items-center"
-              onPress={handleClearAll}
+className="flex-1 py-3.5 bg-bg-tertiary rounded-lg items-center"
+               onPress={handleClearAll}
               disabled={budgets.length === 0}
             >
               <Text className={`text-sm font-medium ${budgets.length === 0 ? 'text-text-tertiary' : 'text-semantic-expense'}`}>
@@ -327,8 +328,8 @@ export function BudgetManager({ visible, onClose }: Props) {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-[3] py-3.5 bg-accent-blue rounded-xl items-center"
-              onPress={handleSave}
+className="flex-[3] py-3.5 bg-accent-green rounded-lg items-center"
+               onPress={handleSave}
               disabled={isSubmitting}
             >
               <Text className="text-white text-sm font-semibold">

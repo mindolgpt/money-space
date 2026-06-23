@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native'
+import { colors } from '@/shared/lib/colors'
 import { getDb } from '@/shared/lib'
 
 export function DataExport() {
@@ -97,10 +98,10 @@ export function DataExport() {
         <Text className="text-sm text-text-secondary mb-3">포맷 선택</Text>
         <View className="flex-row gap-2 mb-4">
           <TouchableOpacity
-            className={`flex-1 py-3 rounded-xl items-center ${
-              selectedFormat === 'csv' ? 'bg-accent-blue' : 'bg-bg-tertiary'
-            }`}
-            onPress={() => onFormatSelect('csv')}
+className={`flex-1 py-3 rounded-lg items-center ${
+               selectedFormat === 'csv' ? 'bg-accent-green' : 'bg-bg-tertiary'
+             }`}
+             onPress={() => onFormatSelect('csv')}
           >
             <Text
               className={`text-sm font-medium ${
@@ -111,10 +112,10 @@ export function DataExport() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className={`flex-1 py-3 rounded-xl items-center ${
-              selectedFormat === 'json' ? 'bg-accent-blue' : 'bg-bg-tertiary'
-            }`}
-            onPress={() => onFormatSelect('json')}
+className={`flex-1 py-3 rounded-lg items-center ${
+               selectedFormat === 'json' ? 'bg-accent-green' : 'bg-bg-tertiary'
+             }`}
+             onPress={() => onFormatSelect('json')}
           >
             <Text
               className={`text-sm font-medium ${
@@ -133,14 +134,14 @@ export function DataExport() {
         </Text>
 
         <TouchableOpacity
-          className={`py-3 rounded-xl items-center flex-row justify-center ${
-            isExporting ? 'bg-accent-blue/60' : 'bg-accent-blue'
+          className={`py-3 rounded-lg items-center flex-row justify-center ${
+            isExporting ? 'bg-accent-green/60' : 'bg-accent-green'
           }`}
           onPress={onExportPress}
           disabled={isExporting}
         >
           {isExporting ? (
-            <ActivityIndicator color="white" className="mr-2" />
+            <ActivityIndicator color={colors.white} className="mr-2" />
           ) : null}
           <Text className="text-white font-semibold">
             {isExporting ? '내보내는 중...' : '내보내기'}

@@ -15,6 +15,7 @@ import { useAuthStore } from '@/features/auth/auth-manager'
 import { useCategories } from '@/entities/category'
 import { useUpdateSettings } from '@/entities/user'
 import type { Category } from '@/entities/category'
+import { colors } from '@/shared/lib/colors'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -28,7 +29,7 @@ interface OnboardingSlide {
 const SLIDES: OnboardingSlide[] = [
   {
     id: '1',
-    icon: <Wallet size={64} color="#007AFF" />,
+    icon: <Wallet size={64} color={colors.accentGreen} />,
     title: '가계부 관리',
     description: '수입, 지출, 저축을 한눈에 관리하세요',
   },
@@ -40,7 +41,7 @@ const SLIDES: OnboardingSlide[] = [
   },
   {
     id: '3',
-    icon: <Users size={64} color="#10B981" />,
+    icon: <Users size={64} color={colors.accentGreen} />,
     title: '가족 공유',
     description: '가족과 가계부를 공유하고 함께 관리하세요',
   },
@@ -185,7 +186,7 @@ export default function OnboardingScreen() {
             <View
               key={index}
               className={`w-2 h-2 rounded-full mx-1 ${
-                index === currentPage ? 'bg-accent-blue' : 'bg-bg-tertiary'
+                index === currentPage ? 'bg-accent-green' : 'bg-bg-tertiary'
               }`}
             />
           ))}
@@ -199,7 +200,7 @@ export default function OnboardingScreen() {
             <Text className="text-text-secondary font-medium">건너뛰기</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex-2 py-4 bg-accent-blue rounded-xl items-center px-8"
+            className="flex-2 py-4 bg-accent-green rounded-xl items-center px-8"
             onPress={handleNext}
           >
             <Text className="text-white font-semibold">
@@ -215,7 +216,7 @@ export default function OnboardingScreen() {
     <View className="flex-1 px-6 justify-center">
       <View className="items-center mb-8">
         <View className="w-24 h-24 rounded-full bg-bg-tertiary items-center justify-center mb-6">
-          <Bell size={40} color="#86868B" />
+          <Bell size={40} color={colors.textTertiary} />
         </View>
         <Text className="text-2xl font-bold text-text-primary mb-3 text-center">
           알림 설정
@@ -227,7 +228,7 @@ export default function OnboardingScreen() {
 
       <View className="mb-8">
         <TouchableOpacity
-          className="py-4 bg-accent-blue rounded-xl items-center mb-3"
+          className="py-4 bg-accent-green rounded-xl items-center mb-3"
           onPress={handleRequestNotificationPermission}
         >
           <Text className="text-white font-semibold">알림 허용</Text>
@@ -246,7 +247,7 @@ export default function OnboardingScreen() {
     <ScrollView className="flex-1 px-6 py-8">
       <View className="items-center mb-8">
         <View className="w-20 h-20 rounded-full bg-bg-tertiary items-center justify-center mb-4">
-          <Wallet size={36} color="#86868B" />
+          <Wallet size={36} color={colors.textTertiary} />
         </View>
         <Text className="text-xl font-bold text-text-primary mb-2 text-center">
           첫 예산 설정
@@ -262,7 +263,7 @@ export default function OnboardingScreen() {
           <TextInput
             className="flex-1 bg-bg-tertiary rounded-xl px-4 py-3 text-lg text-text-primary"
             placeholder="예) 1000000"
-            placeholderTextColor="#C7C7CC"
+            placeholderTextColor={colors.textTertiary}
             keyboardType="numeric"
             value={budgetInput}
             onChangeText={(text) => {
@@ -287,7 +288,7 @@ export default function OnboardingScreen() {
               key={cat.id}
               className={`px-4 py-2.5 rounded-full border ${
                 selectedCategories.includes(cat.id)
-                  ? 'bg-accent-blue border-accent-blue'
+                  ? 'bg-accent-green border-accent-green'
                   : 'bg-transparent border-border'
               }`}
               onPress={() => toggleCategory(cat.id)}
@@ -307,7 +308,7 @@ export default function OnboardingScreen() {
       </View>
 
       <TouchableOpacity
-        className="py-4 bg-accent-blue rounded-xl items-center"
+        className="py-4 bg-accent-green rounded-xl items-center"
         onPress={handleComplete}
       >
         <Text className="text-white font-semibold text-base">
@@ -315,7 +316,7 @@ export default function OnboardingScreen() {
         </Text>
       </TouchableOpacity>
 
-      <Text className="text-xs text-text-text-tertiary text-center mt-4">
+      <Text className="text-xs text-text-tertiary text-center mt-4">
         예산과 카테고리는 나중에 설정에서도 변경할 수 있어요
       </Text>
     </ScrollView>

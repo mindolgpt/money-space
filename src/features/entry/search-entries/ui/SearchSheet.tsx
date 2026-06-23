@@ -12,6 +12,7 @@ import { Search, Lightbulb, Film, Pill, Wallet, FileText, Utensils, ShoppingCart
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useSearchEntries } from '@/entities/entry'
 import { useDebounce } from '@/features/entry/search-entries/model/use-debounce'
+import { colors } from '@/shared/lib/colors'
 import type { Entry } from '@/entities/entry'
 
 type Props = {
@@ -35,7 +36,7 @@ function HighlightedText({ text, highlight, ...props }: { text: string; highligh
     <Text {...props}>
       {parts.map((part, i) =>
         matchRegex.test(part) ? (
-          <Text key={i} style={{ backgroundColor: 'rgba(255, 204, 0, 0.4)', fontWeight: '700' }}>
+          <Text key={i} style={{ backgroundColor: colors.accentGreen + '4D', fontWeight: '700' }}>
             {part}
           </Text>
         ) : (
@@ -69,13 +70,13 @@ export function SearchSheet({ onClose }: Props) {
     }
     const getCategoryIconComponent = (categoryId?: string) => {
       const Icon = ICON_MAP[categoryId ?? 'etc']
-      return Icon ? <Icon size={18} color="#86868B" /> : <FileText size={18} color="#86868B" />
+      return Icon ? <Icon size={18} color={colors.textTertiary} /> : <FileText size={18} color={colors.textTertiary} />
     }
 
   const getCategoryBg = (categoryId?: string) => {
     const colors: Record<string, string> = {
       food: 'bg-accent-red/10', shopping: 'bg-accent-orange/10',
-      transport: 'bg-accent-yellow/10', cafe: 'bg-amber-500/10',
+      transport: 'bg-accent-yellow/10', cafe: 'bg-accent-orange/10',
       entertainment: 'bg-accent-purple/10', health: 'bg-accent-green/10',
       salary: 'bg-accent-green/10', etc: 'bg-bg-tertiary',
     }
@@ -99,28 +100,28 @@ export function SearchSheet({ onClose }: Props) {
       {/* Header */}
       <View className="px-4 pt-4 pb-3">
         <View className="flex-row items-center">
-          <View className="flex-1 flex-row items-center bg-bg-tertiary rounded-xl px-4 py-3">
-            <Search size={20} color="#C7C7CC" className="mr-3" />
+          <View className="flex-1 flex-row items-center bg-bg-tertiary rounded-lg px-4 py-3">
+            <Search size={20} color={colors.textTertiary} className="mr-3" />
             <TextInput
               className="flex-1 text-base text-text-primary"
               placeholder="검색 (메모, 금액)"
-              placeholderTextColor="#C7C7CC"
+              placeholderTextColor={colors.textTertiary}
               value={query}
               onChangeText={setQuery}
               autoFocus
             />
             {isFetching && (
-              <ActivityIndicator size="small" color="#007AFF" />
+              <ActivityIndicator size="small" color={colors.accentGreen} />
             )}
           </View>
           <TouchableOpacity
-            className="ml-3 px-3 py-2 rounded-xl bg-bg-tertiary"
+            className="ml-3 px-3 py-2 rounded-lg bg-bg-tertiary"
             onPress={() => setShowFilters(!showFilters)}
           >
             <Text className="text-sm text-text-secondary">필터</Text>
           </TouchableOpacity>
           <TouchableOpacity className="ml-2" onPress={onClose}>
-            <Text className="text-accent-blue font-medium">취소</Text>
+            <Text className="text-accent-green font-medium">취소</Text>
           </TouchableOpacity>
         </View>
 
@@ -131,7 +132,7 @@ export function SearchSheet({ onClose }: Props) {
               <TouchableOpacity
                 key={f.key}
                 className={`px-3 py-1.5 rounded-full ${
-                  typeFilter === f.key ? 'bg-accent-blue' : 'bg-bg-tertiary'
+                  typeFilter === f.key ? 'bg-accent-green' : 'bg-bg-tertiary'
                 }`}
                 onPress={() => setTypeFilter(f.key)}
               >
@@ -168,7 +169,7 @@ export function SearchSheet({ onClose }: Props) {
           >
             <View className="flex-row items-center flex-1">
               <View
-                className={`w-10 h-10 rounded-xl items-center justify-center mr-3 ${getCategoryBg(item.categoryId)}`}
+                className={`w-10 h-10 rounded-full items-center justify-center mr-3 ${getCategoryBg(item.categoryId)}`}
               >
                 {getCategoryIconComponent(item.categoryId)}
               </View>
@@ -201,15 +202,15 @@ export function SearchSheet({ onClose }: Props) {
         ListEmptyComponent={
           <View className="py-16 items-center">
             {isLoading ? (
-              <ActivityIndicator size="large" color="#007AFF" />
+              <ActivityIndicator size="large" color={colors.accentGreen} />
             ) : query.trim() ? (
               <>
-                <Search size={32} color="#C7C7CC" className="mb-3" />
+                <Search size={32} color={colors.textTertiary} className="mb-3" />
                 <Text className="text-text-tertiary text-sm">검색 결과가 없습니다</Text>
               </>
             ) : (
               <>
-                <Lightbulb size={32} color="#C7C7CC" className="mb-3" />
+                <Lightbulb size={32} color={colors.textTertiary} className="mb-3" />
                 <Text className="text-text-tertiary text-sm">
                   메모나 금액으로 검색하세요
                 </Text>

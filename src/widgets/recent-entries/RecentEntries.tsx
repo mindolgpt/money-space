@@ -11,6 +11,7 @@ import {
 import { router } from 'expo-router'
 import { type LucideIcon, Utensils, ShoppingCart, Car, Coffee, Film, Pill, Wallet, FileText, Edit3, Trash2 } from 'lucide-react-native'
 import { removeEntryLocally, type Entry } from '@/entities/entry'
+import { colors } from '@/shared/lib/colors'
 
 type Props = {
   entries: Entry[]
@@ -155,17 +156,17 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
         {/* Background actions */}
         <View className="absolute inset-y-0 right-0 flex-row">
           <TouchableOpacity
-            className="w-20 bg-accent-blue items-center justify-center"
+            className="w-20 bg-accent-green items-center justify-center"
             onPress={handleEdit}
           >
-            <Edit3 size={16} color="white" />
+            <Edit3 size={16} color={colors.white} />
             <Text className="text-white text-xs mt-1">수정</Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="w-20 bg-accent-red items-center justify-center"
             onPress={handleDelete}
           >
-            <Trash2 size={16} color="white" />
+            <Trash2 size={16} color={colors.white} />
             <Text className="text-white text-xs mt-1">삭제</Text>
           </TouchableOpacity>
         </View>
@@ -175,7 +176,7 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
             className="w-20 bg-accent-red items-center justify-center"
             onPress={handleDelete}
           >
-            <Trash2 size={16} color="white" />
+            <Trash2 size={16} color={colors.white} />
             <Text className="text-white text-xs mt-1">삭제</Text>
           </TouchableOpacity>
         </View>
@@ -190,10 +191,10 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
             onPress={handlePress}
           >
             <View className="flex-row items-center py-3.5 px-4 border-b border-border bg-bg-secondary">
-              <View className={`w-10 h-10 rounded-xl items-center justify-center mr-3 ${getCategoryColor(item.categoryId)}`}>
+              <View className={`w-10 h-10 rounded-full items-center justify-center mr-3 ${getCategoryColor(item.categoryId)}`}>
                 {(() => {
                   const IconComponent = getCategoryIcon(item.categoryId)
-                  return <IconComponent size={16} color="#86868B" />
+                  return <IconComponent size={16} color={colors.textTertiary} />
                 })()}
               </View>
               <View className="flex-1">
@@ -234,12 +235,12 @@ export function RecentEntries({ entries }: Props) {
         </TouchableOpacity>
       </View>
       {displayEntries.length === 0 ? (
-        <View className="bg-bg-secondary rounded-2xl py-8 items-center border border-border">
-          <FileText size={32} color="#C7C7CC" className="mb-2" />
+          <View className="bg-bg-secondary rounded-lg py-8 items-center border border-border">
+          <FileText size={32} color={colors.textTertiary} className="mb-2" />
           <Text className="text-sm text-text-tertiary">첫 기록을 남겨보세요</Text>
         </View>
       ) : (
-        <View className="bg-bg-secondary rounded-2xl overflow-hidden border border-border">
+          <View className="bg-bg-secondary rounded-lg overflow-hidden border border-border">
           <FlatList
             data={displayEntries}
             keyExtractor={(item) => item.id}

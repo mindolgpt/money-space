@@ -7,13 +7,15 @@ import {
   Switch,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native'
 import { X } from 'lucide-react-native'
+import { colors } from '@/shared/lib/colors'
 import { Button } from '@/shared/ui'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useCreateEntry, EntryType, PaymentMethod, CreateEntryInput } from '@/entities/entry'
 import { useSetLastUsedCategory } from '@/entities/category'
-import { AmountInput } from '@/features/entry/add-entry/ui/AmountInput'
 import { CategoryPicker } from '@/features/entry/add-entry/ui/CategoryPicker'
 import { PaymentMethodSelector } from '@/features/entry/add-entry/ui/PaymentMethodSelector'
 import { DatePicker } from '@/features/entry/add-entry/ui/DatePicker'
@@ -188,63 +190,111 @@ export function EntryForm({ onClose, onSuccess }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-bg-primary">
+    <KeyboardAvoidingView
+      className="flex-1 bg-bg-primary"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-4 h-16 border-b border-border bg-bg-secondary/95">
+        <TouchableOpacity onPress={onModalClose}>
+          <X size={20} color={colors.textPrimary} />
+        </TouchableOpacity>
+        <Text className="text-base font-semibold text-text-primary">
+          {form.type === 'expense' ? '지출 기록' : form.type === 'income' ? '수입 기록' : '저축 기록'}
+        </Text>
+        <TouchableOpacity
+          className="bg-accent-green px-4 py-1.5 rounded-full"
+          onPress={onSave}
+          disabled={isPending || !form.amount || !form.categoryId}
+          style={{ opacity: isPending || !form.amount || !form.categoryId ? 0.5 : 1 }}
+        >
+          <Text className="text-white text-sm font-semibold">완료</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Header */}
-        <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
-          <TouchableOpacity
-            className="w-8 h-8 rounded-full items-center justify-center"
-            onPress={onModalClose}
-          >
-            <X size={20} color="#86868B" />
-          </TouchableOpacity>
-          <Text className="text-lg font-bold text-text-primary">새 거래</Text>
-          <View style={{ width: 32 }} />
+        {/* Type Selector Pills */}
+        <View className="flex-row gap-2 px-4 pt-4 pb-2">
+          {ENTRY_TYPES.map((t) => (
+            <TouchableOpacity
+              key={t.key}
+              className={`px-4 py-1.5 rounded-full ${
+                form.type === t.key ? 'bg-accent-green' : 'bg-bg-tertiary'
+              }`}
+              onPress={() => {
+                onFieldChange('type', t.key)
+                onFieldChange('categoryId', '')
+              }}
+            >
+              <Text
+                className={`text-xs font-semibold ${
+                  form.type === t.key ? 'text-white' : 'text-text-secondary'
+                }`}
+              >
+                {t.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        <View className="p-4">
-          {/* Type Selector */}
-          <View className="flex-row gap-2 mb-4">
-            {ENTRY_TYPES.map((t) => (
-              <TouchableOpacity
-                key={t.key}
-                className={`flex-1 py-3 rounded-xl items-center ${
-                  form.type === t.key ? 'bg-accent-blue' : 'bg-bg-tertiary'
-                }`}
-                onPress={() => {
-                  onFieldChange('type', t.key)
-                  onFieldChange('categoryId', '')
-                }}
-              >
-                <Text
-                  className={`text-sm font-medium ${
-                    form.type === t.key ? 'text-text-inverse' : 'text-text-secondary'
-                  }`}
-                >
-                  {t.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+        {/* Amount - Large Centered */}
+        <View className="items-center py-8 px-4">
+          <Text className="text-sm font-medium text-text-secondary tracking-widest uppercase mb-3">금액</Text>
+          <View className="flex-row items-baseline">
+            <Text className="text-3xl font-bold text-accent-green mr-1">₩</Text>
+            <TextInput
+              className="text-[36px] font-bold text-text-primary"
+              style={{ letterSpacing: -0.72 }}
+              placeholder="0"
+              keyboardType="numeric"
+              value={formatAmountDisplay(form.amount)}
+              onChangeText={onAmountChange}
+              placeholderTextColor={colors.textTertiary}
+            />
           </View>
+        </View>
 
-          {/* Amount */}
-          <AmountInput
-            value={form.amount}
-            displayValue={formatAmountDisplay(form.amount)}
-            onChange={onAmountChange}
-          />
-
-          {/* Category */}
+        <View className="px-4">
+          {/* Category Grid */}
           <CategoryPicker
             type={form.type}
             selectedId={form.categoryId}
             onSelect={(id) => onFieldChange('categoryId', id)}
           />
+
+          {/* Shared Toggle */}
+          <View className="flex-row items-center justify-between py-4 px-4 mb-4 rounded-lg bg-bg-tertiary border border-border">
+            <View className="flex-1 mr-3">
+              <Text className="text-sm font-medium text-text-primary">피드에 공유하기</Text>
+              <Text className="text-xs text-text-tertiary mt-0.5">
+                가족과 거래를 공유합니다
+              </Text>
+            </View>
+            <Switch
+              value={form.isShared}
+              onValueChange={(v) => onFieldChange('isShared', v)}
+              trackColor={{ false: colors.bgElevated, true: colors.accentGreen }}
+              thumbColor="white"
+            />
+          </View>
+
+          {/* Description */}
+          <View className="mb-4">
+            <TextInput
+              className="bg-transparent border-b border-border py-3 text-base text-text-primary"
+              placeholder="어디에 쓰셨나요?"
+              placeholderTextColor={colors.textTertiary + '66'}
+              value={form.note}
+              onChangeText={(t) => {
+                if (t.length <= 500) onFieldChange('note', t)
+              }}
+            />
+          </View>
 
           {/* Date */}
           <DatePicker
@@ -283,42 +333,6 @@ export function EntryForm({ onClose, onSuccess }: Props) {
             }}
           />
 
-          {/* Note */}
-          <View className="mb-4">
-            <View className="flex-row justify-between mb-2">
-              <Text className="text-sm text-text-secondary">메모</Text>
-              <Text className="text-xs text-text-tertiary">{form.note.length}/500</Text>
-            </View>
-            <TextInput
-              className="input min-h-[80px]"
-              placeholder="메모를 입력하세요"
-              placeholderTextColor="#C7C7CC"
-              value={form.note}
-              onChangeText={(t) => {
-                if (t.length <= 500) onFieldChange('note', t)
-              }}
-              multiline
-              numberOfLines={3}
-              textAlignVertical="top"
-            />
-          </View>
-
-          {/* Shared Toggle */}
-          <View className="flex-row items-center justify-between mb-4 py-3 border-b border-border">
-            <View>
-              <Text className="text-sm font-medium text-text-primary">가족 공유</Text>
-              <Text className="text-xs text-text-tertiary mt-0.5">
-                가족과 거래를 공유합니다
-              </Text>
-            </View>
-            <Switch
-              value={form.isShared}
-              onValueChange={(v) => onFieldChange('isShared', v)}
-              trackColor={{ false: '#E8E8ED', true: '#34C759' }}
-              thumbColor="white"
-            />
-          </View>
-
           {/* Recurring Toggle */}
           <View className="flex-row items-center justify-between mb-6 py-3 border-b border-border">
             <View>
@@ -330,7 +344,7 @@ export function EntryForm({ onClose, onSuccess }: Props) {
             <Switch
               value={form.isRecurring}
               onValueChange={(v) => onFieldChange('isRecurring', v)}
-              trackColor={{ false: '#E8E8ED', true: '#34C759' }}
+              trackColor={{ false: colors.bgElevated, true: colors.accentGreen }}
               thumbColor="white"
             />
           </View>
@@ -347,6 +361,6 @@ export function EntryForm({ onClose, onSuccess }: Props) {
           </Button>
         </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   )
 }

@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle, withSpring, withTiming, withSequence } from
 import { useCategories, useDeleteCategory, useReorderCategories } from '@/entities/category'
 import type { Category, CategoryType } from '@/entities/category'
 import { CategoryCreateModal , CategoryEditModal } from '@/features/category/category-modal'
+import { colors } from '@/shared/lib/colors'
 import { X, ChevronUp, ChevronDown } from 'lucide-react-native'
 
 const TABS: { key: CategoryType; label: string }[] = [
@@ -89,7 +90,7 @@ export function CategoryManager({ onClose }: Props) {
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity onPress={onClose}>
-          <Text className="text-accent-blue text-base">닫기</Text>
+          <Text className="text-accent-green text-base">닫기</Text>
         </TouchableOpacity>
         <Text className="text-lg font-bold text-text-primary">카테고리 관리</Text>
         <View className="flex-row gap-2">
@@ -98,18 +99,18 @@ export function CategoryManager({ onClose }: Props) {
               onPress={() => setIsDragging(true)}
               className="px-3 py-1.5 rounded-lg bg-bg-tertiary"
             >
-              <Text className="text-accent-blue text-sm font-medium">순서 편집</Text>
+              <Text className="text-accent-green text-sm font-medium">순서 편집</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               onPress={() => setIsDragging(false)}
-              className="px-3 py-1.5 rounded-lg bg-accent-blue"
+              className="px-3 py-1.5 rounded-lg bg-accent-green"
             >
               <Text className="text-white text-sm font-medium">완료</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity onPress={() => setShowCreateModal(true)}>
-            <Text className="text-accent-blue text-base">+ 추가</Text>
+            <Text className="text-accent-green text-base">+ 추가</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -120,7 +121,7 @@ export function CategoryManager({ onClose }: Props) {
           <TouchableOpacity
             key={tab.key}
             className={`px-5 py-2 rounded-full ${
-              selectedType === tab.key ? 'bg-accent-blue' : 'bg-bg-tertiary'
+              selectedType === tab.key ? 'bg-accent-green' : 'bg-bg-tertiary'
             }`}
             onPress={() => onTypeTabChange(tab.key)}
           >
@@ -192,7 +193,7 @@ function CategoryItem({ category, onPress, onDelete, isDragging }: CategoryItemP
   return (
     <Animated.View style={animStyle}>
       <TouchableOpacity
-        className="flex-row items-center justify-between py-3.5 px-4 rounded-xl bg-bg-secondary mb-2"
+        className="flex-row items-center justify-between py-3.5 px-4 rounded-lg bg-bg-secondary mb-2"
         onPress={onPress}
         onLongPress={onDelete}
       >
@@ -213,7 +214,7 @@ function CategoryItem({ category, onPress, onDelete, isDragging }: CategoryItemP
               className="w-8 h-8 rounded-full bg-accent-red/10 items-center justify-center"
               onPress={onDelete}
             >
-              <X size={16} color="#FF3B30" />
+              <X size={16} color={colors.accentRed} />
             </TouchableOpacity>
           )}
           <Text className="text-text-tertiary">⋮⋮</Text>
@@ -244,30 +245,30 @@ function DraggableCategoryItem({ category, index, total, onMove }: DraggableCate
 
   return (
     <Animated.View style={[animStyle, { zIndex: 10 }]}>
-      <View className="flex-row items-center justify-between py-3.5 px-4 rounded-xl bg-accent-blue/10 border border-accent-blue/30 mb-2">
+      <View className="flex-row items-center justify-between py-3.5 px-4 rounded-lg bg-accent-green/10 border border-accent-green/30 mb-2">
         <View className="flex-row items-center flex-1">
           <Text className="text-xl mr-3">{category.icon}</Text>
           <View className="flex-1">
             <Text className="text-base font-medium text-text-primary">
               {category.name}
             </Text>
-            <Text className="text-xs text-accent-blue">순서 변경 중...</Text>
+            <Text className="text-xs text-accent-green">순서 변경 중...</Text>
           </View>
         </View>
         <View className="flex-row items-center gap-1">
           <TouchableOpacity
-            className={`w-9 h-9 rounded-full items-center justify-center ${index === 0 ? 'bg-bg-tertiary' : 'bg-accent-blue/20'}`}
+            className={`w-9 h-9 rounded-full items-center justify-center ${index === 0 ? 'bg-bg-tertiary' : 'bg-accent-green/20'}`}
             onPress={() => onMove(-1)}
             disabled={index === 0}
           >
-            <ChevronUp size={20} color={index === 0 ? '#C7C7CC' : '#007AFF'} />
+            <ChevronUp size={20} color={index === 0 ? colors.textTertiary : colors.accentGreen} />
           </TouchableOpacity>
           <TouchableOpacity
-            className={`w-9 h-9 rounded-full items-center justify-center ${index === total - 1 ? 'bg-bg-tertiary' : 'bg-accent-blue/20'}`}
+            className={`w-9 h-9 rounded-full items-center justify-center ${index === total - 1 ? 'bg-bg-tertiary' : 'bg-accent-green/20'}`}
             onPress={() => onMove(1)}
             disabled={index === total - 1}
           >
-            <ChevronDown size={20} color={index === total - 1 ? '#C7C7CC' : '#007AFF'} />
+            <ChevronDown size={20} color={index === total - 1 ? colors.textTertiary : colors.accentGreen} />
           </TouchableOpacity>
         </View>
       </View>

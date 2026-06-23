@@ -11,6 +11,7 @@ import { BudgetVsActual } from '@/widgets/budget-vs-actual'
 import { MonthlyComparisonChart, useMonthlyComparison } from '@/widgets/monthly-comparison'
 import { PeriodSelector, getPeriodDisplayLabel, getDateRangeForPeriod, type PeriodType } from '@/widgets/period-selector'
 import { exportToPdf } from '@/shared/lib/export-helper'
+import { colors } from '@/shared/lib/colors'
 import { Card, AmountText } from '@/shared/ui'
 
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
@@ -176,14 +177,14 @@ export function StatisticsScreen() {
       <View className="px-5 pt-6 pb-2 flex-row items-center justify-between">
         <Text className="text-xl font-bold text-text-primary tracking-tight">통계</Text>
         <TouchableOpacity
-          className="px-3 py-1.5 bg-bg-tertiary rounded-xl flex-row items-center"
+          className="px-3 py-1.5 bg-bg-tertiary rounded-lg flex-row items-center"
           onPress={() => setShowExportMenu(!showExportMenu)}
         >
-          <Download size={14} color="#86868B" />
+          <Download size={14} color={colors.textTertiary} />
           <Text className="text-xs text-text-secondary font-medium ml-1.5">내보내기</Text>
         </TouchableOpacity>
         {showExportMenu && (
-          <View className="absolute top-full right-0 mt-2 bg-bg-secondary rounded-xl shadow-md z-10 border border-border">
+          <View className="absolute top-full right-0 mt-2 bg-bg-secondary rounded-lg shadow-md z-10 border border-border">
             <TouchableOpacity className="px-4 py-3 border-b border-border" onPress={() => { handleExportCSV(); setShowExportMenu(false) }}>
               <Text className="text-sm text-text-primary font-medium">CSV 내보내기</Text>
             </TouchableOpacity>
@@ -201,13 +202,13 @@ export function StatisticsScreen() {
       {/* Month Navigation */}
       <View className="flex-row items-center justify-between px-4 mb-4">
         <TouchableOpacity className="w-9 h-9 rounded-full items-center justify-center bg-bg-tertiary" onPress={() => changeMonth(-1)}>
-          <ChevronLeft size={20} color="#86868B" />
+          <ChevronLeft size={20} color={colors.textTertiary} />
         </TouchableOpacity>
         <Text className="text-base font-bold text-text-primary">
           {periodType === 'year' ? `${year}년` : `${year}년 ${MONTHS[month - 1]}`}
         </Text>
         <TouchableOpacity className="w-9 h-9 rounded-full items-center justify-center bg-bg-tertiary" onPress={() => changeMonth(1)}>
-          <ChevronRight size={20} color="#86868B" />
+          <ChevronRight size={20} color={colors.textTertiary} />
         </TouchableOpacity>
       </View>
 
@@ -220,14 +221,14 @@ export function StatisticsScreen() {
           <View className="flex-row">
             <View className="flex-1 items-center">
               <View className="w-9 h-9 rounded-lg bg-semantic-income/10 items-center justify-center mb-1.5">
-                <TrendingUp size={16} color="#34C759" />
+                <TrendingUp size={16} color={colors.accentGreen} />
               </View>
               <Text className="text-xs text-text-secondary mb-1">총 수입</Text>
               <AmountText amount={income} type="income" className="text-sm" showSign={false} />
             </View>
             <View className="flex-1 items-center">
               <View className="w-9 h-9 rounded-lg bg-semantic-expense/10 items-center justify-center mb-1.5">
-                <TrendingDown size={16} color="#FF3B30" />
+                <TrendingDown size={16} color={colors.accentRed} />
               </View>
               <Text className="text-xs text-text-secondary mb-1">총 지출</Text>
               <AmountText amount={expense} type="expense" className="text-sm" showSign={false} />
@@ -283,7 +284,7 @@ export function StatisticsScreen() {
               return (
                 <View key={item.cat} className="flex-row items-center mb-3 last:mb-0">
                   <Text className="text-xs text-text-tertiary w-4 font-medium">{index + 1}</Text>
-                  <FileText size={16} color="#86868B" className="mr-2" />
+                  <FileText size={16} color={colors.textTertiary} className="mr-2" />
                   <Text className="text-sm text-text-primary flex-1">{item.cat}</Text>
                   <View className="flex-1 h-1.5 bg-bg-tertiary rounded-full overflow-hidden mr-2">
                     <View className="h-full bg-semantic-expense rounded-full" style={{ width: `${pct}%` }} />

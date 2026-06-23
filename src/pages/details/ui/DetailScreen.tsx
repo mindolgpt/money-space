@@ -15,13 +15,14 @@ import { X, ArrowLeft, Trash2, Share2, Edit3 } from 'lucide-react-native'
 import { useEntry, useDeleteEntry } from '@/entities/entry'
 import { useCategory } from '@/entities/category'
 import { EditEntryModal } from '@/features/entry/edit-entry'
+import { colors } from '@/shared/lib/colors'
 import { Card, Badge } from '@/shared/ui'
 
 function DetailRow({ label, value, isLink }: { label: string; value: string; isLink?: boolean }) {
   return (
     <View className="flex-row py-3.5 px-0">
       <Text className="text-sm text-text-secondary w-20">{label}</Text>
-      <Text className={`text-sm flex-1 ${isLink ? 'text-accent-blue underline' : 'text-text-primary'}`} numberOfLines={isLink ? 1 : undefined}>
+      <Text className={`text-sm flex-1 ${isLink ? 'text-accent-green underline' : 'text-text-primary'}`} numberOfLines={isLink ? 1 : undefined}>
         {value}
       </Text>
     </View>
@@ -73,7 +74,7 @@ export function DetailScreen() {
       <View className="flex-1 bg-bg-primary items-center justify-center">
         <Text className="text-text-tertiary mb-4">내역을 찾을 수 없습니다</Text>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text className="text-accent-blue font-semibold">뒤로 가기</Text>
+          <Text className="text-accent-green font-semibold">뒤로 가기</Text>
         </TouchableOpacity>
       </View>
     )
@@ -89,11 +90,11 @@ export function DetailScreen() {
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-3 bg-bg-secondary border-b border-border">
         <TouchableOpacity onPress={() => router.back()}>
-          <ArrowLeft size={22} color="#007AFF" />
+          <ArrowLeft size={22} color={colors.accentGreen} />
         </TouchableOpacity>
         <Text className="font-semibold text-text-primary">내역 상세</Text>
         <TouchableOpacity onPress={() => setShowEditModal(true)}>
-          <Edit3 size={20} color="#007AFF" />
+          <Edit3 size={20} color={colors.accentGreen} />
         </TouchableOpacity>
       </View>
 
@@ -101,7 +102,7 @@ export function DetailScreen() {
         {/* Amount Card */}
         <View className="items-center py-10 px-4">
           <Badge
-            variant={entry.type === 'income' ? 'green' : entry.type === 'saving' ? 'blue' : 'red'}
+            variant={entry.type === 'income' ? 'green' : entry.type === 'saving' ? 'green' : 'red'}
             label={typeLabel}
           />
           <Text className="text-[40px] font-bold text-text-primary mt-4 tracking-tight">
@@ -160,17 +161,17 @@ export function DetailScreen() {
         {/* Action Buttons */}
         <View className="flex-row gap-3 px-4 mt-6">
           <TouchableOpacity
-            className="flex-1 flex-row items-center justify-center py-3.5 rounded-xl bg-bg-secondary border border-border"
+            className="flex-1 flex-row items-center justify-center py-3.5 rounded-lg bg-bg-secondary border border-border"
             onPress={onShare}
           >
-            <Share2 size={18} color="#86868B" />
+            <Share2 size={18} color={colors.textTertiary} />
             <Text className="text-sm font-semibold text-text-primary ml-2">공유</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex-1 flex-row items-center justify-center py-3.5 rounded-xl bg-semantic-expense/10"
+            className="flex-1 flex-row items-center justify-center py-3.5 rounded-lg bg-semantic-expense/10"
             onPress={onDelete}
           >
-            <Trash2 size={18} color="#FF3B30" />
+            <Trash2 size={18} color={colors.accentRed} />
             <Text className="text-sm font-semibold text-semantic-expense ml-2">삭제</Text>
           </TouchableOpacity>
         </View>
@@ -190,20 +191,21 @@ export function DetailScreen() {
             />
           )}
           <TouchableOpacity
-            className="absolute top-16 right-6 w-10 h-10 rounded-full bg-white/20 items-center justify-center"
+            className="absolute top-16 right-6 w-10 h-10 rounded-full bg-bg-secondary/20 items-center justify-center"
             onPress={() => setPhotoIndex(null)}
           >
-            <X size={20} color="white" />
+            <X size={20} color={colors.white} />
           </TouchableOpacity>
         </Pressable>
       </Modal>
 
-      <EditEntryModal
-        visible={showEditModal}
-        entry={entry}
-        onClose={() => setShowEditModal(false)}
-        onSaved={() => refetch()}
-      />
+      {showEditModal && (
+        <EditEntryModal
+          entryId={id}
+          onClose={() => setShowEditModal(false)}
+          onSuccess={() => refetch()}
+        />
+      )}
     </View>
   )
 }

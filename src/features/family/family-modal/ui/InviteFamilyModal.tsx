@@ -8,6 +8,7 @@ import {
   Share,
   ActivityIndicator,
 } from 'react-native'
+import { colors } from '@/shared/lib/colors'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useGenerateInviteCode } from '@/entities/family'
 
@@ -70,14 +71,14 @@ export function InviteFamilyModal({ familyId, familyName, onClose }: Props) {
       <View className="flex-1 bg-bg-primary">
         <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity onPress={onClose}>
-            <Text className="text-accent-blue text-base">닫기</Text>
+            <Text className="text-accent-green text-base">닫기</Text>
           </TouchableOpacity>
           <Text className="text-lg font-bold text-text-primary">초대하기</Text>
           <View style={{ width: 50 }} />
         </View>
 
         <View className="flex-1 items-center justify-center p-6">
-          <View className="w-24 h-24 rounded-full bg-accent-blue/10 items-center justify-center mb-6">
+          <View className="w-24 h-24 rounded-full bg-accent-green/10 items-center justify-center mb-6">
             <Text className="text-4xl">🎉</Text>
           </View>
 
@@ -89,7 +90,7 @@ export function InviteFamilyModal({ familyId, familyName, onClose }: Props) {
           </Text>
 
           {isPending && !inviteCode ? (
-            <ActivityIndicator size="large" color="#007AFF" />
+            <ActivityIndicator size="large" color={colors.accentGreen} />
           ) : inviteCode ? (
             <>
               <TouchableOpacity
@@ -106,7 +107,7 @@ export function InviteFamilyModal({ familyId, familyName, onClose }: Props) {
               </Text>
 
               <TouchableOpacity
-                className="btn-primary py-4 px-8 rounded-xl mb-3 w-full"
+                className="bg-accent-green py-4 px-8 rounded-lg mb-3 w-full"
                 onPress={onSharePress}
               >
                 <Text className="text-white font-semibold text-base text-center">
@@ -118,7 +119,7 @@ export function InviteFamilyModal({ familyId, familyName, onClose }: Props) {
                 className="py-3 items-center"
                 onPress={onRefreshCode}
               >
-                <Text className="text-accent-blue text-sm">새 코드 생성</Text>
+                <Text className="text-accent-green text-sm">새 코드 생성</Text>
               </TouchableOpacity>
             </>
           ) : null}

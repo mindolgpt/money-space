@@ -3,6 +3,7 @@ import { View, Text, TextInput } from 'react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useJoinFamily } from '@/entities/family'
 import { router } from 'expo-router'
+import { colors } from '@/shared/lib/colors'
 import { Button } from '@/shared/ui'
 
 export function AcceptInvite({ code: initialCode }: { code: string }) {
@@ -47,7 +48,7 @@ export function AcceptInvite({ code: initialCode }: { code: string }) {
           error ? 'border border-semantic-expense' : ''
         }`}
         placeholder="ABCDEF"
-        placeholderTextColor="#C7C7CC"
+        placeholderTextColor={colors.textTertiary}
         value={code}
         onChangeText={onCodeChange}
         autoCapitalize="characters"

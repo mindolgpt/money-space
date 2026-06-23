@@ -9,6 +9,7 @@ import Animated, {
 import { useEffect } from 'react'
 import * as Haptics from 'expo-haptics'
 import { AlertTriangle, FileText } from 'lucide-react-native'
+import { colors } from '@/shared/lib/colors'
 
 type Props = {
   categoryName: string
@@ -78,12 +79,12 @@ export function BudgetProgress({
       <Animated.View style={containerAnim}>
         <View className="flex-row justify-between items-center mb-2">
           <View className="flex-row items-center">
-            <FileText size={16} color="#86868B" className="mr-1.5" />
+            <FileText size={16} color={colors.textTertiary} className="mr-1.5" />
             <Text className="text-sm font-medium text-text-primary">
               {categoryName}
             </Text>
             {isOver && (
-              <AlertTriangle size={12} color="#FF3B30" className="ml-1.5" />
+              <AlertTriangle size={12} color={colors.accentRed} className="ml-1.5" />
             )}
           </View>
           <Text

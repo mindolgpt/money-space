@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { useAuthStore } from '@/features/auth/auth-manager'
+import { colors } from '@/shared/lib/colors'
 import { useUserProfile, useUpdateProfile, useUploadAvatar } from '@/entities/user'
 
 export function ProfileSettings() {
@@ -97,7 +98,7 @@ export function ProfileSettings() {
                   <Image source={{ uri: profile.avatarUrl }} className="w-full h-full" />
                 </View>
               ) : (
-                <View className="w-16 h-16 rounded-full bg-accent-blue items-center justify-center">
+                <View className="w-16 h-16 rounded-full bg-accent-green items-center justify-center">
                   <Text className="text-white text-xl font-semibold">
                     {profile?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || '?'}
                   </Text>
@@ -105,7 +106,7 @@ export function ProfileSettings() {
               )}
               {isUploading && (
                 <View className="absolute inset-0 bg-black/50 rounded-full items-center justify-center">
-                  <ActivityIndicator color="white" />
+                  <ActivityIndicator color={colors.white} />
                 </View>
               )}
             </TouchableOpacity>
@@ -114,7 +115,7 @@ export function ProfileSettings() {
                 {profile?.name || user?.name || '사용자'}
               </Text>
               <Text className="text-sm text-text-secondary">{user?.email}</Text>
-              <Text className="text-xs text-accent-blue mt-1">프로필 사진 변경</Text>
+              <Text className="text-xs text-accent-green mt-1">프로필 사진 변경</Text>
             </View>
           </View>
 
@@ -123,22 +124,22 @@ export function ProfileSettings() {
           <TextInput
             className="input mb-3"
             placeholder="이름을 입력하세요"
-            placeholderTextColor="#C7C7CC"
+            placeholderTextColor={colors.textTertiary}
             value={name}
             onChangeText={onNameChange}
           />
 
           <TouchableOpacity
-            className={`py-3 rounded-xl items-center ${
+            className={`py-3 rounded-lg items-center ${
               isDirty && name.trim()
-                ? 'bg-accent-blue'
+                ? 'bg-accent-green'
                 : 'bg-bg-tertiary'
             }`}
             onPress={onSave}
             disabled={!isDirty || !name.trim() || isPending}
           >
             {isPending ? (
-              <ActivityIndicator color="white" />
+              <ActivityIndicator color={colors.white} />
             ) : (
               <Text
                 className={`font-semibold ${

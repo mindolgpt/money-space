@@ -7,10 +7,10 @@ type SectionHeaderProps = {
 
 export function SectionHeader({ title, action }: SectionHeaderProps) {
   return (
-    <View className="flex-row items-center justify-between px-5 py-3">
-      <Text className="text-sm font-semibold text-text-primary tracking-tight">{title}</Text>
+    <View className="flex-row items-center justify-between px-5 py-4">
+      <Text className="text-lg font-semibold text-text-primary">{title}</Text>
       {action && (
-        <Text className="text-sm text-accent-blue font-semibold" onPress={action.onPress}>
+        <Text className="text-sm font-medium text-accent-green" onPress={action.onPress}>
           {action.label}
         </Text>
       )}

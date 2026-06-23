@@ -1,6 +1,7 @@
 import { TouchableOpacity } from 'react-native'
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { cn } from '@/shared/lib/cn'
+import { colors } from '@/shared/lib/colors'
 
 type ToggleProps = {
   value: boolean
@@ -12,9 +13,7 @@ export function Toggle({ value, onToggle, disabled }: ToggleProps) {
   const thumbStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: withTiming(value ? 20 : 0, {
-          duration: 250,
-        }),
+        translateX: withTiming(value ? 20 : 0, { duration: 250 }),
       },
     ],
   }))
@@ -22,7 +21,7 @@ export function Toggle({ value, onToggle, disabled }: ToggleProps) {
   return (
     <TouchableOpacity
       className={cn(
-        'w-[51px] h-[31px] rounded-full justify-center px-[2px]',
+        'w-11 h-6 rounded-full justify-center px-0.5',
         value ? 'bg-accent-green' : 'bg-bg-tertiary',
         disabled && 'opacity-50'
       )}
@@ -33,10 +32,10 @@ export function Toggle({ value, onToggle, disabled }: ToggleProps) {
       <Animated.View
         style={[
           {
-            width: 27,
-            height: 27,
-            borderRadius: 14,
-            backgroundColor: '#FFFFFF',
+            width: 20,
+            height: 20,
+            borderRadius: 10,
+            backgroundColor: colors.white,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.15,

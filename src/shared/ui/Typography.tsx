@@ -1,7 +1,7 @@
 import { Text, type TextProps } from 'react-native'
 import { cn } from '@/shared/lib/cn'
 
-type TypographyVariant = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
+type TypographyVariant = 'headline-xl' | 'headline-lg' | 'headline-md' | 'body-lg' | 'body-md' | 'label-md' | 'label-sm' | 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 type TypographyWeight = 'normal' | 'medium' | 'semibold' | 'bold'
 type TypographyColor = 'primary' | 'secondary' | 'tertiary' | 'muted' | 'inverse' | 'accent' | 'income' | 'expense' | 'saving'
 
@@ -14,6 +14,13 @@ interface TypographyProps extends TextProps {
 }
 
 const variantClasses: Record<TypographyVariant, string> = {
+  'headline-xl': 'text-headline-xl',
+  'headline-lg': 'text-headline-lg',
+  'headline-md': 'text-headline-md',
+  'body-lg': 'text-body-lg',
+  'body-md': 'text-body-md',
+  'label-md': 'text-label-md',
+  'label-sm': 'text-label-sm',
   xs: 'text-xs',
   sm: 'text-sm',
   base: 'text-base',
@@ -22,6 +29,12 @@ const variantClasses: Record<TypographyVariant, string> = {
   '2xl': 'text-2xl',
   '3xl': 'text-3xl',
   '4xl': 'text-4xl',
+}
+
+const variantStyles: Record<string, object> = {
+  'headline-xl': { letterSpacing: -0.72 },
+  'headline-lg': { letterSpacing: -0.24 },
+  'label-md': { letterSpacing: 0.14 },
 }
 
 const weightClasses: Record<TypographyWeight, string> = {
@@ -37,14 +50,14 @@ const colorClasses: Record<TypographyColor, string> = {
   tertiary: 'text-text-tertiary',
   muted: 'text-text-tertiary',
   inverse: 'text-text-inverse',
-  accent: 'text-accent-blue',
+  accent: 'text-accent-green',
   income: 'text-semantic-income',
   expense: 'text-semantic-expense',
   saving: 'text-semantic-saving',
 }
 
 export function Typography({
-  variant = 'base',
+  variant = 'body-md',
   weight = 'normal',
   color = 'primary',
   className = '',
@@ -60,7 +73,7 @@ export function Typography({
         colorClasses[color],
         className
       )}
-      style={style}
+      style={[variantStyles[variant], style]}
       {...props}
     >
       {children}

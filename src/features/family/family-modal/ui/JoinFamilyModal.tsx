@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
+import { colors } from '@/shared/lib/colors'
 import { useJoinFamily } from '@/entities/family'
 
 type Props = {
@@ -60,7 +61,7 @@ export function JoinFamilyModal({ onClose }: Props) {
       <View className="flex-1 bg-bg-primary">
         <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity onPress={onClose}>
-            <Text className="text-accent-blue text-base">취소</Text>
+            <Text className="text-accent-green text-base">취소</Text>
           </TouchableOpacity>
           <Text className="text-lg font-bold text-text-primary">초대 코드 입력</Text>
           <View style={{ width: 50 }} />
@@ -75,7 +76,7 @@ export function JoinFamilyModal({ onClose }: Props) {
               errorMessage ? 'border-accent-red' : isValidCode ? 'border-accent-green' : ''
             }`}
             placeholder="ABCDEF"
-            placeholderTextColor="#C7C7CC"
+            placeholderTextColor={colors.textTertiary}
             value={code}
             onChangeText={onCodeChange}
             autoCapitalize="characters"
@@ -91,13 +92,13 @@ export function JoinFamilyModal({ onClose }: Props) {
           )}
 
           <TouchableOpacity
-            className={`btn py-4 flex-row justify-center items-center ${
-              code.length !== 6 || isPending ? 'bg-accent-blue/60' : 'btn-primary'
+            className={`py-4 flex-row justify-center items-center rounded-lg ${
+              code.length !== 6 || isPending ? 'bg-accent-green/60' : 'bg-accent-green'
             }`}
             onPress={onJoin}
             disabled={code.length !== 6 || isPending}
           >
-            {isPending ? <ActivityIndicator color="white" className="mr-2" /> : null}
+            {isPending ? <ActivityIndicator color={colors.white} className="mr-2" /> : null}
             <Text className="text-white font-semibold text-base">
               {isPending ? '참여 중...' : '참여하기'}
             </Text>

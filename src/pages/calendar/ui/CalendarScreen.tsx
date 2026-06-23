@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Film, Pill, Wallet, FileText } from 'lucide-
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useEntries, type Entry } from '@/entities/entry'
 import { useCategories } from '@/entities/category'
+import { colors } from '@/shared/lib/colors'
 
 const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토']
 type ViewMode = 'month' | 'week'
@@ -100,7 +101,7 @@ export function CalendarScreen() {
       </View>
 
       {/* Month Summary */}
-      <View className="bg-bg-secondary mx-4 rounded-2xl border border-border p-4 mb-3">
+      <View className="bg-bg-secondary mx-4 rounded-lg border border-border p-4 mb-3">
         <View className="flex-row">
           <View className="flex-1 items-center">
             <Text className="text-xs text-text-secondary font-medium">수입</Text>
@@ -112,7 +113,7 @@ export function CalendarScreen() {
           </View>
           <View className="flex-1 items-center">
             <Text className="text-xs text-text-secondary font-medium">저축</Text>
-            <Text className="font-semibold text-accent-blue mt-1">{formatAmount(monthSaving)}</Text>
+            <Text className="font-semibold text-accent-green mt-1">{formatAmount(monthSaving)}</Text>
           </View>
         </View>
       </View>
@@ -120,17 +121,17 @@ export function CalendarScreen() {
       {/* Month Navigation */}
       <View className="flex-row items-center justify-between mx-4 mb-3">
         <View className="flex-row items-center gap-2">
-          <TouchableOpacity className="px-3 h-9 rounded-full items-center justify-center bg-accent-blue" onPress={goToToday}>
+          <TouchableOpacity className="px-3 h-9 rounded-full items-center justify-center bg-accent-green" onPress={goToToday}>
             <Text className="text-sm text-white font-semibold">오늘</Text>
           </TouchableOpacity>
         </View>
         <Text className="text-lg font-semibold text-text-primary">{year}년 {month}월</Text>
         <View className="flex-row items-center gap-2">
           <TouchableOpacity className="w-10 h-10 rounded-full items-center justify-center bg-bg-tertiary" onPress={() => changeMonth(-1)}>
-            <ChevronLeft size={20} color="#86868B" />
+            <ChevronLeft size={20} color={colors.textTertiary} />
           </TouchableOpacity>
           <TouchableOpacity className="w-10 h-10 rounded-full items-center justify-center bg-bg-tertiary" onPress={() => changeMonth(1)}>
-            <ChevronRight size={20} color="#86868B" />
+            <ChevronRight size={20} color={colors.textTertiary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -154,11 +155,11 @@ export function CalendarScreen() {
       </View>
 
       {/* Calendar Grid */}
-      <View className="bg-bg-secondary mx-4 rounded-2xl border border-border p-4 mb-4">
+      <View className="bg-bg-secondary mx-4 rounded-lg border border-border p-4 mb-4">
         <View className="flex-row mb-2">
           {WEEK_DAYS.map((day, index) => (
             <View key={day} className="flex-1 items-center py-2">
-              <Text className={`text-xs font-medium ${index === 0 ? 'text-semantic-expense' : index === 6 ? 'text-accent-blue' : 'text-text-secondary'}`}>
+              <Text className={`text-xs font-medium ${index === 0 ? 'text-semantic-expense' : index === 6 ? 'text-accent-purple' : 'text-text-secondary'}`}>
                 {day}
               </Text>
             </View>
@@ -184,7 +185,7 @@ export function CalendarScreen() {
                   className="w-[14.28%] aspect-square items-center justify-center"
                   onPress={() => setSelectedDay(isSelected ? null : day)}
                 >
-                  <View className={`w-9 h-9 rounded-full items-center justify-center ${isToday ? 'bg-accent-blue' : isSelected ? 'bg-bg-tertiary' : ''}`}>
+                  <View className={`w-9 h-9 rounded-full items-center justify-center ${isToday ? 'bg-accent-green' : isSelected ? 'bg-bg-tertiary' : ''}`}>
                     <Text className={`text-base font-medium ${isToday ? 'text-white' : hasExpense || hasIncome ? 'text-text-primary' : 'text-text-secondary'}`}>
                       {day}
                     </Text>
@@ -229,7 +230,7 @@ export function CalendarScreen() {
                       }
                     }}
                   >
-                    <View className={`w-9 h-9 rounded-full items-center justify-center ${isToday ? 'bg-accent-blue' : isSelected ? 'bg-bg-tertiary' : ''}`}>
+                    <View className={`w-9 h-9 rounded-full items-center justify-center ${isToday ? 'bg-accent-green' : isSelected ? 'bg-bg-tertiary' : ''}`}>
                       <Text className={`text-sm font-medium ${isToday ? 'text-white' : isCurrentMonth ? 'text-text-primary' : 'text-text-tertiary'}`}>
                         {weekDate.getDate()}
                       </Text>
@@ -248,15 +249,15 @@ export function CalendarScreen() {
 
       {/* Selected Day Detail */}
       {selectedDay && (
-        <View className="bg-bg-secondary mx-4 rounded-2xl border border-border p-5 mb-4">
+        <View className="bg-bg-secondary mx-4 rounded-lg border border-border p-5 mb-4">
           <Text className="text-base font-semibold text-text-primary mb-4">{month}월 {selectedDay}일</Text>
 
           <View className="flex-row gap-3 mb-4">
-            <View className="flex-1 items-center py-3 rounded-xl bg-bg-tertiary">
+            <View className="flex-1 items-center py-3 rounded-md bg-bg-tertiary">
               <Text className="text-xs text-text-secondary mb-1 font-medium">지출</Text>
               <Text className="font-semibold text-semantic-expense">{selectedDayExpense > 0 ? `₩ ${selectedDayExpense.toLocaleString()}` : '-'}</Text>
             </View>
-            <View className="flex-1 items-center py-3 rounded-xl bg-bg-tertiary">
+            <View className="flex-1 items-center py-3 rounded-md bg-bg-tertiary">
               <Text className="text-xs text-text-secondary mb-1 font-medium">수입</Text>
               <Text className="font-semibold text-semantic-income">{selectedDayIncome > 0 ? `₩ ${selectedDayIncome.toLocaleString()}` : '-'}</Text>
             </View>
@@ -275,7 +276,7 @@ export function CalendarScreen() {
                   >
                     <View className="flex-row items-center gap-2 flex-1">
                       <View className="w-5 h-5 items-center justify-center">
-                        <IconComp size={16} color="#86868B" />
+                        <IconComp size={16} color={colors.textTertiary} />
                       </View>
                       <View className="flex-1">
                         <Text className="text-sm text-text-primary" numberOfLines={1}>{getCategoryName(entry.categoryId)}</Text>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Money-Space | 챌린지 &amp; 커뮤니티</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2e3132",
+                        "on-surface-variant": "#3c4a42",
+                        "on-surface": "#191c1d",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "on-tertiary-container": "#711419",
+                        "background": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#00422b",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "secondary": "#565e74",
+                        "inverse-on-surface": "#f0f1f2",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "error-container": "#ffdad6",
+                        "surface": "#ffffff",
+                        "on-primary-fixed-variant": "#005236",
+                        "surface-container": "#edeeef",
+                        "on-background": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-container-highest": "#e1e3e4",
+                        "tertiary": "#a43a3a",
+                        "on-tertiary-fixed": "#410005",
+                        "surface-tint": "#006c49",
+                        "primary-fixed-dim": "#4edea3",
+                        "secondary-fixed": "#dae2fd",
+                        "on-secondary-container": "#5c647a",
+                        "surface-dim": "#d9dadb",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#10b981",
+                        "outline-variant": "#bbcabf",
+                        "primary": "#10b981",
+                        "outline": "#6c7a71",
+                        "tertiary-container": "#fc7c78",
+                        "surface-variant": "#f3f4f5",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#4edea3",
+                        "surface-container-low": "#f3f4f5",
+                        "primary-fixed": "#6ffbbe",
+                        "on-primary-fixed": "#002113",
+                        "on-tertiary-fixed-variant": "#842225"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "1.25rem",
+                        "stack-xs": "0.25rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "gutter": "1rem",
+                        "container-max": "1200px",
+                        "margin-desktop": "2.5rem",
+                        "stack-lg": "2rem"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #ffffff;
+            color: #191c1d;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .clean-card {
+            background: #ffffff;
+            border: 1px solid #edeeef;
+            transition: all 0.2s ease;
+        }
+        .clean-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-color: #10b981;
+        }
+        body {
+            min-height: 100dvh;
+        }
+    </style>
+</head>
+<body class="pb-24 pt-16">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-gutter h-16 w-full fixed top-0 z-50 bg-surface shadow-[0px_4px_12px_rgba(0,0,0,0.03)] transition-transform active:scale-95 duration-200">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">커뮤니티 챌린지</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity p-2 rounded-full active:scale-95">notifications</button>
+<div class="w-8 h-8 rounded-full bg-cover bg-center border border-outline-variant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDYo5Iuvkp4r25IO-JazzyWvmBtJA2Y7pXFm3s2b370H5KlLYiRZ4gsfYz1Zvsf_od7yVpFgBexx-RtiyGgdwmovnWqjC2wQjDVJWQGZAqFn82Ewc5QkX3KxOV8XSurOsLJDxAvG4n0VinfRuMUECgmu5knJJ7WyQa2akHxttLsUyvfwViUnIimQ80Q0uwcGN_ND4uxnaIkICe2_qA9gIT76cJlXeILZHOE9nqW9WVSglsphXCz-9vTd4HPewX5j861h-e1hlKcXgvZ')"></div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg max-w-container-max">
+<!-- Hero Section -->
+<section class="mb-stack-lg relative overflow-hidden rounded-xl p-8 bg-surface-container-low border border-outline-variant">
+<div class="relative z-10 max-w-xl">
+<span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-label-sm font-label-sm mb-4">커뮤니티 펄스</span>
+<h2 class="font-headline-xl text-headline-xl text-on-surface mb-4">함께 목표를 달성해요</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-6">12,400명의 멤버들이 이번 달 저축 목표를 향해 달리고 있습니다.</p>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 rounded-lg bg-primary text-white font-label-md text-label-md font-bold hover:opacity-90 transition-opacity">챌린지 만들기</button>
+<button class="px-6 py-2.5 rounded-lg border border-outline text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors">이용 방법</button>
+</div>
+</div>
+</section>
+<!-- Trending Challenges Grid -->
+<section class="mb-stack-lg">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">인기 챌린지</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">이번 주 가장 인기 있는 저축 방법</p>
+</div>
+<button class="text-primary font-label-md text-label-md hover:underline">모두 보기</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Challenge Card 1 -->
+<div class="clean-card rounded-xl overflow-hidden bg-white">
+<div class="h-44 w-full bg-cover bg-center relative" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzwPHx4WeBBov-3Ej9dfT1NTbh1B4wMAV0M4Izv5EtBKe8ElkR7ZEoWfssNuz21QlY0ijywbcIFklRfaxYumuENGw3C6cE_iJ6_k2E9CQaZ4gUwKSLRis-aM2UJczOKPmOM3YV1HeNilfelxaToWTQW3LC2WcIeSSCKz-tF_32rnJDvUQo2E11a78Mo1pID3ec-cBuYu_WTfuRz-5TMiw5-nGnkxQUqEzgyPSaFTxPkG1YUqTGwCWGLj6-ixlaaXn5qz6wFpJjVxPw')">
+<div class="absolute top-4 right-4 px-2 py-1 bg-white/80 backdrop-blur-md rounded text-on-surface font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">group</span> 2.4k
+                        </div>
+</div>
+<div class="p-6">
+<h4 class="font-headline-md text-on-surface mb-2">커피 안 마시기 일주일</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-2">매일 마시는 커피 대신 저축을 선택하세요. 주 평균 45달러를 절약합니다.</p>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCf6CMR9MYOlvVEvVcjYYhBpup53hae0wDDbZJUS7ue0AAcdI48e12uxdSYnw7kx7biaD4yqpY3c5CSZS63H0Io1jGpa_aM8IxqioejliYy87lHzZclUbpFCAt8ufQYxl2SDzNu3oPeTBe_Excb2yjxhR0kEZ2JJJOBE29LQIpl2EHHiAFkmD3wii_tH0tWj2Nr0BIpxTmxg70y8OBLRlY1bwrvu6RY1M7j3KcPOtIyYRcvTxtW6UimN7h_F7Vity5JVWnuE0LUyTp4')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfm0RejGaKs1kglhSklc570qe9MvQHwPT6Vps87YH0xRygmhcCYrnX-DU4yzGDuVjjVbNebu7flfQ-mIeqMEwAKxsJHU8VHxWxXZYpPGDAn2cT-hmTBJbryANv5T-tGIS6Mrm4hOjXZxQbXQkTaz726N3o-_4Tunx3QeBTlj2rHX5f-FRVo_pzSR3VovCVcd6B0snR6jP3FewoUlXADtmDkaEo4TfN6FDSdwTk8Xhfw3LjaNUtMk4IAn2xxkj0e5eREaYT23JfBS9-')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold text-on-surface-variant">+12</div>
+</div>
+<button class="px-4 py-2 rounded-lg bg-primary text-white font-label-md text-label-md font-bold transition-all active:scale-95">참여하기</button>
+</div>
+</div>
+</div>
+<!-- Challenge Card 2 -->
+<div class="clean-card rounded-xl overflow-hidden bg-white">
+<div class="h-44 w-full bg-cover bg-center relative" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcJgQe1lZ8GPgmvFDGhbEqtI12UEwSui_qOJ_7NK_woqZ0KKXG8orvRS6xD4G6NCoZfs5O22gtS0Q70Wv_rNe5yknZJJH8Sj5vbhQF7vnEsSzKSxYRTekBjf8n62Z7YpAyqS5ECXN3FhiXFZD4jOjoSC-NwL-mDD9vElJo3n8YLT5Fw1sHejbY4eVwqF2r3Y4tdk9j-0_zIp-0rS6mhrcVXVY6WWgP1-goCDcYwZkVmS4n9ToQ0LnHYN4RybqKxOS7R7W-1N67NcXM')">
+<div class="absolute top-4 right-4 px-2 py-1 bg-white/80 backdrop-blur-md rounded text-on-surface font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">group</span> 8.1k
+                        </div>
+</div>
+<div class="p-6">
+<h4 class="font-headline-md text-on-surface mb-2">52주 저축 챌린지</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-2">진정한 마라톤입니다. 매주 조금씩 늘려 연말까지 $1,378를 모으세요.</p>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJFqODw7_Ik5UcYHhkoxhTvN4rgIHBz7h8WXdtCHwyZiUUk3Qo-Oeh0VEsRIO2cbBuAtKmZYOFVwmID-zWf1iGJPa7oidhhxO7qiIGy2uUDehI721VyUgnrqbM7zy-ghCKSwT8UiAaXSEPna7kW19g0QoZCS3mKRsOuN9tmI-aO8neosQRpg3a_Gsj8jNLSfZ7ewgSkLRXH07pnMNAucojZml6G1-IPxck1roWB7kq-1xfTIEo4EyRBBSgbrIyk318YwricVEdDwYj')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB3ylcrCSDOFfAzT40v_kYIyF9IJH--BZJa6Bgp_5psIGsKEL5KrLoKxx9ClQ14vemYRWpzVw_PtJV4eynVSrAVc3chLbJESw-u_yyAAcBEPUHmHBwscDq0_g7cEkb2DTZTHzJCKMhoWUKbBA455dFK9YPquyImX6UdC7WOz0BZ1-h-OLIOJDoFZGD-03dQtP7SpX6HNb01JExGb2QaRcnE_yE0LtxymWlJhggPcA_q5g7YERpDEIEmPyT73Y5tBfNjn73TBJi-gVjQ')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold text-on-surface-variant">+99</div>
+</div>
+<button class="px-4 py-2 rounded-lg bg-primary text-white font-label-md text-label-md font-bold transition-all active:scale-95">참여하기</button>
+</div>
+</div>
+</div>
+<!-- Challenge Card 3 -->
+<div class="clean-card rounded-xl overflow-hidden bg-white">
+<div class="h-44 w-full bg-cover bg-center relative" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCaDSIjo7FETP5RHwAT2pV5vLVyCksy_6N9IJvv8_G7a-Ps2imPsYOUAZtSQCnSIe-kYW-MiIqmzYAS1FSlC9ojaHxvP08QwrmIYzyNjrPITaTmo_JbwZnPioEcmJSjmo6SsN7g04v-2PoWr0bSlFoGjSIVcu41KX2I-JvRA1iEnCjFtoa1DFJEia210kvsy7rKYjsCjr4qQxXFhHoKLKoLLk_QhBR_V2FvmuBEOn1xoljX8dNXLuG0-tGZuGxPe3REl27QHd224Cj8')">
+<div class="absolute top-4 right-4 px-2 py-1 bg-white/80 backdrop-blur-md rounded text-on-surface font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">group</span> 1.2k
+                        </div>
+</div>
+<div class="p-6">
+<h4 class="font-headline-md text-on-surface mb-2">무지출 주말</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-2">금요일부터 일요일까지 비필수적인 지출을 0원으로 유지해 보세요.</p>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdRvw2rPMaEbQhvSq32RTeV9XOBhr7kKOxdPoYOCB5_IlCarlzHULaUuVLqPxV7F7bTx4Ay3rNuPIsPYAE5HicDVFC3-r3n3wSzcfBU1QhWdK7hkaIc3EX6K_ft1s6ALeQkaTIkPxiNSkIpaTkEg53OgrnG148yu0_qPKv4FS9LL-ChjTVfsPudGRsUez9AijZX6cdd9xLCSGWBithSd5BPsLtwsitRiGJgXR9QI8r4A8fQMvXIXPwisSry-wdPNzgPOskBnLkWMwD')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCO_AawA939ZrDhtNFVJXOuL4fHqz4ax6WY58ALvIpSoEVTUhTLkHO3vs_IuSu_ZQZd2TNeA776Tgo0cZTd8_YNd2xyooJ_uesUn9-9--Q0XnEayJ9JmoogcqufJ2-dF2i3OqvAEkTSTWohb-pk_jB8Voqf2eDknTmCV2YZrrhBkqKFkhFOd53jgUpsJ64EdLdAAt_7FAqGGGrLhWPR2gtsSyluKB_yF7fCn8qX0N9tDCgH7LcZxOboo5AJO2KOM6Rnvysj93v1c5ci')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold text-on-surface-variant">+5</div>
+</div>
+<button class="px-4 py-2 rounded-lg bg-primary text-white font-label-md text-label-md font-bold transition-all active:scale-95">참여하기</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Leaderboard Section -->
+<section class="mb-stack-lg">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">주간 리더보드</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">상위 저축자 및 챌린지 우승자</p>
+</div>
+<div class="flex bg-surface-container-low rounded-lg p-1 border border-outline-variant">
+<button class="px-4 py-1.5 rounded-md bg-white text-primary font-label-sm text-label-sm shadow-sm">전체</button>
+<button class="px-4 py-1.5 rounded-md text-on-surface-variant font-label-sm text-label-sm hover:text-on-surface transition-colors">친구</button>
+</div>
+</div>
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden">
+<!-- Top 1 -->
+<div class="flex items-center justify-between p-5 hover:bg-surface-container-lowest transition-colors cursor-pointer border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-bold text-primary">1</span>
+<div class="w-12 h-12 rounded-full bg-cover bg-center border-2 border-primary/20" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB35UJkyQclIP5olUbyvIFs1VKJ_7RjlmZfofjSPYuqyAZja3b9jUfax-tAUUYgN-bIG1nmBhyOG9rKcSDBL9k6Xr30AcoX5d75PMupkdf_hEq1bF-OndHq1h9-p3XppD0XXW3Wyk-ELEyRmZ2Rtbh0zdrsH_Grv3eQlMq0NiZA0xvwexV92aDdBFaWbusA-t7YXs6wBiNAyODTyAc2FTZGqMJcvGEusQ_R82tUvOMUHReQ7TRDZ5qvI5nLVBhnx2rguIemihNx19zf')"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Alex Rivera</p>
+<p class="text-[12px] text-on-surface-variant">마스터 세이버 • 배지 12개</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-on-surface">$4,250</p>
+<p class="text-[12px] text-on-surface-variant">이번 주 저축액</p>
+</div>
+</div>
+<!-- Top 2 -->
+<div class="flex items-center justify-between p-5 hover:bg-surface-container-lowest transition-colors cursor-pointer border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-bold text-on-surface-variant">2</span>
+<div class="w-12 h-12 rounded-full bg-cover bg-center border border-outline-variant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBCAd09e3EvPmnQPbdJNG5um4FMGerqPVYFydSdEre0wFtn9bW7rsAgU9HFifAjSP6VVk1jZymQe3Iq9VADj4P_VhXz_0wYKEWX8jYB-6kjag-UyUldJEq-NlzlkQNSH4_TfWSwlU3dAtIaY3ZFZB5iAqu4UGwjJjplkj2mjVoqr274oExu1lV0wr3v5S2klpOI1ysuD1InIwD7eaA93tobdkUH3GN994dG8nACebpBstxt2lKAv_5mNfJrfdlblSTH4HQSKsXMat3F')"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Sarah Chen</p>
+<p class="text-[12px] text-on-surface-variant">예산 전문가 • 배지 8개</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-on-surface">$3,890</p>
+<p class="text-[12px] text-on-surface-variant">이번 주 저축액</p>
+</div>
+</div>
+<!-- Top 3 -->
+<div class="flex items-center justify-between p-5 hover:bg-surface-container-lowest transition-colors cursor-pointer border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-bold text-on-surface-variant">3</span>
+<div class="w-12 h-12 rounded-full bg-cover bg-center border border-outline-variant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC5P5Lglw5vHClr0XIUqzHPTYYaJrW6sKpbpUPJImlFghxygc-WNAdtGvhbtfMwrhvsz7h2H8Tg4BwhpWxvyVEZTkRvDlmVSaH5VJ8wHG4vuXyh7vvi8A1TdSAsQ0H6Yur3fQvV3UdatidFc4ogdD6zkZOZPXfqQgi0e1CHHXOaYsmdgvKiGSP15x8z14tM87_xiFnPUYqIISMXecSbzBUCsSWskh1UJoZchlv1ZyF0bv5-l-QQkF1vCIBPsdT8-6P9EOlZ5lfqssfp')"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Marcus Thorne</p>
+<p class="text-[12px] text-on-surface-variant">초기 투자자 • 배지 15개</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-on-surface">$2,710</p>
+<p class="text-[12px] text-on-surface-variant">이번 주 저축액</p>
+</div>
+</div>
+<!-- Your Rank -->
+<div class="flex items-center justify-between p-5 bg-primary/5">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-bold text-primary">242</span>
+<div class="w-12 h-12 rounded-full bg-cover bg-center border-2 border-primary/40" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqMrgyhXNFoXkQ2--sPojI5AGD1vVkaqTTJrk5en0GE6-LDGknzI2LD4on0HvquZ693WVE2q82qd_pCuN4TkSURC8y5iMMumGA219Y_CCExjMtvoO9D-5ek1ZfyJFss6vlK_VZlAdi7GO7HxEdJgTIbJOicRC2Z-wCrDsXFnRYhmdIrd1KYzFYhSq4wbjzuXq0EJtKrhc-t8lnRym4qy93PtEPyeeSQwjxxDChx2HoMiFTe4J1MbICeaV1bE_Ut__jdPPxKE4AdHo7')"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">나 (엘레나)</p>
+<p class="text-[12px] text-primary">라이징 스타 • 배지 4개</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-on-surface">$840</p>
+<p class="text-[12px] text-on-surface-variant">이번 주 저축액</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full h-20 flex justify-around items-center px-4 bg-surface z-50 rounded-t-xl shadow-[0px_-4px_12px_rgba(0,0,0,0.03)] border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Feed</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label-sm text-label-sm">Assets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-[32px] text-primary">add_circle</span>
+<span class="font-label-sm text-label-sm">Add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-secondary-container rounded-xl px-3 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<span class="font-label-sm text-label-sm">Social</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<!-- Desktop Floating Action Button (FAB) - Optional but kept for utility -->
+<button class="hidden md:flex fixed bottom-24 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-lg items-center justify-center hover:opacity-90 transition-all active:scale-90 z-40">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'wght' 600;">add</span>
+</button>
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.96)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = '';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+    </script>
+</body></html>

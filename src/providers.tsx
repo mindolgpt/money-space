@@ -14,6 +14,7 @@ import {
 } from '@/features/sync/sync-engine'
 import { SYNC_INTERVAL_MS } from '@/shared/config'
 import { ThemeProvider, useThemeStore } from '@/shared/lib/theme-provider'
+import { colors } from '@/shared/lib/colors'
 import { logger } from '@/shared/lib/logger'
 
 const queryClient = new QueryClient({
@@ -109,8 +110,8 @@ function AuthRouter({ children }: { children: ReactNode }) {
   if (needsBiometric) {
     return (
       <View className="flex-1 bg-bg-primary items-center justify-center">
-        <View className="w-20 h-20 rounded-full bg-accent-blue/20 items-center justify-center mb-6">
-          <Lock size={40} color="#007AFF" />
+        <View className="w-20 h-20 rounded-full bg-accent-green/20 items-center justify-center mb-6">
+          <Lock size={40} color={colors.accentGreen} />
         </View>
         <Text className="text-xl font-semibold text-text-primary mb-2">
           생체 인증 필요
@@ -118,9 +119,9 @@ function AuthRouter({ children }: { children: ReactNode }) {
         <Text className="text-sm text-text-secondary mb-8 text-center px-8">
           계정 보안을 위해 생체 인증이 필요합니다
         </Text>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={colors.accentGreen} />
         <TouchableOpacity
-          className="mt-8 px-6 py-3 rounded-xl bg-accent-blue"
+          className="mt-8 px-6 py-3 rounded-lg bg-accent-green"
           onPress={async () => {
             const success = await authenticateBiometric()
             if (success) {

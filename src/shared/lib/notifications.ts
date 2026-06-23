@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications'
 import * as Linking from 'expo-linking'
 import { Platform } from 'react-native'
+import { colors } from '@/shared/lib/colors'
 import { logger } from '@/shared/lib/logger'
 
 export type NotificationChannel = 'budget-alert' | 'recurring-reminder' | 'weekly-summary' | 'monthly-report' | 'family-invite'
@@ -42,7 +43,7 @@ export async function setupNotificationChannels(): Promise<void> {
         description: config.description,
         importance: Notifications.AndroidImportance.HIGH,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#0A84FF',
+        lightColor: colors.accentGreen,
       })
     }
     logger.info('Notification channels setup complete')

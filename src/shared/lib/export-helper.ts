@@ -25,7 +25,7 @@ function getCategoryIcon(categories: Category[], id?: string): string {
   return categories.find((c) => c.id === id)?.icon ?? '📝'
 }
 
-function groupByCategory(entries: Entry[], type: 'income' | 'expense'): { name: string; icon: string; amount: number }[] {
+function groupByCategory(entries: Entry[], type: 'income' | 'expense', categories: Category[] = []): { name: string; icon: string; amount: number }[] {
   const map: Record<string, number> = {}
   for (const e of entries.filter((e) => e.type === type)) {
     const key = e.categoryId || 'etc'
@@ -34,8 +34,8 @@ function groupByCategory(entries: Entry[], type: 'income' | 'expense'): { name: 
   return Object.entries(map)
     .sort(([, a], [, b]) => b - a)
     .map(([catId, amount]) => ({
-      name: getCategoryName([], catId),
-      icon: getCategoryIcon([], catId),
+      name: getCategoryName(categories, catId),
+      icon: getCategoryIcon(categories, catId),
       amount,
     }))
 }
@@ -43,8 +43,8 @@ function groupByCategory(entries: Entry[], type: 'income' | 'expense'): { name: 
 export async function exportToPdf(data: ExportData): Promise<void> {
   const { entries, year, month, income, expense, saving, savingsRate, dailyAvg, categories } = data
 
-  const topExpenseCategories = groupByCategory(entries, 'expense').slice(0, 5)
-  const topIncomeCategories = groupByCategory(entries, 'income').slice(0, 5)
+  const topExpenseCategories = groupByCategory(entries, 'expense', categories).slice(0, 5)
+  const topIncomeCategories = groupByCategory(entries, 'income', categories).slice(0, 5)
 
   const expenseRows = topExpenseCategories
     .map((c, i) => `<tr><td>${i + 1}</td><td>${c.icon} ${c.name}</td><td style="text-align:right">${c.amount.toLocaleString()}원</td></tr>`)
@@ -77,16 +77,16 @@ export async function exportToPdf(data: ExportData): Promise<void> {
   <title>Money Space - ${year}년 ${month}월 보고서</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; color: #333; }
-    h1 { color: #0A84FF; font-size: 24px; margin-bottom: 5px; }
+    h1 { color: #10b981; font-size: 24px; margin-bottom: 5px; }
     h2 { color: #333; font-size: 16px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
     .subtitle { color: #666; font-size: 12px; margin-bottom: 20px; }
     .summary { display: flex; gap: 15px; margin-bottom: 20px; }
     .summary-card { flex: 1; background: #f5f5f5; padding: 15px; border-radius: 10px; text-align: center; }
     .summary-card .label { font-size: 11px; color: #666; }
     .summary-card .value { font-size: 18px; font-weight: bold; margin-top: 5px; }
-    .income { color: #34C759; }
-    .expense { color: #FF3B30; }
-    .saving { color: #0A84FF; }
+    .income { color: #10b981; }
+    .expense { color: #ba1a1a; }
+    .saving { color: #006c49; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
     th { background: #f0f0f0; text-align: left; padding: 8px; }
     td { padding: 8px; border-bottom: 1px solid #eee; }

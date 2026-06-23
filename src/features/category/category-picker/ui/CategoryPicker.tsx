@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
 import { useCategories, useDeleteCategory } from '@/entities/category'
 import type { Category, CategoryType } from '@/entities/category'
+import { colors } from '@/shared/lib/colors'
 import { CategoryEditModal } from '@/features/category/category-modal'
 
 type Props = {
@@ -82,7 +83,7 @@ export function CategoryPicker({
         <TextInput
           className="input mb-3"
           placeholder="카테고리 검색"
-          placeholderTextColor="#C7C7CC"
+          placeholderTextColor={colors.textTertiary}
           value={searchQuery}
           onChangeText={onSearchFilterChange}
         />
@@ -140,8 +141,8 @@ function CategoryPickerItem({ category, isSelected, onPress, onLongPress }: Item
   return (
     <Animated.View style={animStyle}>
       <TouchableOpacity
-        className={`px-4 py-3 rounded-xl items-center min-w-[72px] ${
-          isSelected ? 'bg-accent-blue' : 'bg-bg-tertiary'
+        className={`px-4 py-3 rounded-lg items-center min-w-[72px] ${
+          isSelected ? 'bg-accent-green' : 'bg-bg-tertiary'
         }`}
         onPress={onPress}
         onLongPress={onLongPress}

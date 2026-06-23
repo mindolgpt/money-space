@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useEffect } from 'react'
+import { colors } from '@/shared/lib/colors'
 import { AlertTriangle, FileText, type LucideIcon } from 'lucide-react-native'
 
 type Props = {
@@ -67,7 +68,7 @@ export function BudgetProgressBar({
           <View className="flex-row items-center">
             {(() => {
               const IconComponent = categoryIcon || FileText
-              return <IconComponent size={16} color="#86868B" className="mr-1.5" />
+              return <IconComponent size={16} color={colors.textTertiary} className="mr-1.5" />
             })()}
             <Text className="text-sm font-medium text-text-primary">
               {categoryName}

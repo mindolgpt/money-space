@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { router } from 'expo-router'
+import { colors } from '@/shared/lib/colors'
 import { createUserApi } from '@/entities/user'
 
 function isValidEmail(email: string): boolean {
@@ -75,7 +76,7 @@ export function PasswordResetForm() {
             </Text>
           </View>
           <TouchableOpacity
-            className="btn btn-primary py-4 items-center"
+            className="bg-accent-green py-4 items-center rounded-lg"
             onPress={() => router.back()}
           >
             <Text className="text-white font-semibold text-base">
@@ -95,7 +96,7 @@ export function PasswordResetForm() {
       <View className="flex-1 justify-center px-6">
         {/* Title */}
         <View className="items-center mb-10">
-          <View className="w-20 h-20 rounded-2xl bg-accent-blue/10 items-center justify-center mb-4">
+          <View className="w-20 h-20 rounded-2xl bg-accent-green/10 items-center justify-center mb-4">
             <Text className="text-3xl">🔑</Text>
           </View>
           <Text className="text-2xl font-bold text-text-primary mb-2">
@@ -120,7 +121,7 @@ export function PasswordResetForm() {
           <TextInput
             className={`input mb-6 ${error ? 'border-accent-red' : ''}`}
             placeholder="example@email.com"
-            placeholderTextColor="#C7C7CC"
+            placeholderTextColor={colors.textTertiary}
             value={email}
             onChangeText={onEmailChange}
             autoCapitalize="none"
@@ -131,14 +132,14 @@ export function PasswordResetForm() {
           />
 
           <TouchableOpacity
-            className={`btn py-4 flex-row justify-center items-center ${
-              isLoading ? 'bg-accent-blue/60' : 'btn-primary'
+            className={`py-4 flex-row justify-center items-center rounded-lg ${
+              isLoading ? 'bg-accent-green/60' : 'bg-accent-green'
             }`}
             onPress={onResetPress}
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color="white" className="mr-2" />
+              <ActivityIndicator color={colors.white} className="mr-2" />
             ) : null}
             <Text className="text-white font-semibold text-base">
               {isLoading ? '전송 중...' : '재설정 링크 보내기'}
@@ -152,7 +153,7 @@ export function PasswordResetForm() {
           onPress={() => router.back()}
           disabled={isLoading}
         >
-          <Text className="text-accent-blue text-sm font-medium">
+          <Text className="text-accent-green text-sm font-medium">
             로그인으로 돌아가기
           </Text>
         </TouchableOpacity>

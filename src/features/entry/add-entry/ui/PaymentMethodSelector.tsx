@@ -16,13 +16,13 @@ const METHODS: { key: PaymentMethod; label: string }[] = [
 export function PaymentMethodSelector({ value, onChange }: Props) {
   return (
     <View className="mb-4">
-      <Text className="text-sm text-text-secondary mb-2">결제수단</Text>
+      <Text className="text-sm font-medium text-text-secondary tracking-widest uppercase mb-2">결제수단</Text>
       <View className="flex-row">
         {METHODS.map((m) => (
           <TouchableOpacity
             key={m.key}
             className={`px-4 py-2.5 rounded-full mr-2 ${
-              value === m.key ? 'bg-accent-blue' : 'bg-bg-tertiary'
+              value === m.key ? 'bg-accent-green' : 'bg-bg-tertiary'
             }`}
             onPress={() => onChange(m.key)}
           >

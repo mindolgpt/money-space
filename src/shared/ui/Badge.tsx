@@ -17,10 +17,10 @@ const colorMap = {
 }
 
 export function Badge({ variant = 'default', label, className = '', ...props }: BadgeProps) {
-  const colors = colorMap[variant]
+  const c = colorMap[variant]
   return (
-    <View className={cn('px-2.5 py-1 rounded-full', colors.bg, className)} {...props}>
-      <Text className={cn('text-xs font-medium', colors.text)}>{label}</Text>
+    <View className={cn('px-3 py-1 rounded-full', c.bg, className)} {...props}>
+      <Text className={cn('text-xs font-semibold', c.text)}>{label}</Text>
     </View>
   )
 }

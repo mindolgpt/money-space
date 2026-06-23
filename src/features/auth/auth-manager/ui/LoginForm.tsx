@@ -10,6 +10,7 @@ import {
 import { Globe, Smartphone, Wallet, Eye, EyeOff } from 'lucide-react-native'
 import { router } from 'expo-router'
 import { useAuthStore } from '@/features/auth/auth-manager/model/use-auth-store'
+import { colors } from '@/shared/lib/colors'
 import { Button } from '@/shared/ui'
 
 type FormErrors = {
@@ -107,8 +108,8 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
       <View className="flex-1 justify-center px-6">
         {/* Logo/Title */}
         <View className="items-center mb-12">
-          <View className="w-20 h-20 rounded-2xl bg-accent-blue items-center justify-center mb-5">
-            <Wallet size={36} color="white" />
+          <View className="w-20 h-20 rounded-2xl bg-accent-green items-center justify-center mb-5">
+            <Wallet size={36} color={colors.white} />
           </View>
           <Text className="text-3xl font-bold text-text-primary tracking-tight">Money Space</Text>
           <Text className="text-sm text-text-secondary mt-1.5">
@@ -133,7 +134,7 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
               errors.email ? 'border border-semantic-expense' : ''
             }`}
             placeholder="example@email.com"
-            placeholderTextColor="#C7C7CC"
+            placeholderTextColor={colors.textTertiary}
             value={email}
             onChangeText={onEmailChange}
             autoCapitalize="none"
@@ -160,7 +161,7 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
               ref={passwordRef}
               className="flex-1 text-base text-text-primary"
               placeholder="비밀번호"
-              placeholderTextColor="#C7C7CC"
+              placeholderTextColor={colors.textTertiary}
               value={password}
               onChangeText={onPasswordChange}
               secureTextEntry={!showPassword}
@@ -173,9 +174,9 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
               onPress={() => setShowPassword((prev) => !prev)}
             >
               {showPassword ? (
-                <EyeOff size={20} color="#C7C7CC" />
+                <EyeOff size={20} color={colors.textTertiary} />
               ) : (
-                <Eye size={20} color="#C7C7CC" />
+                <Eye size={20} color={colors.textTertiary} />
               )}
             </TouchableOpacity>
           </View>
@@ -192,7 +193,7 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
             className="items-end mb-6"
             onPress={() => router.push('/auth/reset-password' as any)}
           >
-            <Text className="text-accent-blue text-sm font-semibold">비밀번호 찾기</Text>
+            <Text className="text-accent-green text-sm font-semibold">비밀번호 찾기</Text>
           </TouchableOpacity>
 
           <Button
@@ -214,18 +215,18 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
             </View>
 
             <TouchableOpacity
-              className="flex-row items-center justify-center py-3.5 rounded-xl bg-bg-tertiary mb-3 opacity-50"
+              className="flex-row items-center justify-center py-3.5 rounded-lg bg-bg-tertiary mb-3 opacity-50"
               disabled
             >
-              <Globe size={20} color="#86868B" />
+              <Globe size={20} color={colors.textTertiary} />
               <Text className="text-sm font-medium text-text-secondary ml-2">Google로 계속하기 (준비 중)</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-row items-center justify-center py-3.5 rounded-xl bg-bg-tertiary opacity-50"
+              className="flex-row items-center justify-center py-3.5 rounded-lg bg-bg-tertiary opacity-50"
               disabled
             >
-              <Smartphone size={20} color="#86868B" />
+              <Smartphone size={20} color={colors.textTertiary} />
               <Text className="text-sm font-medium text-text-secondary ml-2">Apple로 계속하기 (준비 중)</Text>
             </TouchableOpacity>
           </View>
@@ -239,7 +240,7 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
         >
           <Text className="text-text-secondary font-medium">
             계정이 없으신가요?{' '}
-            <Text className="text-accent-blue font-semibold">회원가입</Text>
+            <Text className="text-accent-green font-semibold">회원가입</Text>
           </Text>
         </TouchableOpacity>
       </View>

@@ -5,6 +5,7 @@ import Animated, {
   withSpring,
   withDelay,
 } from 'react-native-reanimated'
+import { colors } from '@/shared/lib/colors'
 
 type MonthlyData = {
   month: string
@@ -56,7 +57,7 @@ export function MonthlyComparisonChart({ data, maxValue }: Props) {
           <Text className="text-xs text-text-secondary">지출</Text>
         </View>
         <View className="flex-row items-center">
-          <View className="w-3 h-3 rounded-full bg-accent-blue mr-1.5" />
+          <View className="w-3 h-3 rounded-full bg-semantic-saving mr-1.5" />
           <Text className="text-xs text-text-secondary">저축</Text>
         </View>
       </View>
@@ -101,11 +102,11 @@ function MonthBar({ month, income, expense, max, index }: MonthBarProps) {
       <View className="flex-row items-end justify-center gap-1 h-36 w-full px-1">
         <View className="w-5 h-full bg-bg-tertiary/50 rounded-t-lg relative overflow-hidden">
           <Animated.View
-            style={[incomeAnim, { backgroundColor: '#34C759', borderRadius: 4 }]}
+            style={[incomeAnim, { backgroundColor: colors.accentGreen, borderRadius: 4 }]}
             className="absolute bottom-0 w-full"
           />
           <Animated.View
-            style={[expenseAnim, { backgroundColor: '#FF3B30', borderRadius: 4 }]}
+            style={[expenseAnim, { backgroundColor: colors.accentRed, borderRadius: 4 }]}
             className="absolute bottom-0 w-full"
           />
         </View>

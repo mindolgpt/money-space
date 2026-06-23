@@ -23,7 +23,7 @@ export function AmountText({ amount, type = 'neutral', showSign = true, locale =
     : ''
 
   return (
-    <Text className={cn('font-semibold tabular-nums', colorMap[type], className)} style={style} {...props}>
+    <Text className={cn('font-medium tabular-nums', colorMap[type], className)} style={style} {...props}>
       {prefix}₩{amount.toLocaleString(locale)}
     </Text>
   )

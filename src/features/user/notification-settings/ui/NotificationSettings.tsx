@@ -94,8 +94,8 @@ export function NotificationSettings() {
               value={settings.notifications[item.key]}
               onValueChange={(v) => onToggleChange(item.key, v)}
               trackColor={{
-                false: '#E8E8ED',
-                true: '#34C759',
+                false: '#edeeef',
+                true: '#10b981',
               }}
               thumbColor="white"
             />

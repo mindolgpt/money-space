@@ -2,6 +2,7 @@ import React, { Component, type ReactNode, type ErrorInfo } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { AlertTriangle } from 'lucide-react-native'
 import { logger } from '@/shared/lib/logger'
+import { colors } from '@/shared/lib/colors'
 
 interface Props {
   children: ReactNode
@@ -47,7 +48,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <View className="flex-1 justify-center items-center p-6 bg-bg-primary">
           <View className="w-16 h-16 rounded-2xl bg-accent-orange/15 items-center justify-center mb-4">
-            <AlertTriangle size={32} color="#FF9500" />
+            <AlertTriangle size={32} color={colors.accentOrange} />
           </View>
           <Text className="text-xl font-bold text-text-primary mb-2 tracking-tight">문제가 발생했습니다</Text>
           <Text className="text-sm text-text-secondary text-center mb-4 leading-5">
@@ -59,7 +60,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </Text>
           ) : null}
           <TouchableOpacity
-            className="px-8 py-3.5 bg-accent-blue rounded-xl"
+            className="px-8 py-3.5 bg-accent-green rounded-lg"
             onPress={this.handleRetry}
           >
             <Text className="text-white font-semibold text-base">다시 시도</Text>

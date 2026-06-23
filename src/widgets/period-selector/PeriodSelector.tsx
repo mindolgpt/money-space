@@ -28,7 +28,7 @@ export function PeriodSelector({ selected, onChange }: Props) {
         <TouchableOpacity
           key={key}
           className={`flex-1 py-2 rounded-lg items-center ${
-            selected === key ? 'bg-accent-blue' : 'bg-transparent'
+            selected === key ? 'bg-accent-green' : 'bg-transparent'
           }`}
           onPress={() => handlePress(key)}
         >

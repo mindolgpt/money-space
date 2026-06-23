@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native'
+import { colors } from '@/shared/lib/colors'
 import { Calendar } from 'lucide-react-native'
 
 type Props = {
@@ -49,8 +50,8 @@ export function DatePicker({ value, onChange }: Props) {
     <>
       <TouchableOpacity className="mb-4" onPress={openPicker}>
         <Text className="text-sm text-text-secondary mb-2 font-medium">날짜</Text>
-        <View className="flex-row items-center bg-bg-tertiary rounded-xl px-4 py-3">
-          <Calendar size={20} color="#86868B" />
+        <View className="flex-row items-center bg-bg-tertiary rounded-lg px-4 py-3">
+          <Calendar size={20} color={colors.textTertiary} />
           <Text className="text-base text-text-primary ml-2">{formatDisplay(value)}</Text>
         </View>
       </TouchableOpacity>
@@ -59,11 +60,11 @@ export function DatePicker({ value, onChange }: Props) {
         <View className="flex-1 bg-bg-primary">
           <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
             <TouchableOpacity onPress={() => setShowModal(false)}>
-              <Text className="text-accent-blue text-base font-semibold">취소</Text>
+              <Text className="text-accent-green text-base font-semibold">취소</Text>
             </TouchableOpacity>
             <Text className="text-lg font-bold text-text-primary">날짜 선택</Text>
             <TouchableOpacity onPress={confirm}>
-              <Text className="text-accent-blue text-base font-semibold">확인</Text>
+              <Text className="text-accent-green text-base font-semibold">확인</Text>
             </TouchableOpacity>
           </View>
 
@@ -72,10 +73,10 @@ export function DatePicker({ value, onChange }: Props) {
               {years.map((y) => (
                 <TouchableOpacity
                   key={y}
-                  className={`py-3 items-center ${selectedYear === y ? 'bg-accent-blue/10' : ''}`}
+                  className={`py-3 items-center ${selectedYear === y ? 'bg-accent-green/10' : ''}`}
                   onPress={() => setSelectedYear(y)}
                 >
-                  <Text className={`text-sm ${selectedYear === y ? 'text-accent-blue font-semibold' : 'text-text-secondary'}`}>
+                  <Text className={`text-sm ${selectedYear === y ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
                     {y}년
                   </Text>
                 </TouchableOpacity>
@@ -86,10 +87,10 @@ export function DatePicker({ value, onChange }: Props) {
               {months.map((m) => (
                 <TouchableOpacity
                   key={m}
-                  className={`py-3 items-center ${selectedMonth === m ? 'bg-accent-blue/10' : ''}`}
+                  className={`py-3 items-center ${selectedMonth === m ? 'bg-accent-green/10' : ''}`}
                   onPress={() => setSelectedMonth(m)}
                 >
-                  <Text className={`text-sm ${selectedMonth === m ? 'text-accent-blue font-semibold' : 'text-text-secondary'}`}>
+                  <Text className={`text-sm ${selectedMonth === m ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
                     {m}월
                   </Text>
                 </TouchableOpacity>
@@ -100,10 +101,10 @@ export function DatePicker({ value, onChange }: Props) {
               {days.map((d) => (
                 <TouchableOpacity
                   key={d}
-                  className={`py-3 items-center ${selectedDay === d ? 'bg-accent-blue/10' : ''}`}
+                  className={`py-3 items-center ${selectedDay === d ? 'bg-accent-green/10' : ''}`}
                   onPress={() => setSelectedDay(d)}
                 >
-                  <Text className={`text-sm ${selectedDay === d ? 'text-accent-blue font-semibold' : 'text-text-secondary'}`}>
+                  <Text className={`text-sm ${selectedDay === d ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
                     {d}일
                   </Text>
                 </TouchableOpacity>

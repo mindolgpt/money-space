@@ -10,6 +10,7 @@ import Animated, {
 import { useEffect } from 'react'
 import type { Budget } from '@/entities/budget'
 import type { Category } from '@/entities/category'
+import { colors } from '@/shared/lib/colors'
 
 type Props = {
   budget: Budget | null
@@ -94,7 +95,7 @@ export function BudgetVsActual({ budget, actualSpent, category }: Props) {
 
       <View className="h-3 bg-bg-tertiary rounded-full overflow-hidden mb-2">
         <Animated.View
-          style={[barAnim, { backgroundColor: isOverBudget ? '#FF3B30' : percent >= 80 ? '#FF9500' : percent >= 50 ? '#FFCC00' : '#34C759' }]}
+          style={[barAnim, { backgroundColor: isOverBudget ? colors.accentRed : percent >= 80 ? colors.accentOrange : percent >= 50 ? colors.accentYellow : colors.accentGreen }]}
           className="h-full rounded-full"
         />
       </View>
@@ -105,7 +106,7 @@ export function BudgetVsActual({ budget, actualSpent, category }: Props) {
         </Text>
         {isOverBudget && (
           <View className="flex-row items-center">
-            <AlertTriangle size={12} color="#FF3B30" />
+            <AlertTriangle size={12} color={colors.accentRed} />
             <Text className="text-xs text-accent-red font-medium ml-1">예산 초과</Text>
           </View>
         )}

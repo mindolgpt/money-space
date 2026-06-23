@@ -5,6 +5,7 @@ import { EntryType, createEntryLocally } from '@/entities/entry'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useLastUsedCategory } from '@/entities/category'
 import { Card } from '@/shared/ui'
+import { colors } from '@/shared/lib/colors'
 
 type Props = {
   onEntryAdded?: () => void
@@ -70,11 +71,11 @@ export function QuickInput({ onEntryAdded }: Props) {
     return (
       <View className="px-4 mb-1">
         <TouchableOpacity
-          className="flex-row items-center justify-center py-3.5 rounded-2xl border-2 border-dashed border-border bg-white/50"
+          className="flex-row items-center justify-center py-3.5 rounded-lg border-2 border-dashed border-border bg-bg-secondary/50"
           onPress={() => setIsExpanded(true)}
           activeOpacity={0.7}
         >
-          <Zap size={16} color="#FF9500" className="mr-2" />
+          <Zap size={16} color={colors.accentOrange} className="mr-2" />
           <Text className="text-sm font-medium text-text-secondary">빠른 입력</Text>
         </TouchableOpacity>
       </View>
@@ -86,7 +87,7 @@ export function QuickInput({ onEntryAdded }: Props) {
       <Card>
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
-            <Zap size={16} color="#FF9500" className="mr-2" />
+            <Zap size={16} color={colors.accentOrange} className="mr-2" />
             <Text className="text-sm font-semibold text-text-primary">빠른 입력</Text>
           </View>
           <TouchableOpacity
@@ -96,7 +97,7 @@ export function QuickInput({ onEntryAdded }: Props) {
               setIsExpanded(false)
             }}
           >
-            <X size={14} color="#C7C7CC" />
+            <X size={14} color={colors.textTertiary} />
           </TouchableOpacity>
         </View>
 
@@ -104,8 +105,8 @@ export function QuickInput({ onEntryAdded }: Props) {
           {TYPES.map((t) => (
             <TouchableOpacity
               key={t.key}
-              className={`flex-1 py-2.5 rounded-xl items-center ${
-                type === t.key ? 'bg-accent-blue' : 'bg-bg-tertiary'
+              className={`flex-1 py-2.5 rounded-md items-center ${
+                type === t.key ? 'bg-accent-green' : 'bg-bg-tertiary'
               }`}
               onPress={() => setType(t.key)}
               activeOpacity={0.7}
@@ -122,14 +123,14 @@ export function QuickInput({ onEntryAdded }: Props) {
         </View>
 
         {lastCategory && (
-          <TouchableOpacity className="flex-row items-center bg-bg-tertiary rounded-xl px-3 py-2.5 mb-3">
+          <TouchableOpacity className="flex-row items-center bg-bg-tertiary rounded-lg px-3 py-2.5 mb-3">
             <Text className="text-base mr-2">{lastCategory.icon}</Text>
             <Text className="text-sm text-text-secondary flex-1">{lastCategory.name}</Text>
             <Text className="text-xs text-text-tertiary">마지막 사용</Text>
           </TouchableOpacity>
         )}
 
-        <View className="flex-row items-center bg-bg-tertiary rounded-xl px-4 py-3 mb-3">
+        <View className="flex-row items-center bg-bg-tertiary rounded-lg px-4 py-3 mb-3">
           <Text className="text-sm text-text-secondary mr-2">₩</Text>
           <TextInput
             className="flex-1 text-lg font-semibold text-text-primary"
@@ -137,7 +138,7 @@ export function QuickInput({ onEntryAdded }: Props) {
             keyboardType="numeric"
             value={amount}
             onChangeText={handleAmountChange}
-            placeholderTextColor="#C7C7CC"
+            placeholderTextColor={colors.textTertiary}
             autoFocus
           />
           {displayAmount ? (
@@ -152,8 +153,8 @@ export function QuickInput({ onEntryAdded }: Props) {
         </View>
 
         <TouchableOpacity
-          className={`py-3 rounded-xl items-center ${
-            amount && parseInt(amount, 10) > 0 && lastCategory ? 'bg-accent-blue' : 'bg-bg-tertiary'
+          className={`py-3 rounded-lg items-center ${
+            amount && parseInt(amount, 10) > 0 && lastCategory ? 'bg-accent-green' : 'bg-bg-tertiary'
           }`}
           onPress={handleQuickAdd}
           disabled={!amount || parseInt(amount, 10) === 0 || !lastCategory}

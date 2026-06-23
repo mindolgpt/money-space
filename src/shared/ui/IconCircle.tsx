@@ -2,6 +2,7 @@ import { type LucideIcon } from 'lucide-react-native'
 import { View, type ViewProps } from 'react-native'
 import { cn } from '@/shared/lib/cn'
 import { useThemeStore } from '@/shared/lib/theme-provider'
+import { colors } from '@/shared/lib/colors'
 
 type IconCircleProps = ViewProps & {
   icon: LucideIcon
@@ -26,21 +27,21 @@ const variantBgMap = {
 }
 
 const variantIconColorMapLight: Record<string, string> = {
-  green: '#34C759',
-  red: '#FF3B30',
-  blue: '#007AFF',
-  orange: '#FF9500',
-  purple: '#AF52DE',
-  gray: '#86868B',
+  green: colors.accentGreen,
+  red: colors.accentRed,
+  blue: colors.accentBlue,
+  orange: colors.accentOrange,
+  purple: colors.accentPurple,
+  gray: colors.textTertiary,
 }
 
 const variantIconColorMapDark: Record<string, string> = {
-  green: '#30D158',
-  red: '#FF453A',
-  blue: '#0A84FF',
-  orange: '#FF9F0A',
-  purple: '#BF5AF2',
-  gray: 'rgba(255,255,255,0.55)',
+  green: colors.accentGreen,
+  red: colors.accentRed,
+  blue: colors.accentBlue,
+  orange: colors.accentOrange,
+  purple: colors.accentPurple,
+  gray: colors.textTertiary,
 }
 
 export function IconCircle({ icon: IconComponent, variant = 'gray', size = 'md', iconSize, className = '', ...props }: IconCircleProps) {
@@ -50,7 +51,7 @@ export function IconCircle({ icon: IconComponent, variant = 'gray', size = 'md',
   const iconColor = isDark ? variantIconColorMapDark[variant] : variantIconColorMapLight[variant]
 
   return (
-    <View className={cn(s.container, 'rounded-xl items-center justify-center', bg, className)} {...props}>
+      <View className={cn(s.container, 'rounded-full items-center justify-center', bg, className)} {...props}>
       <IconComponent size={iconSize ?? s.icon} color={iconColor} />
     </View>
   )

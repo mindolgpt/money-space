@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { Wallet, Eye, EyeOff, Check } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager/model/use-auth-store'
+import { colors } from '@/shared/lib/colors'
 import { Button } from '@/shared/ui'
 
 type FormErrors = {
@@ -191,8 +192,8 @@ export function RegisterForm({
         <View className="flex-1 justify-center px-6 pt-16">
           {/* Logo/Title */}
           <View className="items-center mb-10">
-            <View className="w-20 h-20 rounded-2xl bg-accent-blue items-center justify-center mb-4">
-              <Wallet size={36} color="white" />
+            <View className="w-20 h-20 rounded-2xl bg-accent-green items-center justify-center mb-4">
+              <Wallet size={36} color={colors.white} />
             </View>
             <Text className="text-3xl font-bold text-text-primary tracking-tight">회원가입</Text>
             <Text className="text-sm text-text-secondary mt-1.5">
@@ -218,7 +219,7 @@ export function RegisterForm({
                 errors.name ? 'border border-semantic-expense' : ''
               }`}
               placeholder="김철수"
-              placeholderTextColor="#C7C7CC"
+              placeholderTextColor={colors.textTertiary}
               value={name}
               onChangeText={onNameChange}
               editable={!isLoading}
@@ -239,7 +240,7 @@ export function RegisterForm({
                 errors.email ? 'border border-semantic-expense' : ''
               }`}
               placeholder="example@email.com"
-              placeholderTextColor="#C7C7CC"
+              placeholderTextColor={colors.textTertiary}
               value={email}
               onChangeText={onEmailChange}
               autoCapitalize="none"
@@ -265,7 +266,7 @@ export function RegisterForm({
                 ref={passwordRef}
                 className="flex-1 text-base text-text-primary"
                 placeholder="비밀번호 (8자 이상)"
-                placeholderTextColor="#C7C7CC"
+                placeholderTextColor={colors.textTertiary}
                 value={password}
                 onChangeText={onPasswordChange}
                 secureTextEntry={!showPassword}
@@ -278,9 +279,9 @@ export function RegisterForm({
                 onPress={() => setShowPassword((prev) => !prev)}
               >
                 {showPassword ? (
-                  <EyeOff size={20} color="#C7C7CC" />
+                  <EyeOff size={20} color={colors.textTertiary} />
                 ) : (
-                  <Eye size={20} color="#C7C7CC" />
+                  <Eye size={20} color={colors.textTertiary} />
                 )}
               </TouchableOpacity>
             </View>
@@ -323,7 +324,7 @@ export function RegisterForm({
                 ref={confirmPasswordRef}
                 className="flex-1 text-base text-text-primary"
                 placeholder="비밀번호 다시 입력"
-                placeholderTextColor="#C7C7CC"
+                placeholderTextColor={colors.textTertiary}
                 value={confirmPassword}
                 onChangeText={onConfirmPasswordChange}
                 secureTextEntry={!showConfirmPassword}
@@ -336,9 +337,9 @@ export function RegisterForm({
                 onPress={() => setShowConfirmPassword((prev) => !prev)}
               >
                 {showConfirmPassword ? (
-                  <EyeOff size={20} color="#C7C7CC" />
+                  <EyeOff size={20} color={colors.textTertiary} />
                 ) : (
-                  <Eye size={20} color="#C7C7CC" />
+                  <Eye size={20} color={colors.textTertiary} />
                 )}
               </TouchableOpacity>
             </View>
@@ -357,15 +358,15 @@ export function RegisterForm({
               <View
                 className={`w-5 h-5 rounded-md border-2 items-center justify-center mr-3 ${
                   isTermsAgreed
-                    ? 'bg-accent-blue border-accent-blue'
+                    ? 'bg-accent-green border-accent-green'
                     : 'border-border'
                 }`}
               >
-                {isTermsAgreed ? <Check size={12} color="white" /> : null}
+                {isTermsAgreed ? <Check size={12} color={colors.white} /> : null}
               </View>
               <Text className="text-sm text-text-secondary flex-1 leading-5">
                 이용약관 및{' '}
-                <Text className="text-accent-blue font-semibold">개인정보 처리방침</Text>에
+                <Text className="text-accent-green font-semibold">개인정보 처리방침</Text>에
                 동의합니다
               </Text>
             </TouchableOpacity>
@@ -389,7 +390,7 @@ export function RegisterForm({
           >
             <Text className="text-text-secondary font-medium">
               이미 계정이 있으신가요?{' '}
-              <Text className="text-accent-blue font-semibold">로그인</Text>
+              <Text className="text-accent-green font-semibold">로그인</Text>
             </Text>
           </TouchableOpacity>
         </View>

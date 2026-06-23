@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { View, Text, TouchableOpacity, FlatList, Alert, Share } from 'react-native'
 import { X } from 'lucide-react-native'
+import { colors } from '@/shared/lib/colors'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useFamilies, useFamilyMembers, useLeaveFamily, useRemoveMember, useUpdateMemberRole, useGenerateInviteCode } from '@/entities/family'
 import { useFamilyEntries } from '@/entities/entry'
@@ -118,7 +119,7 @@ export function FamilyManager({ onClose }: Props) {
     <View className="flex-1 bg-bg-primary">
       <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
         <TouchableOpacity onPress={onClose}>
-          <Text className="text-accent-blue text-base">닫기</Text>
+          <Text className="text-accent-green text-base">닫기</Text>
         </TouchableOpacity>
         <Text className="text-lg font-bold text-text-primary">가족 관리</Text>
         <View style={{ width: 50 }} />
@@ -127,14 +128,14 @@ export function FamilyManager({ onClose }: Props) {
       {/* Action Buttons */}
       <View className="flex-row px-4 py-3 gap-3">
         <TouchableOpacity
-          className="flex-1 py-3 rounded-xl bg-accent-blue items-center"
-          onPress={() => setShowCreateModal(true)}
+className="flex-1 py-3 rounded-lg bg-accent-green items-center"
+           onPress={() => setShowCreateModal(true)}
         >
           <Text className="text-white font-medium text-sm">가족 생성</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="flex-1 py-3 rounded-xl bg-bg-tertiary items-center"
-          onPress={() => setShowJoinModal(true)}
+className="flex-1 py-3 rounded-lg bg-bg-tertiary items-center"
+           onPress={() => setShowJoinModal(true)}
         >
           <Text className="text-text-secondary font-medium text-sm">초대 코드 입력</Text>
         </TouchableOpacity>
@@ -172,16 +173,16 @@ export function FamilyManager({ onClose }: Props) {
           {isAdmin && (
             <View className="flex-row gap-3 mb-4">
               <TouchableOpacity
-                className="flex-1 py-2.5 rounded-xl bg-accent-blue/10 items-center"
-                onPress={onCopyCode}
+className="flex-1 py-2.5 rounded-lg bg-accent-green/10 items-center"
+                 onPress={onCopyCode}
               >
-                <Text className="text-accent-blue text-sm font-medium">코드 보기</Text>
+                <Text className="text-accent-green text-sm font-medium">코드 보기</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex-1 py-2.5 rounded-xl bg-accent-blue/10 items-center"
-                onPress={onShareInvite}
+className="flex-1 py-2.5 rounded-lg bg-accent-green/10 items-center"
+                 onPress={onShareInvite}
               >
-                <Text className="text-accent-blue text-sm font-medium">초대 공유</Text>
+                <Text className="text-accent-green text-sm font-medium">초대 공유</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -223,12 +224,12 @@ export function FamilyManager({ onClose }: Props) {
                     <View className={`px-1.5 py-0.5 rounded ${
                       entry.type === 'income' ? 'bg-accent-green/20' :
                       entry.type === 'expense' ? 'bg-accent-red/20' :
-                      'bg-accent-blue/20'
+                      'bg-accent-green/20'
                     }`}>
                       <Text className={`text-xs ${
                         entry.type === 'income' ? 'text-accent-green' :
                         entry.type === 'expense' ? 'text-accent-red' :
-                        'text-accent-blue'
+                        'text-accent-green'
                       }`}>
                         {entry.type === 'income' ? '수입' : entry.type === 'expense' ? '지출' : '저축'}
                       </Text>
@@ -278,8 +279,8 @@ type FamilyCardProps = {
 function FamilyCard({ family, isSelected, onPress }: FamilyCardProps) {
   return (
     <TouchableOpacity
-      className={`flex-row items-center py-3 px-4 rounded-xl mb-2 ${
-        isSelected ? 'bg-accent-blue/10 border border-accent-blue/30' : 'bg-bg-secondary'
+      className={`flex-row items-center py-3 px-4 rounded-lg mb-2 ${
+        isSelected ? 'bg-accent-green/10 border border-accent-green/30' : 'bg-bg-secondary'
       }`}
       onPress={onPress}
     >
@@ -313,7 +314,7 @@ const ROLE_LABELS_MAP: Record<FamilyRole, string> = {
 function MemberItem({ member, isAdmin, isSelf, onRemove, onRoleChange }: MemberItemProps) {
   return (
     <View className="flex-row items-center py-2.5 px-3 rounded-xl bg-bg-secondary mb-1.5">
-      <View className="w-8 h-8 rounded-full bg-accent-blue/20 items-center justify-center mr-3">
+      <View className="w-8 h-8 rounded-full bg-accent-green/20 items-center justify-center mr-3">
         <Text className="text-sm">{isSelf ? '👤' : '👥'}</Text>
       </View>
       <View className="flex-1">
@@ -322,8 +323,8 @@ function MemberItem({ member, isAdmin, isSelf, onRemove, onRoleChange }: MemberI
           {isSelf ? ' (나)' : ''}
         </Text>
         <View className="flex-row items-center gap-1">
-          <View className={`px-2 py-0.5 rounded-full ${member.role === 'admin' ? 'bg-accent-purple/20' : member.role === 'viewer' ? 'bg-accent-orange/20' : 'bg-accent-blue/20'}`}>
-            <Text className={`text-xs ${member.role === 'admin' ? 'text-accent-purple' : member.role === 'viewer' ? 'text-accent-orange' : 'text-accent-blue'}`}>
+          <View className={`px-2 py-0.5 rounded-full ${member.role === 'admin' ? 'bg-accent-purple/20' : member.role === 'viewer' ? 'bg-accent-orange/20' : 'bg-accent-green/20'}`}>
+            <Text className={`text-xs ${member.role === 'admin' ? 'text-accent-purple' : member.role === 'viewer' ? 'text-accent-orange' : 'text-accent-green'}`}>
               {ROLE_LABELS_MAP[member.role]}
             </Text>
           </View>
@@ -332,10 +333,10 @@ function MemberItem({ member, isAdmin, isSelf, onRemove, onRoleChange }: MemberI
       {isAdmin && !isSelf && (
         <View className="flex-row gap-1">
           <TouchableOpacity
-            className="w-7 h-7 rounded-full bg-accent-blue/10 items-center justify-center"
+            className="w-7 h-7 rounded-full bg-accent-green/10 items-center justify-center"
             onPress={onRemove}
           >
-            <X size={16} color="#FF3B30" />
+            <X size={16} color={colors.accentRed} />
           </TouchableOpacity>
         </View>
       )}

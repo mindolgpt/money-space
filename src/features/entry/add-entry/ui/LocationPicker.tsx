@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, Alert, Linking, ActivityIndicator } from 'react-native'
+import { colors } from '@/shared/lib/colors'
 import * as Location from 'expo-location'
 
 type Props = {
@@ -59,7 +60,7 @@ export function LocationPicker({ latitude, longitude, locationName, onChange }: 
           <Text className="text-sm font-medium text-text-primary">위치</Text>
           {hasLocation ? (
             <TouchableOpacity onPress={openInMaps}>
-              <Text className="text-xs text-accent-blue mt-0.5 underline" numberOfLines={1}>
+              <Text className="text-xs text-accent-green mt-0.5 underline" numberOfLines={1}>
                 {locationName ?? `${latitude!.toFixed(4)}, ${longitude!.toFixed(4)}`}
               </Text>
             </TouchableOpacity>
@@ -68,7 +69,7 @@ export function LocationPicker({ latitude, longitude, locationName, onChange }: 
           )}
         </View>
         {loading ? (
-          <ActivityIndicator size="small" color="#007AFF" />
+          <ActivityIndicator size="small" color={colors.accentGreen} />
         ) : hasLocation ? (
           <TouchableOpacity onPress={removeLocation} className="p-2">
             <Text className="text-accent-red text-sm">삭제</Text>
@@ -76,9 +77,9 @@ export function LocationPicker({ latitude, longitude, locationName, onChange }: 
         ) : (
           <TouchableOpacity
             onPress={requestLocation}
-            className="px-3 py-1.5 rounded-lg bg-accent-blue/10"
+            className="px-3 py-1.5 rounded-lg bg-accent-green/10"
           >
-            <Text className="text-accent-blue text-sm font-medium">현재 위치 추가</Text>
+            <Text className="text-accent-green text-sm font-medium">현재 위치 추가</Text>
           </TouchableOpacity>
         )}
       </View>

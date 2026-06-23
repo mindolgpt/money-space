@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
+import { colors } from '@/shared/lib/colors'
 import { useCreateFamily } from '@/entities/family'
 
 type Props = {
@@ -51,7 +52,7 @@ export function CreateFamilyModal({ onClose }: Props) {
       <View className="flex-1 bg-bg-primary">
         <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity onPress={onClose}>
-            <Text className="text-accent-blue text-base">취소</Text>
+            <Text className="text-accent-green text-base">취소</Text>
           </TouchableOpacity>
           <Text className="text-lg font-bold text-text-primary">가족 생성</Text>
           <View style={{ width: 50 }} />
@@ -62,7 +63,7 @@ export function CreateFamilyModal({ onClose }: Props) {
           <TextInput
             className={`input mb-1 ${nameError ? 'border-accent-red' : ''}`}
             placeholder="예: 김씨 가족"
-            placeholderTextColor="#C7C7CC"
+            placeholderTextColor={colors.textTertiary}
             value={name}
             onChangeText={onNameChange}
             maxLength={30}
@@ -76,13 +77,13 @@ export function CreateFamilyModal({ onClose }: Props) {
           </View>
 
           <TouchableOpacity
-            className={`btn py-4 flex-row justify-center items-center ${
-              !name.trim() || isPending ? 'bg-accent-blue/60' : 'btn-primary'
+            className={`py-4 flex-row justify-center items-center rounded-lg ${
+              !name.trim() || isPending ? 'bg-accent-green/60' : 'bg-accent-green'
             }`}
             onPress={onCreate}
             disabled={!name.trim() || isPending}
           >
-            {isPending ? <ActivityIndicator color="white" className="mr-2" /> : null}
+            {isPending ? <ActivityIndicator color={colors.white} className="mr-2" /> : null}
             <Text className="text-white font-semibold text-base">
               {isPending ? '생성 중...' : '가족 생성'}
             </Text>

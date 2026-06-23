@@ -32,9 +32,9 @@ export function Card({ variant = 'default', padded = true, className = '', style
     elevated: {
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.08,
-      shadowRadius: 16,
-      elevation: 4,
+      shadowOpacity: 0.06,
+      shadowRadius: 12,
+      elevation: 3,
     },
     outlined: {},
   }
@@ -42,7 +42,7 @@ export function Card({ variant = 'default', padded = true, className = '', style
   return (
     <View
       className={cn(
-        'rounded-2xl border',
+        'rounded-lg border',
         variants[variant],
         padded && 'p-4',
         className

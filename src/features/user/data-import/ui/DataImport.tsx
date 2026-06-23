@@ -7,6 +7,7 @@ import {
   Alert,
 } from 'react-native'
 import * as DocumentPicker from 'expo-document-picker'
+import { colors } from '@/shared/lib/colors'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { createEntryLocally } from '@/entities/entry'
 import type { Entry } from '@/entities/entry'
@@ -137,14 +138,14 @@ export function DataImport() {
         </Text>
 
         <TouchableOpacity
-          className={`py-3 rounded-xl items-center flex-row justify-center ${
-            isImporting ? 'bg-accent-blue/60' : 'bg-accent-blue'
+          className={`py-3 rounded-lg items-center flex-row justify-center ${
+            isImporting ? 'bg-accent-green/60' : 'bg-accent-green'
           }`}
           onPress={onImportPress}
           disabled={isImporting}
         >
           {isImporting ? (
-            <ActivityIndicator color="white" className="mr-2" />
+            <ActivityIndicator color={colors.white} className="mr-2" />
           ) : null}
           <Text className="text-white font-semibold">
             {isImporting ? '처리 중...' : '파일 선택'}

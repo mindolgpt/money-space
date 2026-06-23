@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFFFF;
+            color: #191c1d;
+            overflow-x: hidden;
+        }
+        .numpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-category {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+            border-color: #10b981 !important;
+        }
+        .active-category .cat-icon-container {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            border-color: transparent !important;
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        .cursor-blink {
+            animation: pulse-soft 1s infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#006c49",
+                        "primary-container": "#10b981",
+                        "on-primary": "#ffffff",
+                        "secondary": "#565e74",
+                        "background": "#ffffff",
+                        "surface": "#ffffff",
+                        "surface-container": "#f3f4f6",
+                        "on-surface": "#191c1d",
+                        "on-surface-variant": "#6c7a71",
+                        "outline": "#bbcabf",
+                        "outline-variant": "#e1e3e4"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col items-center justify-start">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-outline-variant flex justify-between items-center px-6 h-16">
+<button class="flex items-center gap-1.5 text-on-surface hover:bg-black/5 px-2 py-1 rounded-lg transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">close</span>
+<span class="font-label-md text-label-md">취소</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface">지출 기록</h1>
+<button class="bg-primary-container text-on-primary px-4 py-1.5 rounded-full font-label-md text-label-md hover:brightness-95 transition-all active:scale-95" id="save-transaction">
+            완료
+        </button>
+</header>
+<main class="w-full max-w-lg mt-16 flex-1 flex flex-col px-6 pb-8 overflow-y-auto">
+<!-- Amount Input Display -->
+<section class="flex flex-col items-center justify-center py-12">
+<span class="font-label-md text-label-md text-on-surface-variant mb-2">금액</span>
+<div class="flex items-center gap-1">
+<span class="font-headline-xl text-headline-xl text-primary-container">₩</span>
+<span class="font-headline-xl text-headline-xl text-on-surface tracking-tighter" id="amount-display">0</span>
+<span class="w-1 h-10 bg-primary-container cursor-blink rounded-full ml-1"></span>
+</div>
+</section>
+<!-- Category Selection -->
+<section class="mb-8">
+<h2 class="font-label-sm text-label-sm text-on-surface-variant mb-4 uppercase tracking-wider px-1">카테고리</h2>
+<div class="grid grid-cols-4 gap-3">
+<button class="category-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-outline-variant transition-all active:scale-95" data-category="Shopping">
+<div class="cat-icon-container w-11 h-11 rounded-full flex items-center justify-center bg-surface-container-low border border-outline-variant">
+<span class="material-symbols-outlined text-lg">shopping_bag</span>
+</div>
+<span class="font-label-sm text-[11px]">쇼핑</span>
+</button>
+<button class="category-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-outline-variant transition-all active:scale-95 active-category" data-category="Dining">
+<div class="cat-icon-container w-11 h-11 rounded-full flex items-center justify-center bg-surface-container-low border border-outline-variant">
+<span class="material-symbols-outlined text-lg">restaurant</span>
+</div>
+<span class="font-label-sm text-[11px]">식비</span>
+</button>
+<button class="category-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-outline-variant transition-all active:scale-95" data-category="Transport">
+<div class="cat-icon-container w-11 h-11 rounded-full flex items-center justify-center bg-surface-container-low border border-outline-variant">
+<span class="material-symbols-outlined text-lg">commute</span>
+</div>
+<span class="font-label-sm text-[11px]">교통</span>
+</button>
+<button class="category-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-outline-variant transition-all active:scale-95" data-category="Travel">
+<div class="cat-icon-container w-11 h-11 rounded-full flex items-center justify-center bg-surface-container-low border border-outline-variant">
+<span class="material-symbols-outlined text-lg">flight</span>
+</div>
+<span class="font-label-sm text-[11px]">여행</span>
+</button>
+</div>
+</section>
+<!-- Feed Toggle & Description -->
+<section class="space-y-6 mb-8">
+<div class="bg-surface-container-low border border-outline-variant p-4 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-[20px]">share</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">피드에 공유하기</p>
+<p class="text-[10px] text-on-surface-variant leading-tight">나의 소비 목표를 친구들과 공유해보세요</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<div class="relative px-1">
+<input class="w-full bg-transparent border-b border-outline-variant focus:border-primary-container transition-colors py-3 font-body-lg text-body-lg text-on-surface outline-none placeholder:text-on-surface-variant/40" placeholder="어디에 쓰셨나요?" type="text"/>
+</div>
+</section>
+<div class="flex-1"></div>
+</main>
+<!-- Numpad Fixed Bottom -->
+<footer class="w-full max-w-lg bg-surface-container border-t border-outline-variant p-4 pb-8 z-50">
+<div class="numpad-grid">
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="1">1</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="2">2</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="3">3</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="4">4</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="5">5</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="6">6</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="7">7</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="8">8</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="9">9</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val=".">.</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-on-surface hover:bg-white/50 active:scale-95 transition-all" data-val="0">0</button>
+<button class="num-btn h-14 rounded-lg flex items-center justify-center font-headline-md text-headline-md text-primary-container hover:bg-white/50 active:scale-95 transition-all" data-val="back">
+<span class="material-symbols-outlined text-2xl">backspace</span>
+</button>
+</div>
+</footer>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const display = document.getElementById('amount-display');
+            let currentInput = "0";
+
+            function updateDisplay() {
+                let clean = currentInput.replace(/[^0-9.]/g, '');
+                if (clean === "" || clean === ".") clean = "0";
+                
+                const parts = clean.split('.');
+                if (parts.length > 2) clean = parts[0] + '.' + parts[1];
+                if (parts[1] && parts[1].length > 2) clean = parts[0] + '.' + parts[1].substring(0, 2);
+
+                const val = parseFloat(clean);
+                display.innerText = val.toLocaleString('ko-KR', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            document.querySelectorAll('.num-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const val = btn.getAttribute('data-val');
+                    
+                    if (val === 'back') {
+                        currentInput = currentInput.slice(0, -1);
+                        if (currentInput === "") currentInput = "0";
+                    } else if (val === '.') {
+                        if (!currentInput.includes('.')) {
+                            currentInput += '.';
+                        }
+                    } else {
+                        if (currentInput === "0") {
+                            currentInput = val;
+                        } else {
+                            currentInput += val;
+                        }
+                    }
+                    updateDisplay();
+                });
+            });
+
+            // Category Selection Logic
+            const catBtns = document.querySelectorAll('.category-btn');
+            catBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    catBtns.forEach(b => b.classList.remove('active-category'));
+                    btn.classList.add('active-category');
+                });
+            });
+
+            // Save interaction
+            document.getElementById('save-transaction').addEventListener('click', function() {
+                const originalText = this.innerText;
+                this.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span>';
+                setTimeout(() => {
+                    this.innerHTML = '<span class="material-symbols-outlined">check</span>';
+                }, 800);
+            });
+        });
+    </script>
+</body></html>

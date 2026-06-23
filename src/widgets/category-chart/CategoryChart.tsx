@@ -6,6 +6,7 @@ import Animated, {
   withDelay,
 } from 'react-native-reanimated'
 import { type LucideIcon, Utensils, ShoppingCart, Car, Coffee, Film, Pill, Wallet, FileText } from 'lucide-react-native'
+import { colors } from '@/shared/lib/colors'
 
 type Props = {
   entries: Entry[]
@@ -23,14 +24,14 @@ type CategoryBarProps = {
 }
 
 const CATEGORY_COLORS = [
-  '#FF453A',
-  '#FF9F0A',
-  '#FFD60A',
-  '#30D158',
-  '#BF5AF2',
-  '#0A84FF',
-  '#FF375F',
-  '#64D2FF',
+  '#10b981',
+  '#ba1a1a',
+  '#565e74',
+  '#a43a3a',
+  '#5c647a',
+  '#fc7c78',
+  '#006c49',
+  '#3c4a42',
 ]
 
 function CategoryBar({
@@ -60,7 +61,7 @@ function CategoryBar({
   return (
     <View className="flex-row items-center mb-4">
       <View className="w-16 flex-row items-center">
-        <IconComponent size={16} color="#86868B" />
+        <IconComponent size={16} color={colors.textTertiary} />
         <Text className="text-xs text-text-secondary ml-1.5" numberOfLines={1}>
           {cat}
         </Text>

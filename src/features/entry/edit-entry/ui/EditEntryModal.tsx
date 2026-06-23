@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { X } from 'lucide-react-native'
+import { colors } from '@/shared/lib/colors'
 import { useEntry, useUpdateEntry, useDeleteEntry, EntryType, PaymentMethod, UpdateEntryInput } from '@/entities/entry'
 import { AmountInput } from '@/features/entry/add-entry/ui/AmountInput'
 import { CategoryPicker } from '@/features/entry/add-entry/ui/CategoryPicker'
@@ -136,7 +137,7 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-bg-primary">
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={colors.accentGreen} />
       </View>
     )
   }
@@ -157,7 +158,7 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
             className="w-8 h-8 rounded-full items-center justify-center"
             onPress={onClose}
           >
-            <X size={20} color="#86868B" />
+            <X size={20} color={colors.textTertiary} />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-text-primary">거래 수정</Text>
           <TouchableOpacity onPress={onDelete}>
@@ -171,8 +172,8 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
             {ENTRY_TYPES.map((t) => (
               <TouchableOpacity
                 key={t.key}
-                className={`flex-1 py-3 rounded-xl items-center ${
-                  type === t.key ? 'bg-accent-blue' : 'bg-bg-tertiary'
+                className={`flex-1 py-2.5 rounded-full items-center ${
+                  type === t.key ? 'bg-accent-green' : 'bg-bg-tertiary'
                 }`}
                 onPress={() => setType(t.key)}
               >
@@ -231,7 +232,7 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
             <TextInput
               className="input min-h-[80px]"
               placeholder="메모를 입력하세요"
-              placeholderTextColor="#C7C7CC"
+              placeholderTextColor={colors.textTertiary}
               value={note}
               onChangeText={(t) => {
                 if (t.length <= 500) setNote(t)
@@ -253,7 +254,7 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
             <Switch
               value={isShared}
               onValueChange={setIsShared}
-              trackColor={{ false: '#E8E8ED', true: '#34C759' }}
+              trackColor={{ false: colors.bgElevated, true: colors.accentGreen }}
               thumbColor="white"
             />
           </View>
@@ -269,23 +270,23 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
             <Switch
               value={isRecurring}
               onValueChange={setIsRecurring}
-              trackColor={{ false: '#E8E8ED', true: '#34C759' }}
+              trackColor={{ false: colors.bgElevated, true: colors.accentGreen }}
               thumbColor="white"
             />
           </View>
 
           {/* Save Button */}
           <TouchableOpacity
-            className={`btn py-4 flex-row justify-center items-center ${
+            className={`py-3.5 rounded-lg items-center justify-center flex-row ${
               isPending || !amount || !categoryId
-                ? 'bg-accent-blue/60'
-                : 'btn-primary'
+                ? 'bg-accent-green/60'
+                : 'bg-accent-green'
             }`}
             onPress={onSave}
             disabled={isPending || !amount || !categoryId}
           >
             {isPending ? (
-              <ActivityIndicator color="white" className="mr-2" />
+              <ActivityIndicator color={colors.white} className="mr-2" />
             ) : null}
             <Text className="text-white font-semibold text-base">
               {isPending ? '저장 중...' : '저장하기'}

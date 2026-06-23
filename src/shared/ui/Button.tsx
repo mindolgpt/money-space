@@ -1,5 +1,6 @@
 import { TouchableOpacity, Text, ActivityIndicator, type TouchableOpacityProps } from 'react-native'
 import { cn } from '@/shared/lib/cn'
+import { colors } from '@/shared/lib/colors'
 
 type ButtonProps = TouchableOpacityProps & {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline'
@@ -19,7 +20,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const variantClasses = {
-    primary: 'bg-text-text-primary active:opacity-90',
+    primary: 'bg-accent-green active:opacity-90',
     secondary: 'bg-bg-tertiary active:opacity-80',
     ghost: 'bg-transparent active:bg-bg-tertiary',
     danger: 'bg-semantic-expense/15 active:opacity-80',
@@ -35,9 +36,9 @@ export function Button({
   }
 
   const sizeClasses = {
-    sm: 'py-2 px-4 rounded-lg',
-    md: 'py-3.5 px-6 rounded-xl',
-    lg: 'py-4 px-8 rounded-xl',
+    sm: 'py-2 px-4 rounded-md',
+    md: 'py-3.5 px-6 rounded-lg',
+    lg: 'py-4 px-8 rounded-lg',
   }
 
   const textSizeClasses = {
@@ -62,7 +63,7 @@ export function Button({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'primary' ? '#FFFFFF' : variant === 'danger' ? '#FF3B30' : '#1D1D1F'}
+          color={variant === 'primary' ? colors.white : variant === 'danger' ? colors.accentRed : colors.textPrimary}
         />
       ) : (
         <>

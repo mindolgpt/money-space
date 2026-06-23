@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Money-Space | 피드</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2e3132",
+                        "on-surface-variant": "#3c4a42",
+                        "on-surface": "#191c1d",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "on-tertiary-container": "#711419",
+                        "background": "#f8f9fa",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#00422b",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "secondary": "#565e74",
+                        "inverse-on-surface": "#f0f1f2",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9fa",
+                        "on-primary-fixed-variant": "#005236",
+                        "surface-container": "#edeeef",
+                        "on-background": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-container-highest": "#e1e3e4",
+                        "tertiary": "#a43a3a",
+                        "on-tertiary-fixed": "#410005",
+                        "surface-tint": "#006c49",
+                        "primary-fixed-dim": "#4edea3",
+                        "secondary-fixed": "#dae2fd",
+                        "on-secondary-container": "#5c647a",
+                        "surface-dim": "#d9dadb",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#10b981",
+                        "outline-variant": "#bbcabf",
+                        "primary": "#006c49",
+                        "outline": "#6c7a71",
+                        "tertiary-container": "#fc7c78",
+                        "surface-variant": "#e1e3e4",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#4edea3",
+                        "surface-container-low": "#f3f4f5",
+                        "primary-fixed": "#6ffbbe",
+                        "on-primary-fixed": "#002113",
+                        "on-tertiary-fixed-variant": "#842225"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-lg": "24px",
+                        "section-gap": "48px",
+                        "gutter": "16px",
+                        "container-padding-desktop": "32px",
+                        "stack-md": "16px",
+                        "unit": "4px",
+                        "container-padding-mobile": "16px",
+                        "margin-mobile": "1.25rem"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-xl-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-xl": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-xl-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #191c1d;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100dvh;
+        }
+        .feed-card {
+            background: #ffffff;
+            border: 1px solid #edeeef;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        .story-ring {
+            background: linear-gradient(45deg, #10b981, #6ffbbe);
+            padding: 2px;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .emerald-gradient {
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar component from COMPONENTS_12 -->
+<header class="flex justify-between items-center px-gutter h-16 w-full fixed top-0 z-50 bg-surface shadow-[0px_4px_12px_rgba(0,0,0,0.03)] transition-opacity">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 28px;">account_balance_wallet</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">소셜 금융 피드</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">add_circle</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-20 pb-28 max-w-xl mx-auto">
+<!-- Stories Section -->
+<section class="mb-6">
+<div class="flex gap-4 overflow-x-auto hide-scrollbar px-margin-mobile py-2">
+<!-- User Story Add -->
+<div class="flex flex-col items-center gap-2 flex-shrink-0">
+<div class="w-16 h-16 rounded-full border-2 border-dashed border-outline flex items-center justify-center text-outline">
+<span class="material-symbols-outlined">add</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">나의 목표</span>
+</div>
+<!-- Active Stories -->
+<div class="flex flex-col items-center gap-2 flex-shrink-0">
+<div class="w-16 h-16 rounded-full story-ring">
+<div class="w-full h-full rounded-full bg-surface-container-lowest overflow-hidden border-2 border-surface-container-lowest">
+<img alt="Bali Trip" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCd9azcQ-vrKFjtlj4HJ_H8sWgi5mJUkL6Y0vOhAaY6PPSsmoD5y1Obzpm8trXWBEtp2bSxDURyMZQDLtYULgxfwUoL_hbOSML1pddt0Gvxueamy4Ak2U7n-TSUM7UtTzp_qlkR4JIqkLPUw9YdIJZo-IHomy8R7WItj82bGcl5C3_Q38smDS1qPCh79FZ3lxpIVAy-isLd8lm0v-5abcczIKsyh6NkAWLWgA6uScAnogVdRDtElR9PSGupOVKpbrYkSUBHuqryxZy1"/>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">발리 여행</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-shrink-0">
+<div class="w-16 h-16 rounded-full story-ring">
+<div class="w-full h-full rounded-full bg-surface-container-lowest overflow-hidden border-2 border-surface-container-lowest">
+<img alt="New Tesla" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9C37YqHeEAFTPfUUeNYOscFdRLLRqhMKlw2F_kfBARckGkUwkxz89iVDsPg2M5lhKGtuJauu58d5SOB9RZYm6ycuClepqnut-3oak2XdzueXA-_VKzf1hrM4MNFPZTUnLJIWRx8SSEmPsv-yF3ABRZtRbrjTLSdPIalFV5zjY3KzOFrLD8eh461QlKSGcQcM3BrEbgQJQmn8Wmo74F0DJ707MhA1jBMe-lZEkmYmN4bFhaSEl5lC6rR_FNrVGxjpVlfqe6mzjRJzq"/>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">새 테슬라</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-shrink-0">
+<div class="w-16 h-16 rounded-full story-ring">
+<div class="w-full h-full rounded-full bg-surface-container-lowest overflow-hidden border-2 border-surface-container-lowest">
+<img alt="Dream Loft" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB80ZoKb8SjUDhOcLAcLTUnJKJW7j65PQ0vCFLlmm5NHBbNysra9AuFdzJf5Fb1tq1WEnYbcYzbObeykk4Lsp6R4tgNtby2XGDHejwDqkzWyYmFjDEP6aOe5wBXD7SKYUkKY6P4WZghFIR-CrSbgVjtlpY2R8jlSEdo2NGQhhZToCjuF35J9kx4AhANUJoJhA8rNK-M9O-QUdgrDi6wimgZN5nExcj8PbOPZnJE9mkj5nl7xUQTpkHfHzXfYCx-BherGvQNOaqgxZ_V"/>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">드림 로프트</span>
+</div>
+</div>
+</section>
+<!-- Vertical Feed -->
+<section class="space-y-6 px-margin-mobile">
+<!-- Feed Item 1 -->
+<article class="feed-card rounded-xl overflow-hidden">
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-container">
+<img alt="Marcus Chen" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl4yvdXr9LT71Vj-WqcZcEdJDISJK9pshW843-JgZX-_oiH_QAtJjfWlng1KA6YR9J7aXAUlzlr0KgaTQMqhdJbjebOFQZC0FMBnoRK8j99g2cVEdPVgcLHHUGKdADtOhFQDnd4wqGBEgFdeLbnYiZ6f5WYSAidI2cQHYmxGQYpTWEfn376-G5dp0j3MZ8qgNrWLBZ3o7uunYTaKVf5BLF9eSGTdXsJec_-mSj0tEeeV56GZyzha53dc1vS8afG1ovdQtIYAOPusiD"/>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold">Marcus Chen</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">챌린지 우승자</p>
+</div>
+</div>
+<button class="text-on-surface-variant p-2">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="relative">
+<img alt="Savings Post" class="w-full aspect-square object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9Duck3p9TE96-ET6B3THoarqX3nwN4TzY-ZZ0nFI54s2XI1Ir6iJ2hqihRP6OT9NPt_0O_szZ-v_G-vyjRGW1jfSjSYGal6VHfFQmWSA9TxN5AvDhfzlbJcEPYLvQ3P6GnPLrJRx-TreBESBH1iGsfp01RqgwTPxtv5vj2E2-x78iIv40aI9M95qZvULoxJ9ZGtTpJJIgfT7Am8QBQESK4mo5AwDaiwgg9aQzLbxlmc7b-5G3yv-j7GTccJgG_UpSS02MuOpHkkFA"/>
+<div class="absolute top-4 right-4 bg-primary-container text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-label-md text-label-md font-semibold">절약한 $420</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-4">
+<button class="text-primary active:scale-125 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<div class="space-y-1">
+<p class="font-label-md text-label-md text-on-surface font-bold">좋아요 1,248개</p>
+<p class="font-body-md text-body-md text-on-surface leading-snug">
+<span class="font-bold">marcus_c</span> 방금 커피 안 마시기 30일 챌린지를 완료했어요! 절약한 420달러는 여행 자금에 보탰습니다. 발리, 기다려! ✈️☕️
+                    </p>
+<p class="font-label-sm text-label-sm text-outline pt-2">댓글 42개 모두 보기</p>
+<p class="font-label-sm text-[10px] text-outline uppercase tracking-wider">2시간 전</p>
+</div>
+</div>
+</article>
+<!-- Feed Item 2 -->
+<article class="feed-card rounded-xl overflow-hidden">
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-container">
+<img alt="Elena Rodriguez" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6HPTGC1LOEokgkKGknXIc_H1A1OvZciaGLu-Elqs9OZxNATvyiTVEEVJiXRH8o9UYHp5LOiTCGfR1r0IQYwLp4-qOBDH6N33YJ6Z1tZv3u8scY2vSwyRSfy9zD8Mbfpgz4NPA7xq66xtxzIaopeGm_MDR7tqZPiwSjO0oWW5crwRjkVRgsftftZJYQmLmkfPnu6g-8yU1fSjpCMN-UyrHEoUiNSuYI3q-IvVbnASqCnpXLQjBJ1rX7yO5jRaXzgS8lDm7RL7y7Rlq"/>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold">Elena Rodriguez</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">라이프스타일 기록</p>
+</div>
+</div>
+<button class="text-on-surface-variant p-2">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="relative">
+<img alt="Office Post" class="w-full aspect-square object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxOIsH0UV6J6ElFkgJQulG_Mq1W3o4CUYf7lN7GbQBfodcfMOey66L9qpUOi6VA6QGdFCC5u5-99h0rOMIFzrwTeQ4yDTgatcHEgDUTfL2fqJwryJR_TcnSMmhIInzTSdLreQVuVF2Hkt5Jv6-8p3YsQHVvd8U4y28pQ02x4a-JGve-4jQY_xH8pYPVxiddH0Hf7TRXCybo5obROIiVNqRU8TrGcpngTmrvytZwXEGFZ9yjTIC7APdUNZ_ZWs29dDw-mNGqMPTfjkc"/>
+<div class="absolute top-4 right-4 bg-tertiary-container text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
+<span class="material-symbols-outlined text-sm">shopping_cart</span>
+<span class="font-label-md text-label-md font-semibold">지출 $1,150</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<div class="space-y-1">
+<p class="font-label-md text-label-md text-on-surface font-bold">좋아요 856개</p>
+<p class="font-body-md text-body-md text-on-surface leading-snug">
+<span class="font-bold">elena_r</span> 홈 오피스 업그레이드 완료. 질보다 양! 이 세팅으로 생산성이 배가 될 것 같네요! 👩‍💻✨ #투자 #워크스페이스
+                    </p>
+<div class="flex gap-2 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">#비즈니스</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">#라이프스타일</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline pt-2">댓글 12개 모두 보기</p>
+<p class="font-label-sm text-[10px] text-outline uppercase tracking-wider">5시간 전</p>
+</div>
+</div>
+</article>
+<!-- Milestone Card (Creative) -->
+<article class="feed-card rounded-xl overflow-hidden p-8 flex flex-col items-center text-center emerald-gradient border-none">
+<div class="w-20 h-20 rounded-full bg-primary-container/20 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-primary mb-2">순자산 달성!</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-xs">
+                공식적으로 개인 자산 5만 달러를 돌파했습니다. 이 기세를 이어가세요!
+            </p>
+<div class="flex justify-center items-end gap-3 h-32 mb-8">
+<div class="w-10 h-16 bg-primary/20 rounded-t-lg"></div>
+<div class="w-10 h-24 bg-primary/40 rounded-t-lg"></div>
+<div class="w-10 h-32 bg-primary rounded-t-lg"></div>
+</div>
+<button class="w-full bg-primary text-white py-4 rounded-xl font-headline-md shadow-lg shadow-primary/20 active:scale-[0.98] transition-all">
+                마일스톤 공유하기
+            </button>
+</article>
+</section>
+</main>
+<!-- BottomNavBar component from COMPONENTS_12 -->
+<nav class="fixed bottom-0 w-full h-20 flex justify-around items-center px-4 bg-surface z-50 shadow-[0px_-4px_12px_rgba(0,0,0,0.03)] border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-primary bg-secondary-container rounded-xl px-3 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label-sm text-label-sm">자산</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-size: 32px;">add_circle</span>
+<span class="font-label-sm text-label-sm">추가</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="font-label-sm text-label-sm">챌린지</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">프로필</span>
+</a>
+</nav>
+<script>
+    // Micro-interactions for buttons
+    document.querySelectorAll('button, a').forEach(el => {
+        el.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            ripple.className = 'absolute bg-primary/10 rounded-full w-4 h-4 animate-ping pointer-events-none';
+            ripple.style.left = `${e.clientX}px`;
+            ripple.style.top = `${e.clientY}px`;
+            document.body.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+</script>
+</body></html>

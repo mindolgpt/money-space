@@ -26,7 +26,7 @@ export function InviteScreen({ familyId }: Props) {
   if (!familyId && user) {
     return (
       <View className="flex-1 bg-bg-primary items-center justify-center p-6">
-        <View className="w-20 h-20 rounded-full bg-accent-blue/10 items-center justify-center mb-4">
+        <View className="w-20 h-20 rounded-full bg-accent-green/10 items-center justify-center mb-4">
           <Text className="text-3xl">👨‍👩‍👧</Text>
         </View>
         <Text className="text-lg font-bold text-text-primary mb-2">
@@ -36,7 +36,7 @@ export function InviteScreen({ familyId }: Props) {
           초대 코드를 입력하여 가족에 참여하세요
         </Text>
         <TouchableOpacity
-          className="btn-primary py-3 px-8 rounded-xl"
+          className="bg-accent-green py-3 px-8 rounded-lg"
           onPress={() => setShowJoinModal(true)}
         >
           <Text className="text-white font-semibold">초대 코드 입력</Text>
@@ -64,7 +64,7 @@ export function InviteScreen({ familyId }: Props) {
         autoCapitalize="none"
       />
       <TouchableOpacity
-        className="bg-accent-blue rounded-lg p-3 items-center"
+        className="bg-accent-green rounded-lg p-3 items-center"
         onPress={handleSend}
         disabled={isPending}
       >

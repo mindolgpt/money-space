@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Money-Space | 내 자산 현황</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #191c1d;
+            overflow-x: hidden;
+            min-height: max(884px, 100dvh);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2e3132",
+                        "on-surface-variant": "#3c4a42",
+                        "on-surface": "#191c1d",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "on-tertiary-container": "#711419",
+                        "background": "#f8f9fa",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#00422b",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "secondary": "#565e74",
+                        "inverse-on-surface": "#f0f1f2",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9fa",
+                        "on-primary-fixed-variant": "#005236",
+                        "surface-container": "#edeeef",
+                        "on-background": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-container-highest": "#e1e3e4",
+                        "tertiary": "#a43a3a",
+                        "on-tertiary-fixed": "#410005",
+                        "surface-tint": "#006c49",
+                        "primary-fixed-dim": "#4edea3",
+                        "secondary-fixed": "#dae2fd",
+                        "on-secondary-container": "#5c647a",
+                        "surface-dim": "#d9dadb",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#10b981",
+                        "outline-variant": "#e5e7eb",
+                        "primary": "#10b981",
+                        "outline": "#6c7a71",
+                        "tertiary-container": "#fc7c78",
+                        "surface-variant": "#e1e3e4",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#4edea3",
+                        "surface-container-low": "#f3f4f5",
+                        "primary-fixed": "#6ffbbe",
+                        "on-primary-fixed": "#002113",
+                        "on-tertiary-fixed-variant": "#842225"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-lg": "24px",
+                        "section-gap": "48px",
+                        "gutter": "16px",
+                        "container-padding-desktop": "32px",
+                        "stack-md": "16px",
+                        "unit": "4px",
+                        "container-padding-mobile": "16px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-xl-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-xl": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-xl-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body-md text-on-surface antialiased">
+<!-- Top App Bar (From COMPONENTS_12) -->
+<header class="flex justify-between items-center px-gutter h-16 w-full fixed top-0 z-50 bg-surface shadow-[0px_4px_12px_rgba(0,0,0,0.03)]">
+<div class="flex items-center gap-stack-sm active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet">account_balance_wallet</span>
+<h1 class="font-headline-md font-bold text-primary">Money-Space</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="p-2 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-cover bg-center border border-outline-variant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXzCCSPNglOP8Tgf8kiKPJIQAasUaCJ7tlg84JfEf8eRzVj05r6ArOgCPnUKBB2PZhoMSgDT6X9t4PELb9tjwp3MVi6kptwjI83Afsda8pRGyhyKNj4fJHJsDkQST41bKGCX6oH8fVDlFZp2FgMYE_OWOScc5XvFLYlKNx4OQTM_dYpoB2HhVN0sDEotSXyzmLdhcWtIUDQj9inG8XBCL_ThA6vQf8xHwOu9Nn6efLft8GTRPzo401ZumZ6IQD3I2IkZzVuGd_5atg')"></div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto space-y-stack-lg">
+<!-- Hero Section: Total Balance -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm flex flex-col items-center justify-center text-center">
+<div class="space-y-1">
+<span class="font-label-md text-on-surface-variant uppercase tracking-widest">총 잔액</span>
+<div class="flex items-baseline justify-center gap-1">
+<span class="font-headline-xl text-on-surface">$42,650</span>
+<span class="font-headline-md text-on-surface-variant">.84</span>
+</div>
+<div class="mt-stack-sm inline-flex items-center gap-1 text-primary bg-primary/10 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span class="font-label-sm">이번 달 +12.5% 증가</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Category Charts -->
+<section class="lg:col-span-8 space-y-stack-md">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-on-surface">주요 소비 카테고리</h2>
+<span class="font-label-md text-primary cursor-pointer hover:underline font-semibold">상세 분석 보기</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-stack-md">
+<!-- Food Category -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-stack-md">
+<div class="p-2 bg-tertiary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-tertiary" data-icon="restaurant">restaurant</span>
+</div>
+<span class="font-label-sm text-on-surface-variant">42%</span>
+</div>
+<p class="font-label-md text-on-surface-variant">식비</p>
+<p class="font-headline-md text-on-surface">$1,240</p>
+<div class="mt-stack-md h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 42%"></div>
+</div>
+</div>
+<!-- Travel Category -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-stack-md">
+<div class="p-2 bg-secondary-container/30 rounded-lg">
+<span class="material-symbols-outlined text-secondary" data-icon="flight">flight</span>
+</div>
+<span class="font-label-sm text-on-surface-variant">28%</span>
+</div>
+<p class="font-label-md text-on-surface-variant">여행</p>
+<p class="font-headline-md text-on-surface">$850</p>
+<div class="mt-stack-md h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 28%"></div>
+</div>
+</div>
+<!-- Life Category -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-sm hover:shadow-md transition-shadow col-span-2 md:col-span-1">
+<div class="flex justify-between items-start mb-stack-md">
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="movie">movie</span>
+</div>
+<span class="font-label-sm text-on-surface-variant">15%</span>
+</div>
+<p class="font-label-md text-on-surface-variant">생활</p>
+<p class="font-headline-md text-on-surface">$420</p>
+<div class="mt-stack-md h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 15%"></div>
+</div>
+</div>
+</div>
+<!-- Savings Progress Card -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-lg rounded-xl shadow-sm relative overflow-hidden group">
+<div class="flex flex-col md:flex-row justify-between items-center gap-stack-md relative z-10">
+<div class="space-y-stack-sm flex-1">
+<h3 class="font-headline-md text-on-surface">발리 휴가 계획</h3>
+<p class="font-body-md text-on-surface-variant">목표액 $5,000 중 75%를 달성했습니다. 조금만 더 힘내세요!</p>
+<div class="pt-stack-md">
+<div class="flex justify-between font-label-sm mb-2">
+<span class="text-primary font-bold">$3,750.00</span>
+<span class="text-on-surface-variant">목표: $5,000</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-1000 ease-out" style="width: 75%"></div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-48 h-32 rounded-lg bg-cover bg-center border border-outline-variant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDFGGPpfnTGkQ-1q8iBUPtMOj3HQhwzr8B7NPh3pHa8kn_NFzGIWzMlcmcPXqfP_qjPmTXNZAinU9ne0JiWv5nmvRjJhBgMeBxlQJZMnuLH1G5rgnA9fBCyFA5oEpEzVN7n0gqRMhKsvn7zxNCtMH_CRFsakNugPJ2BWElNqB9_p2U0iH0cFLfj7MsKu_O1BK4blQsqgJfjtGOneW9vnCNk-3-J8T9D2OXN0zi7pr3BEssKDqV_sSKV_WvetDiQnOGKnE15tw3ZuIUC')"></div>
+</div>
+</div>
+</section>
+<!-- Transaction Tray & Sidebar -->
+<aside class="lg:col-span-4 space-y-stack-md">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-on-surface">최근 거래 내역</h2>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:bg-surface-container p-1 rounded-full transition-colors" data-icon="tune">tune</span>
+</div>
+<div class="space-y-stack-sm max-h-[500px] overflow-y-auto custom-scrollbar pr-1">
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl flex items-center gap-stack-md hover:bg-surface-container-low transition-colors cursor-pointer shadow-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-on-surface font-semibold">애플 스토어</p>
+<p class="font-label-sm text-on-surface-variant">기술 • 2시간 전</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-on-surface font-bold">-$129.00</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest border-l-4 border-l-primary border border-outline-variant p-stack-md rounded-xl flex items-center gap-stack-md hover:bg-surface-container-low transition-colors cursor-pointer shadow-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center bg-primary/10 text-primary">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-on-surface font-semibold">급여 입금</p>
+<p class="font-label-sm text-on-surface-variant">수입 • 5시간 전</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-primary font-bold">+$4,200.00</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl flex items-center gap-stack-md hover:bg-surface-container-low transition-colors cursor-pointer shadow-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-on-surface font-semibold">스타벅스</p>
+<p class="font-label-sm text-on-surface-variant">식비 • 어제</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-on-surface font-bold">-$6.50</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl flex items-center gap-stack-md hover:bg-surface-container-low transition-colors cursor-pointer shadow-sm">
+<div class="w-12 h-12 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-on-surface font-semibold">우버</p>
+<p class="font-label-sm text-on-surface-variant">여행 • 어제</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-on-surface font-bold">-$24.80</p>
+</div>
+</div>
+</div>
+<div class="border-2 border-dashed border-outline-variant p-stack-md rounded-xl flex items-center justify-center gap-stack-sm text-primary hover:border-primary hover:bg-primary/5 transition-all cursor-pointer group">
+<span class="material-symbols-outlined transition-transform group-hover:rotate-90" data-icon="add">add</span>
+<span class="font-label-md font-bold">새 거래 추가</span>
+</div>
+</aside>
+</div>
+</main>
+<!-- Bottom Navigation Bar (From COMPONENTS_12) -->
+<nav class="fixed bottom-0 w-full h-20 flex justify-around items-center px-4 bg-surface shadow-[0px_-4px_12px_rgba(0,0,0,0.03)] border-t border-outline-variant z-50">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm">홈</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary bg-secondary-container rounded-xl px-4 py-1 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="account_balance" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="font-label-sm font-bold">자산</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-label-sm">추가</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="emoji_events">emoji_events</span>
+<span class="font-label-sm">챌린지</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-high transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm">프로필</span>
+</button>
+</nav>
+<script>
+        window.addEventListener('load', () => {
+            const bars = document.querySelectorAll('.h-full');
+            bars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.transition = 'width 1s ease-out';
+                    bar.style.width = width;
+                }, 300);
+            });
+        });
+    </script>
+</body></html>

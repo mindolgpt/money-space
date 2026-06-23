@@ -8,6 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native'
+import { colors } from '@/shared/lib/colors'
 import {
   CreditCard,
   Shield,
@@ -68,7 +69,7 @@ const renderIcon = (iconKey: string, size: number) => {
   const icon = getIconComponent(iconKey)
   if (typeof icon === 'function') {
     const IconComponent = icon as LucideIcon
-    return <IconComponent size={size} color="#86868B" />
+    return <IconComponent size={size} color={colors.textTertiary} />
   }
   return <Text className="text-lg">{icon}</Text>
 }
@@ -122,7 +123,7 @@ export function CategoryCreateModal({ type, onClose }: Props) {
         {/* Header */}
         <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity onPress={onClose}>
-            <Text className="text-accent-blue text-base">취소</Text>
+            <Text className="text-accent-green text-base">취소</Text>
           </TouchableOpacity>
           <Text className="text-lg font-bold text-text-primary">카테고리 추가</Text>
           <View style={{ width: 50 }} />
@@ -136,7 +137,7 @@ export function CategoryCreateModal({ type, onClose }: Props) {
               <TouchableOpacity
                 key={icon}
                 className={`w-11 h-11 rounded-xl items-center justify-center ${
-                  selectedIcon === icon ? 'bg-accent-blue' : 'bg-bg-tertiary'
+                  selectedIcon === icon ? 'bg-accent-green' : 'bg-bg-tertiary'
                 }`}
                 onPress={() => onIconSelect(icon)}
               >
@@ -150,7 +151,7 @@ export function CategoryCreateModal({ type, onClose }: Props) {
           <TextInput
             className={`input mb-1 ${nameError ? 'border-accent-red' : ''}`}
             placeholder="카테고리명 (최대 20자)"
-            placeholderTextColor="#C7C7CC"
+            placeholderTextColor={colors.textTertiary}
             value={name}
             onChangeText={onNameChange}
             maxLength={20}
@@ -165,16 +166,16 @@ export function CategoryCreateModal({ type, onClose }: Props) {
 
           {/* Save Button */}
           <TouchableOpacity
-            className={`btn py-4 flex-row justify-center items-center ${
+            className={`py-4 flex-row justify-center items-center rounded-lg ${
               !selectedIcon || !name.trim() || isPending
-                ? 'bg-accent-blue/60'
-                : 'btn-primary'
+                ? 'bg-accent-green/60'
+                : 'bg-accent-green'
             }`}
             onPress={onSave}
             disabled={!selectedIcon || !name.trim() || isPending}
           >
             {isPending ? (
-              <ActivityIndicator color="white" className="mr-2" />
+              <ActivityIndicator color={colors.white} className="mr-2" />
             ) : null}
             <Text className="text-white font-semibold text-base">
               {isPending ? '저장 중...' : '저장'}

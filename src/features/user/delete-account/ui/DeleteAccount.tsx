@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
+import { colors } from '@/shared/lib/colors'
 import { useDeleteAccount } from '@/entities/user'
 
 export function DeleteAccount() {
@@ -71,7 +72,7 @@ export function DeleteAccount() {
         <TextInput
           className={`input mb-1 ${passwordError ? 'border-accent-red' : ''}`}
           placeholder="현재 비밀번호"
-          placeholderTextColor="#C7C7CC"
+          placeholderTextColor={colors.textTertiary}
           value={password}
           onChangeText={onPasswordChange}
           secureTextEntry
@@ -83,14 +84,14 @@ export function DeleteAccount() {
         ) : null}
 
         <TouchableOpacity
-          className={`py-3 rounded-xl items-center mt-2 flex-row justify-center ${
+          className={`py-3 rounded-lg items-center mt-2 flex-row justify-center ${
             isPending ? 'bg-accent-red/60' : 'bg-accent-red'
           }`}
           onPress={onDeletePress}
           disabled={isPending}
         >
           {isPending ? (
-            <ActivityIndicator color="white" className="mr-2" />
+            <ActivityIndicator color={colors.white} className="mr-2" />
           ) : null}
           <Text className="text-white font-semibold">
             {isPending ? '처리 중...' : '계정 삭제'}

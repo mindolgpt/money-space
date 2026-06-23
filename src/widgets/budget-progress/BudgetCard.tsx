@@ -11,6 +11,7 @@ import { FileText } from 'lucide-react-native'
 import type { Budget } from '@/entities/budget'
 import { useDeleteBudget, BUDGET_KEYS } from '@/entities/budget'
 import { BudgetProgress } from '@/widgets/budget-progress/BudgetProgress'
+import { colors } from '@/shared/lib/colors'
 
 type Props = {
   budget: Budget
@@ -96,7 +97,7 @@ export function BudgetCard({
         >
           <View className="flex-row items-center justify-between mb-1">
             <View className="flex-row items-center">
-              <FileText size={16} color="#86868B" className="mr-2" />
+              <FileText size={16} color={colors.textTertiary} className="mr-2" />
               <Text className="font-medium text-text-primary">{categoryName}</Text>
             </View>
             <Text className="text-xs text-text-secondary">

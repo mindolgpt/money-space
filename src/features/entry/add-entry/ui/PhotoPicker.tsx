@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import { colors } from '@/shared/lib/colors'
 import { X } from 'lucide-react-native'
 
 type Props = {
@@ -110,7 +111,7 @@ export function PhotoPicker({ photoUrls, onAddPhoto, onRemovePhoto }: Props) {
               className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-accent-red items-center justify-center"
               onPress={() => onRemove(index)}
             >
-              <X size={12} color="white" />
+              <X size={12} color={colors.white} />
             </TouchableOpacity>
           </View>
         ))}
@@ -122,7 +123,7 @@ export function PhotoPicker({ photoUrls, onAddPhoto, onRemovePhoto }: Props) {
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator size="small" color="#007AFF" />
+              <ActivityIndicator size="small" color={colors.accentGreen} />
             ) : (
               <Text className="text-2xl text-text-tertiary">+</Text>
             )}
