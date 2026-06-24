@@ -1,4 +1,4 @@
-import * as SecureStore from 'expo-secure-store'
+import { getItem, setItem, removeItem } from '@/shared/lib/storage'
 
 export async function storeTokens(
   session: {
@@ -7,33 +7,33 @@ export async function storeTokens(
   } | null,
 ) {
   if (session?.access_token) {
-    await SecureStore.setItemAsync('access_token', session.access_token)
+    await setItem('access_token', session.access_token)
     if (session.refresh_token) {
-      await SecureStore.setItemAsync('refresh_token', session.refresh_token)
+      await setItem('refresh_token', session.refresh_token)
     }
   }
 }
 
 export async function getAccessToken(): Promise<string | null> {
-  return SecureStore.getItemAsync('access_token')
+  return getItem('access_token')
 }
 
 export async function clearTokens(): Promise<void> {
-  await SecureStore.deleteItemAsync('access_token')
-  await SecureStore.deleteItemAsync('refresh_token')
+  await removeItem('access_token')
+  await removeItem('refresh_token')
 }
 
 const ONBOARDING_KEY = 'has_completed_onboarding'
 
 export async function getOnboardingStatus(): Promise<boolean> {
-  const value = await SecureStore.getItemAsync(ONBOARDING_KEY)
+  const value = await getItem(ONBOARDING_KEY)
   return value === 'true'
 }
 
 export async function setOnboardingCompleted(): Promise<void> {
-  await SecureStore.setItemAsync(ONBOARDING_KEY, 'true')
+  await setItem(ONBOARDING_KEY, 'true')
 }
 
 export async function clearOnboardingStatus(): Promise<void> {
-  await SecureStore.deleteItemAsync(ONBOARDING_KEY)
+  await removeItem(ONBOARDING_KEY)
 }
