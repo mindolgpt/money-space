@@ -252,11 +252,11 @@ export function StatisticsScreen() {
 
       {/* Saving & Daily Avg */}
       <View className="flex-row px-4 gap-3 mb-4">
-        <Card className="flex-1">
+        <Card className="flex-1 self-start">
           <Text className="text-label-sm font-medium">저축</Text>
           <AmountText amount={saving} type="saving" className="text-label-md" showSign={false} />
         </Card>
-        <Card className="flex-1">
+        <Card className="flex-1 self-start">
           <Text className="text-label-sm font-medium">일 평균 지출</Text>
           <Text className={`text-label-md font-semibold ${expense > 0 ? 'text-semantic-expense' : 'text-text-primary'}`}>
             {expense > 0 ? `₩${dailyAvg.toLocaleString()}` : '-'}

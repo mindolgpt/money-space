@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, type LucideIcon } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import {
   View,
   ScrollView,
@@ -21,6 +21,7 @@ import {
   Pill,
   FileText,
   Bell,
+  type LucideIcon,
 } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useEntries } from '@/entities/entry'

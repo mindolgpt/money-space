@@ -3,8 +3,8 @@ import { generateId } from '@/shared/lib/uuid'
 type SQLiteDatabase = {
   execSync: (sql: string) => any[]
   runSync: (sql: string, ...params: any[]) => any
-  getAllSync: (sql: string, ...params: any[]) => any[]
-  getFirstSync: (sql: string, ...params: any[]) => any
+  getAllSync: <T = any>(sql: string, ...params: any[]) => T[]
+  getFirstSync: <T = any>(sql: string, ...params: any[]) => T
 }
 
 const tables = new Set<string>()

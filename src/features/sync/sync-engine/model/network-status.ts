@@ -26,7 +26,7 @@ export function onNetworkChange(listener: NetworkListener): () => void {
 export async function isWifi(): Promise<boolean> {
   try {
     const state = await Network.getNetworkStateAsync()
-    return state.isConnected && state.type === Network.NetworkStateType.WIFI
+    return !!(state.isConnected) && state.type === Network.NetworkStateType.WIFI
   } catch {
     return false
   }

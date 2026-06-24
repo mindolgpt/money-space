@@ -56,7 +56,7 @@ export function SyncStatus() {
 
   return (
     <View className="mt-2 flex-row items-center gap-2">
-      <View className="px-2.5 py-1 rounded-full bg-accent-yellow/15 flex-1 self-start">
+      <View className="px-2.5 py-1 rounded-full bg-accent-yellow/15 self-start">
         <View className="flex-row items-center gap-1">
           <Clock size={12} color={colors.accentOrange} />
           <Text className="text-label-sm font-semibold text-accent-orange">

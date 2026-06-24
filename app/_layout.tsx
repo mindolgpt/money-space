@@ -4,10 +4,22 @@ import { StatusBar } from 'expo-status-bar'
 import { useThemeStore } from '@/shared/lib/theme-provider'
 import { ErrorBoundary } from '@/shared/ui'
 import { logger } from '@/shared/lib/logger'
+import { Platform, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 function RootLayoutContent() {
   const { isDark } = useThemeStore()
+
+  if (Platform.OS === 'web') {
+    return (
+      <>
+        <StatusBar style={isDark ? 'light' : 'dark'} />
+        <View style={{ flex: 1 }}>
+          <Stack screenOptions={{ headerShown: false }} />
+        </View>
+      </>
+    )
+  }
 
   return (
     <>

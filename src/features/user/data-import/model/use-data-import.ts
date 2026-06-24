@@ -89,6 +89,8 @@ export function useDataImport() {
             date: entry.date,
             categoryId: entry.categoryId,
             note: entry.note,
+            isShared: false,
+            isRecurring: false,
           })
           successCount++
         }

@@ -47,7 +47,7 @@ export function useEditEntry(entryId: string, onClose: () => void, onSuccess?: (
     return parseInt(val, 10).toLocaleString()
   }
 
-  const setLocation = (loc: { latitude?: number; longitude?: number; locationName?: string } | undefined) => {
+  const setLocation = (loc: { latitude: number; longitude: number; locationName: string } | null) => {
     setLatitude(loc?.latitude)
     setLongitude(loc?.longitude)
     setLocationName(loc?.locationName)

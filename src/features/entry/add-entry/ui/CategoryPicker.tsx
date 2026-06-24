@@ -50,7 +50,7 @@ function CategoryGridItem({ item, selectedId, onSelect, variantPill }: CategoryI
   return (
     <Animated.View style={animStyle} className="w-1/4 px-1 mb-3 items-center">
       <CategoryPill
-        icon={IconComponent}
+        icon={IconComponent as any}
         label={item.name}
         active={isSelected}
         variant={variantPill}

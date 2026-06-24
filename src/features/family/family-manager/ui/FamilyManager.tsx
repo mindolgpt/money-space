@@ -41,10 +41,10 @@ export function FamilyManager({ onClose }: Props) {
       </View>
 
       <View className="flex-row px-4 py-3 gap-3">
-        <Button variant="primary" size="md" className="flex-1" onPress={() => setShowCreateModal(true)}>
+        <Button variant="primary" size="md" className="flex-1 self-start" onPress={() => setShowCreateModal(true)}>
           가족 생성
         </Button>
-        <Button variant="secondary" size="md" className="flex-1" onPress={() => setShowJoinModal(true)}>
+        <Button variant="secondary" size="md" className="flex-1 self-start" onPress={() => setShowJoinModal(true)}>
           초대 코드 입력
         </Button>
       </View>
@@ -77,10 +77,10 @@ export function FamilyManager({ onClose }: Props) {
         <View className="px-4 mt-4">
           {isAdmin && (
             <View className="flex-row gap-3 mb-4">
-              <Button variant="outline" size="sm" className="flex-1" onPress={onCopyCode}>
+              <Button variant="outline" size="sm" className="flex-1 self-start" onPress={onCopyCode}>
                 코드 보기
               </Button>
-              <Button variant="outline" size="sm" className="flex-1" onPress={onShareInvite}>
+              <Button variant="outline" size="sm" className="flex-1 self-start" onPress={onShareInvite}>
                 초대 공유
               </Button>
             </View>

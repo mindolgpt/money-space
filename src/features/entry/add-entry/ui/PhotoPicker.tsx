@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text, Image, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, Image, Alert, ActivityIndicator, TouchableOpacity } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { colors } from '@/shared/lib/colors'
 import { X, Camera } from 'lucide-react-native'
@@ -108,15 +108,17 @@ export function PhotoPicker({ photoUrls, onAddPhoto, onRemovePhoto }: Props) {
               className="w-20 h-20 rounded-xl"
               resizeMode="cover"
             />
-            <View className="absolute -top-1.5 -right-1.5">
+            <TouchableOpacity
+              className="absolute -top-1.5 -right-1.5"
+              onPress={() => onRemove(index)}
+            >
               <IconCircle
                 icon={X}
                 variant="red"
                 size="sm"
                 iconSize={10}
-                onPress={() => onRemove(index)}
               />
-            </View>
+            </TouchableOpacity>
           </View>
         ))}
 
