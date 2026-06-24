@@ -1,16 +1,13 @@
 import { useState } from 'react'
 import {
   View,
-  Text,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
 } from 'react-native'
 import { router } from 'expo-router'
-import { colors } from '@/shared/lib/colors'
 import { createUserApi } from '@/entities/user'
+import { Button, Input, Typography } from '@/shared/ui'
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -66,23 +63,23 @@ export function PasswordResetForm() {
         <View className="flex-1 justify-center px-6">
           <View className="items-center mb-10">
             <View className="w-20 h-20 rounded-2xl bg-accent-green/10 items-center justify-center mb-4">
-              <Text className="text-3xl">✉️</Text>
+              <Typography variant="headline-md">✉️</Typography>
             </View>
-            <Text className="text-2xl font-bold text-text-primary mb-2">
+            <Typography variant="headline-md" weight="bold" color="primary" className="mb-2">
               이메일 전송 완료
-            </Text>
-            <Text className="text-sm text-secondary text-center leading-5">
+            </Typography>
+            <Typography variant="label-sm" color="secondary" className="text-center leading-5">
               {email}로{'\n'}비밀번호 재설정 링크를 보냈습니다.
-            </Text>
+            </Typography>
           </View>
-          <TouchableOpacity
-            className="bg-accent-green py-4 items-center rounded-lg"
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
             onPress={() => router.back()}
           >
-            <Text className="text-white font-semibold text-base">
-              로그인으로 돌아가기
-            </Text>
-          </TouchableOpacity>
+            로그인으로 돌아가기
+          </Button>
         </View>
       </KeyboardAvoidingView>
     )
@@ -97,33 +94,35 @@ export function PasswordResetForm() {
         {/* Title */}
         <View className="items-center mb-10">
           <View className="w-20 h-20 rounded-2xl bg-accent-green/10 items-center justify-center mb-4">
-            <Text className="text-3xl">🔑</Text>
+            <Typography variant="headline-md">🔑</Typography>
           </View>
-          <Text className="text-2xl font-bold text-text-primary mb-2">
+          <Typography variant="headline-md" weight="bold" color="primary" className="mb-2">
             비밀번호 찾기
-          </Text>
-          <Text className="text-sm text-secondary text-center leading-5">
+          </Typography>
+          <Typography variant="label-sm" color="secondary" className="text-center leading-5">
             가입한 이메일 주소를 입력하면{'\n'}
             재설정 링크를 보내드립니다.
-          </Text>
+          </Typography>
         </View>
 
         {/* Error */}
         {error ? (
           <View className="bg-accent-red/10 rounded-xl p-3 mb-4">
-            <Text className="text-accent-red text-sm text-center">{error}</Text>
+            <Typography variant="label-sm" color="expense" className="text-center">
+              {error}
+            </Typography>
           </View>
         ) : null}
 
         {/* Form */}
         <View className="mb-6">
-          <Text className="text-sm text-secondary mb-2">이메일</Text>
-          <TextInput
-            className={`input mb-6 ${error ? 'border-accent-red' : ''}`}
+          <Input
+            variant="box"
+            label="이메일"
             placeholder="example@email.com"
-            placeholderTextColor={colors.textTertiary}
             value={email}
             onChangeText={onEmailChange}
+            error={error}
             autoCapitalize="none"
             keyboardType="email-address"
             editable={!isLoading}
@@ -131,20 +130,16 @@ export function PasswordResetForm() {
             onSubmitEditing={onResetPress}
           />
 
-          <TouchableOpacity
-            className={`py-4 flex-row justify-center items-center rounded-lg ${
-              isLoading ? 'bg-accent-green/60' : 'bg-accent-green'
-            }`}
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={isLoading}
             onPress={onResetPress}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <ActivityIndicator color={colors.white} className="mr-2" />
-            ) : null}
-            <Text className="text-white font-semibold text-base">
-              {isLoading ? '전송 중...' : '재설정 링크 보내기'}
-            </Text>
-          </TouchableOpacity>
+            {isLoading ? '전송 중...' : '재설정 링크 보내기'}
+          </Button>
         </View>
 
         {/* Back to Login */}
@@ -153,9 +148,9 @@ export function PasswordResetForm() {
           onPress={() => router.back()}
           disabled={isLoading}
         >
-          <Text className="text-accent-green text-sm font-medium">
+          <Typography variant="label-sm" color="accent" weight="medium">
             로그인으로 돌아가기
-          </Text>
+          </Typography>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

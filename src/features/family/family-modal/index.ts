@@ -1,3 +1,6 @@
 export { CreateFamilyModal } from '@/features/family/family-modal/ui/CreateFamilyModal'
 export { JoinFamilyModal } from '@/features/family/family-modal/ui/JoinFamilyModal'
 export { InviteFamilyModal } from '@/features/family/family-modal/ui/InviteFamilyModal'
+export { useCreateFamilyModal } from '@/features/family/family-modal/model/use-create-family-modal'
+export { useInviteFamilyModal } from '@/features/family/family-modal/model/use-invite-family-modal'
+export { useJoinFamilyModal } from '@/features/family/family-modal/model/use-join-family-modal'

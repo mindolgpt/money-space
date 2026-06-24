@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react'
 import {
   View,
   Text,
-  TextInput,
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
@@ -12,6 +11,7 @@ import { Search, Lightbulb, Film, Pill, Wallet, FileText, Utensils, ShoppingCart
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useSearchEntries } from '@/entities/entry'
 import { useDebounce } from '@/features/entry/search-entries/model/use-debounce'
+import { Input, Button, Chip } from '@/shared/ui'
 import { colors } from '@/shared/lib/colors'
 import type { Entry } from '@/entities/entry'
 
@@ -97,53 +97,39 @@ export function SearchSheet({ onClose }: Props) {
 
   return (
     <View className="flex-1 bg-bg-primary">
-      {/* Header */}
       <View className="px-4 pt-4 pb-3">
-        <View className="flex-row items-center">
-          <View className="flex-1 flex-row items-center bg-bg-tertiary rounded-lg px-4 py-3">
-            <Search size={20} color={colors.textTertiary} className="mr-3" />
-            <TextInput
-              className="flex-1 text-base text-text-primary"
+        <View className="flex-row items-center gap-2">
+          <View className="flex-1">
+            <Input
+              variant="box"
+              containerClassName="mb-0"
               placeholder="검색 (메모, 금액)"
-              placeholderTextColor={colors.textTertiary}
               value={query}
               onChangeText={setQuery}
               autoFocus
+              rightElement={isFetching ? <ActivityIndicator size="small" color={colors.accentGreen} /> : undefined}
             />
-            {isFetching && (
-              <ActivityIndicator size="small" color={colors.accentGreen} />
-            )}
           </View>
-          <TouchableOpacity
-            className="ml-3 px-3 py-2 rounded-lg bg-bg-tertiary"
-            onPress={() => setShowFilters(!showFilters)}
-          >
-            <Text className="text-sm text-text-secondary">필터</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="ml-2" onPress={onClose}>
-            <Text className="text-accent-green font-medium">취소</Text>
-          </TouchableOpacity>
+          <Button variant="secondary" size="sm" onPress={() => setShowFilters(!showFilters)}>
+            필터
+          </Button>
+          <Button variant="ghost" size="sm" onPress={onClose}>
+            취소
+          </Button>
         </View>
 
         {/* Filters */}
         {showFilters && (
           <View className="flex-row gap-2 mt-3">
             {typeFilters.map((f) => (
-              <TouchableOpacity
+              <Chip
                 key={f.key}
-                className={`px-3 py-1.5 rounded-full ${
-                  typeFilter === f.key ? 'bg-accent-green' : 'bg-bg-tertiary'
-                }`}
+                label={f.label}
+                variant={typeFilter === f.key ? 'filled' : 'outlined'}
+                color="green"
+                size="sm"
                 onPress={() => setTypeFilter(f.key)}
-              >
-                <Text
-                  className={`text-xs font-medium ${
-                    typeFilter === f.key ? 'text-white' : 'text-text-secondary'
-                  }`}
-                >
-                  {f.label}
-                </Text>
-              </TouchableOpacity>
+              />
             ))}
           </View>
         )}
@@ -152,7 +138,7 @@ export function SearchSheet({ onClose }: Props) {
       {/* Result count */}
       {query.trim() && (
         <View className="px-4 pb-2">
-          <Text className="text-xs text-text-tertiary">
+          <Text className="text-label-sm text-text-tertiary">
             {filteredResults.length}건{filteredResults.length !== results.length ? ` (${results.length}건 중)` : ''}
           </Text>
         </View>
@@ -175,11 +161,11 @@ export function SearchSheet({ onClose }: Props) {
               </View>
               <View className="flex-1">
                 <HighlightedText
-                  className="text-sm font-medium text-text-primary"
+                  className="text-body-md font-medium text-text-primary"
                   text={item.note || item.categoryId || '내역'}
                   highlight={query}
                 />
-                <Text className="text-xs text-text-tertiary mt-0.5">
+                <Text className="text-label-sm text-text-tertiary mt-0.5">
                   {item.date} · {item.paymentMethod ? (
                     { cash: '현금', card: '카드', account: '계좌', transfer: '이체' }[item.paymentMethod]
                   ) : '카드'}
@@ -206,12 +192,12 @@ export function SearchSheet({ onClose }: Props) {
             ) : query.trim() ? (
               <>
                 <Search size={32} color={colors.textTertiary} className="mb-3" />
-                <Text className="text-text-tertiary text-sm">검색 결과가 없습니다</Text>
+                <Text className="text-text-tertiary text-body-md">검색 결과가 없습니다</Text>
               </>
             ) : (
               <>
                 <Lightbulb size={32} color={colors.textTertiary} className="mb-3" />
-                <Text className="text-text-tertiary text-sm">
+                <Text className="text-text-tertiary text-body-md">
                   메모나 금액으로 검색하세요
                 </Text>
               </>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native'
+import { Button } from '@/shared/ui'
 import { colors } from '@/shared/lib/colors'
 import { Calendar } from 'lucide-react-native'
 
@@ -48,24 +49,25 @@ export function DatePicker({ value, onChange }: Props) {
 
   return (
     <>
-      <TouchableOpacity className="mb-4" onPress={openPicker}>
-        <Text className="text-sm text-text-secondary mb-2 font-medium">날짜</Text>
-        <View className="flex-row items-center bg-bg-tertiary rounded-lg px-4 py-3">
-          <Calendar size={20} color={colors.textTertiary} />
-          <Text className="text-base text-text-primary ml-2">{formatDisplay(value)}</Text>
-        </View>
-      </TouchableOpacity>
+      <View className="mb-4">
+        <Text className="text-label-md text-text-secondary mb-2 font-medium">날짜</Text>
+        <Button
+          variant="outline"
+          size="md"
+          fullWidth
+          icon={<Calendar size={20} color={colors.textTertiary} />}
+          onPress={openPicker}
+        >
+          {formatDisplay(value)}
+        </Button>
+      </View>
 
       <Modal visible={showModal} animationType="slide" presentationStyle="pageSheet">
         <View className="flex-1 bg-bg-primary">
           <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
-            <TouchableOpacity onPress={() => setShowModal(false)}>
-              <Text className="text-accent-green text-base font-semibold">취소</Text>
-            </TouchableOpacity>
-            <Text className="text-lg font-bold text-text-primary">날짜 선택</Text>
-            <TouchableOpacity onPress={confirm}>
-              <Text className="text-accent-green text-base font-semibold">확인</Text>
-            </TouchableOpacity>
+            <Button variant="ghost" onPress={() => setShowModal(false)}>취소</Button>
+            <Text className="text-headline-md font-bold text-text-primary">날짜 선택</Text>
+            <Button variant="ghost" onPress={confirm}>확인</Button>
           </View>
 
           <View className="flex-row flex-1">
@@ -76,7 +78,7 @@ export function DatePicker({ value, onChange }: Props) {
                   className={`py-3 items-center ${selectedYear === y ? 'bg-accent-green/10' : ''}`}
                   onPress={() => setSelectedYear(y)}
                 >
-                  <Text className={`text-sm ${selectedYear === y ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
+                  <Text className={`text-label-md ${selectedYear === y ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
                     {y}년
                   </Text>
                 </TouchableOpacity>
@@ -90,7 +92,7 @@ export function DatePicker({ value, onChange }: Props) {
                   className={`py-3 items-center ${selectedMonth === m ? 'bg-accent-green/10' : ''}`}
                   onPress={() => setSelectedMonth(m)}
                 >
-                  <Text className={`text-sm ${selectedMonth === m ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
+                  <Text className={`text-label-md ${selectedMonth === m ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
                     {m}월
                   </Text>
                 </TouchableOpacity>
@@ -104,7 +106,7 @@ export function DatePicker({ value, onChange }: Props) {
                   className={`py-3 items-center ${selectedDay === d ? 'bg-accent-green/10' : ''}`}
                   onPress={() => setSelectedDay(d)}
                 >
-                  <Text className={`text-sm ${selectedDay === d ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
+                  <Text className={`text-label-md ${selectedDay === d ? 'text-accent-green font-semibold' : 'text-text-secondary'}`}>
                     {d}일
                   </Text>
                 </TouchableOpacity>

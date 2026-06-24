@@ -16,7 +16,7 @@ export function SyncStatus() {
     return (
       <View className="mt-2">
         <View className="px-2.5 py-1 rounded-full bg-accent-orange/15 self-start">
-          <Text className="text-accent-orange text-xs font-medium">
+          <Text className="text-accent-orange text-label-sm font-semibold">
             오프라인
           </Text>
         </View>
@@ -30,7 +30,7 @@ export function SyncStatus() {
         <View className="px-2.5 py-1 rounded-full bg-accent-green/15 self-start">
           <View className="flex-row items-center gap-1">
             <RefreshCw size={12} color={colors.accentGreen} />
-            <Text className="text-accent-green text-xs font-medium">
+            <Text className="text-accent-green text-label-sm font-semibold">
               동기화 중...
             </Text>
           </View>
@@ -45,7 +45,7 @@ export function SyncStatus() {
         <View className="px-2.5 py-1 rounded-full bg-accent-green/15 self-start">
           <View className="flex-row items-center gap-1">
             <Check size={12} color={colors.accentGreen} />
-            <Text className="text-accent-green text-xs font-medium">
+            <Text className="text-accent-green text-label-sm font-semibold">
               동기화 완료
             </Text>
           </View>
@@ -59,7 +59,7 @@ export function SyncStatus() {
       <View className="px-2.5 py-1 rounded-full bg-accent-yellow/15 flex-1 self-start">
         <View className="flex-row items-center gap-1">
           <Clock size={12} color={colors.accentOrange} />
-          <Text className="text-xs font-medium text-accent-orange">
+          <Text className="text-label-sm font-semibold text-accent-orange">
             {pendingCount}개 동기화 대기
           </Text>
         </View>
@@ -69,7 +69,7 @@ export function SyncStatus() {
         onPress={() => manualSync()}
         disabled={isPending}
       >
-        <Text className="text-xs font-semibold text-accent-green">
+        <Text className="text-label-sm font-semibold text-accent-green">
           {isPending ? '...' : '동기화'}
         </Text>
       </TouchableOpacity>

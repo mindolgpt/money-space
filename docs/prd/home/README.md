@@ -229,7 +229,210 @@ onShowPendingCount() {
 }
 ```
 
-## 6. 상태 관리
+## 6. 주요 위젯
+
+### 6.1 PeriodSelector
+
+```typescript
+// src/widgets/period-selector/PeriodSelector.tsx
+
+export type PeriodType = 'week' | 'month' | 'year'
+
+// Props
+interface PeriodSelectorProps {
+  selected: PeriodType
+  onChange: (period: PeriodType) => void
+}
+
+// 기간 표시 라벨
+getPeriodDisplayLabel(period: PeriodType, date: Date): string
+// 주차 계산
+getWeekNumber(date: Date): number
+// 기간별 날짜 범위
+getDateRangeForPeriod(period: PeriodType, date: Date): { start: Date; end: Date }
+```
+
+### 6.2 MonthlySummary
+
+```typescript
+// src/widgets/monthly-summary/MonthlySummary.tsx
+
+interface MonthlySummaryProps {
+  year: number
+  month: number
+  income: number
+  expense: number
+  saving?: number
+}
+
+// 월별 요약 카드
+// 수입/지출/저축/잔액 4가지 항목 표시
+// HomeScreen 상단에 표시
+```
+
+### 6.3 RecentEntries
+
+```typescript
+// src/widgets/recent-entries/RecentEntries.tsx
+
+interface RecentEntriesProps {
+  entries: Entry[]
+}
+
+// 최근 5개 거래 표시 (스와이프 가능)
+// 왼쪽 스와이프: 수정 (초록)
+// 오른쪽 스와이프: 삭제 (빨강)
+// 탭: 상세 페이지 이동
+// "전체 보기" 링크 → CalendarScreen 이동
+```
+
+### 6.4 QuickInput
+
+```typescript
+// src/widgets/quick-input/ui/QuickInput.tsx
+
+interface QuickInputProps {
+  onEntryAdded?: () => void
+}
+
+// 접이식 빠른 입력 폼
+// 토글: 지출/수입/저축
+// 마지막 사용 카테고리 표시
+// 금액 입력 + 저장 버튼
+// 저장 시 확인 다이얼로그
+```
+
+### 6.5 MonthlyComparisonChart
+
+```typescript
+// src/widgets/monthly-comparison/MonthlyComparisonChart.tsx
+
+interface MonthlyComparisonProps {
+  // 월별 비교 데이터 제공 hook
+}
+
+// 사용: StatisticsScreen에서 월별 수입/지출/저축 비교 표시
+```
+
+### 6.6 PieChart
+
+```typescript
+// src/widgets/pie-chart/PieChart.tsx
+
+// 카테고리별 지출 비율을 원형 차트로 표시
+// StatisticsScreen에서 사용
+```
+
+### 6.7 BudgetVsActual
+
+```typescript
+// src/widgets/budget-vs-actual/BudgetVsActual.tsx
+
+interface BudgetVsActualProps {
+  budget: Budget | null
+  actualSpent: number
+  category?: Category
+}
+
+// 예산 대비 실제 지출을 시각적으로 표시
+// 초과 시 경고 애니메이션 (pulse)
+// 색상: Green(<50%) → Yellow(50-79%) → Orange(80-99%) → Red(100%+)
+```
+
+### 6.8 CategoryChart
+
+```typescript
+// src/widgets/category-chart/CategoryChart.tsx
+
+interface CategoryChartProps {
+  entries: Entry[]
+  type: 'expense' | 'income'
+}
+
+// 카테고리별 지출/수입 바 차트
+// StatisticsScreen에서 사용
+```
+
+### 6.9 BudgetCard
+
+```typescript
+// src/widgets/budget-progress/BudgetCard.tsx
+
+interface BudgetCardProps {
+  budget: Budget
+  categoryName: string
+  categoryIcon?: string
+  spent: number
+  onEdit?: () => void
+}
+
+// 스와이프로 삭제 가능한 예산 카드
+// BudgetManagerScreen에서 사용
+```
+
+### 6.10 SyncStatus
+
+```typescript
+// src/widgets/sync-status/SyncStatus.tsx
+
+// 동기화 상태 표시 위젯
+// isSyncing: 회전 애니메이션
+// isOnline: 오프라인 배너
+// pendingCount: 대기 중인 항목 수
+// onRefresh: 수동 동기화 트리거
+```
+
+## 7. 주요 페이지
+
+### 7.1 StatisticsScreen
+
+```typescript
+// src/pages/statistics/ui/StatisticsScreen.tsx
+
+// 기간 선택 (PeriodSelector: 주/월/연도)
+// 월별 요약 (MonthlySummary)
+// 지출 카테고리 차트 (CategoryChart)
+// 예산 대비 지출 (BudgetVsActual)
+// 월별 비교 차트 (MonthlyComparisonChart)
+```
+
+### 7.2 CalendarScreen
+
+```typescript
+// src/pages/calendar/ui/CalendarScreen.tsx
+
+// 달력 뷰
+// 특정 날짜 선택 시 해당 날짜의 내역 표시
+// EntryItem 탭 → DetailScreen 이동
+```
+
+### 7.3 DetailScreen
+
+```typescript
+// src/pages/details/ui/DetailScreen.tsx
+
+// Entry 상세 정보 표시
+// 사진, 위치, 메모 등
+// 수정/삭제 액션
+```
+
+### 7.4 SettingsScreen
+
+```typescript
+// src/pages/settings/ui/SettingsScreen.tsx
+
+// 프로필 설정 (ProfileSettings)
+// 알림 설정 (NotificationSettings)
+// 테마 설정
+// 데이터 내보내기 (DataExport)
+// 데이터 가져오기 (DataImport)
+// 가족 관리 (FamilyManagerScreen)
+// 카테고리 관리 (CategoryManagerScreen)
+// 계정 삭제 (DeleteAccount)
+// 로그아웃
+```
+
+## 8. 상태 관리
 
 | 상태 | 위치 | 방식 |
 |------|------|------|
@@ -240,7 +443,7 @@ onShowPendingCount() {
 | 테마 | 전역 | Zustand (`useThemeStore`) |
 | 인증 | 전역 | Zustand (`useAuthStore`) |
 
-## 7. 폴백/에러 처리
+## 9. 폴백/에러 처리
 
 | 상황 | 처리 |
 |------|------|

@@ -28,6 +28,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
       style={{
         height: 64,
         paddingBottom: 8,
+        paddingTop: 8,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.03,
@@ -72,10 +73,9 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
               color={isFocused ? colors.accentGreen : colors.textTertiary}
             />
             <Text
-              className="text-[11px] font-semibold mt-0.5"
+              className="text-label-sm font-semibold mt-0.5"
               style={{
                 color: isFocused ? colors.accentGreen : colors.textTertiary,
-                letterSpacing: 0.3,
               }}
             >
               {label}

@@ -290,31 +290,88 @@ onDetailTap() {
 }
 ```
 
-### 5.3 BudgetCard (목록 아이템)
+### 5.3 BudgetCard
 
 ```typescript
-// Events: 목록 내 개별 예산 카드
+// Events: src/widgets/budget-progress/BudgetCard.tsx
+
+interface BudgetCardProps {
+  budget: Budget
+  categoryName: string
+  categoryIcon?: string
+  spent: number
+  onEdit?: () => void
+}
 
 // ===== 스와이프 액세스 =====
-onSwipeLeft(budgetId: string) {
+onSwipeLeft() {
   // 삭제 버튼 Reveal
-  setSwipedBudgetId(budgetId)
+  setShowActions(true)
+  translateX.value = withTiming(-80, { duration: 200 })
+}
+
+// ===== 스와이프 복구 =====
+onSwipeRight() {
+  setShowActions(false)
+  translateX.value = withTiming(0, { duration: 200 })
 }
 
 // ===== 삭제 버튼 =====
-onDeleteBudget(budgetId: string) {
-  showConfirmDialog({
-    title: '예산 삭제',
-    message: '이 예산을 삭제하시겠습니까?',
-    confirmText: '삭제',
-    cancelText: '취소',
-    onConfirm: async () => {
-      await deleteBudget(budgetId)
-      queryClient.invalidateQueries({ queryKey: BUDGET_KEYS.all() })
-      showToast('삭제되었습니다')
+onDelete() {
+  Alert.alert('예산 삭제', '이 예산을 삭제하시겠습니까?', [
+    { text: '취소', style: 'cancel' },
+    {
+      text: '삭제',
+      style: 'destructive',
+      onPress: async () => {
+        await deleteBudget.mutateAsync(budget.id)
+        queryClient.invalidateQueries({ queryKey: BUDGET_KEYS.all() })
+      },
     },
-  })
+  ])
 }
+
+// ===== 카드 탭 =====
+onCardPress() {
+  if (showActions) {
+    onSwipeRight()
+  } else if (onEdit) {
+    onEdit()
+  }
+}
+```
+
+### 5.4 BudgetProgressBar
+
+```typescript
+// Events: src/features/budget/budget-manager/ui/BudgetProgressBar.tsx
+
+interface BudgetProgressBarProps {
+  categoryName: string
+  categoryIcon?: LucideIcon
+  spent: number
+  budget: number
+}
+
+// 예산 사용량 progress bar
+// BudgetManagerScreen에서 카테고리별 사용량 표시
+```
+
+### 5.5 BudgetVsActual
+
+```typescript
+// Events: src/widgets/budget-vs-actual/BudgetVsActual.tsx
+
+interface BudgetVsActualProps {
+  budget: Budget | null
+  actualSpent: number
+  category?: Category
+}
+
+// 예산 대비 실제 지출 시각화
+// 예산 미설정 시 "설정된 예산이 없습니다" 표시
+// 진행바 색상: Green(<50%) → Yellow(50-79%) → Orange(80-99%) → Red(100%+)
+// 100% 초과 시 pulse 애니메이션
 ```
 
 ## 6. 상태 관리

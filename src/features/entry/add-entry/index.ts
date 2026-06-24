@@ -1,7 +1,6 @@
 export { EntryForm } from '@/features/entry/add-entry/ui/EntryForm'
 export { AddEntryModal } from '@/features/entry/add-entry/ui/AddEntryModal'
 export { useEntryFormStore } from '@/features/entry/add-entry/model/use-entry-form-store'
-export { AmountInput } from '@/features/entry/add-entry/ui/AmountInput'
 export { PhotoPicker } from '@/features/entry/add-entry/ui/PhotoPicker'
 export { CategoryPicker } from '@/features/entry/add-entry/ui/CategoryPicker'
 export { DatePicker } from '@/features/entry/add-entry/ui/DatePicker'

@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Switch,
   ScrollView,
   Alert,
   KeyboardAvoidingView,
@@ -12,7 +11,7 @@ import {
 } from 'react-native'
 import { X } from 'lucide-react-native'
 import { colors } from '@/shared/lib/colors'
-import { Button } from '@/shared/ui'
+import { Button, Input, Toggle } from '@/shared/ui'
 import { useAuthStore } from '@/features/auth/auth-manager'
 import { useCreateEntry, EntryType, PaymentMethod, CreateEntryInput } from '@/entities/entry'
 import { useSetLastUsedCategory } from '@/entities/category'
@@ -27,10 +26,10 @@ type Props = {
   onSuccess?: () => void
 }
 
-const ENTRY_TYPES: { key: EntryType; label: string }[] = [
-  { key: 'expense', label: '지출' },
-  { key: 'income', label: '수입' },
-  { key: 'saving', label: '저축' },
+const ENTRY_TYPES: { key: EntryType; label: string; variant: 'green' | 'red' | 'blue' }[] = [
+  { key: 'expense', label: '지출', variant: 'red' },
+  { key: 'income', label: '수입', variant: 'green' },
+  { key: 'saving', label: '저축', variant: 'blue' },
 ]
 
 const INITIAL_STATE = {
@@ -199,7 +198,7 @@ export function EntryForm({ onClose, onSuccess }: Props) {
         <TouchableOpacity onPress={onModalClose}>
           <X size={20} color={colors.textPrimary} />
         </TouchableOpacity>
-        <Text className="text-base font-semibold text-text-primary">
+        <Text className="text-body-md font-semibold text-text-primary">
           {form.type === 'expense' ? '지출 기록' : form.type === 'income' ? '수입 기록' : '저축 기록'}
         </Text>
         <TouchableOpacity
@@ -208,7 +207,7 @@ export function EntryForm({ onClose, onSuccess }: Props) {
           disabled={isPending || !form.amount || !form.categoryId}
           style={{ opacity: isPending || !form.amount || !form.categoryId ? 0.5 : 1 }}
         >
-          <Text className="text-white text-sm font-semibold">완료</Text>
+          <Text className="text-white text-label-md font-bold">완료</Text>
         </TouchableOpacity>
       </View>
 
@@ -224,7 +223,7 @@ export function EntryForm({ onClose, onSuccess }: Props) {
             <TouchableOpacity
               key={t.key}
               className={`px-4 py-1.5 rounded-full ${
-                form.type === t.key ? 'bg-accent-green' : 'bg-bg-tertiary'
+                form.type === t.key ? 'bg-accent-green' : 'bg-bg-tertiary border border-border'
               }`}
               onPress={() => {
                 onFieldChange('type', t.key)
@@ -232,7 +231,7 @@ export function EntryForm({ onClose, onSuccess }: Props) {
               }}
             >
               <Text
-                className={`text-xs font-semibold ${
+                className={`text-label-md font-semibold ${
                   form.type === t.key ? 'text-white' : 'text-text-secondary'
                 }`}
               >
@@ -244,9 +243,9 @@ export function EntryForm({ onClose, onSuccess }: Props) {
 
         {/* Amount - Large Centered */}
         <View className="items-center py-8 px-4">
-          <Text className="text-sm font-medium text-text-secondary tracking-widest uppercase mb-3">금액</Text>
+          <Text className="text-label-md font-semibold text-text-secondary tracking-widest uppercase mb-3">금액</Text>
           <View className="flex-row items-baseline">
-            <Text className="text-3xl font-bold text-accent-green mr-1">₩</Text>
+            <Text className="text-headline-xl font-bold text-accent-green mr-1">₩</Text>
             <TextInput
               className="text-[36px] font-bold text-text-primary"
               style={{ letterSpacing: -0.72 }}
@@ -270,31 +269,26 @@ export function EntryForm({ onClose, onSuccess }: Props) {
           {/* Shared Toggle */}
           <View className="flex-row items-center justify-between py-4 px-4 mb-4 rounded-lg bg-bg-tertiary border border-border">
             <View className="flex-1 mr-3">
-              <Text className="text-sm font-medium text-text-primary">피드에 공유하기</Text>
-              <Text className="text-xs text-text-tertiary mt-0.5">
+              <Text className="text-body-md font-semibold text-text-primary">피드에 공유하기</Text>
+              <Text className="text-label-sm text-text-tertiary mt-0.5">
                 가족과 거래를 공유합니다
               </Text>
             </View>
-            <Switch
+            <Toggle
               value={form.isShared}
-              onValueChange={(v) => onFieldChange('isShared', v)}
-              trackColor={{ false: colors.bgElevated, true: colors.accentGreen }}
-              thumbColor="white"
+              onToggle={() => onFieldChange('isShared', !form.isShared)}
             />
           </View>
 
-          {/* Description */}
-          <View className="mb-4">
-            <TextInput
-              className="bg-transparent border-b border-border py-3 text-base text-text-primary"
-              placeholder="어디에 쓰셨나요?"
-              placeholderTextColor={colors.textTertiary + '66'}
-              value={form.note}
-              onChangeText={(t) => {
-                if (t.length <= 500) onFieldChange('note', t)
-              }}
-            />
-          </View>
+          {/* Description - Underline Input */}
+          <Input
+            variant="underline"
+            placeholder="어디에 쓰셨나요?"
+            value={form.note}
+            onChangeText={(t) => {
+              if (t.length <= 500) onFieldChange('note', t)
+            }}
+          />
 
           {/* Date */}
           <DatePicker
@@ -336,16 +330,14 @@ export function EntryForm({ onClose, onSuccess }: Props) {
           {/* Recurring Toggle */}
           <View className="flex-row items-center justify-between mb-6 py-3 border-b border-border">
             <View>
-              <Text className="text-sm font-medium text-text-primary">반복 설정</Text>
-              <Text className="text-xs text-text-tertiary mt-0.5">
+              <Text className="text-body-md font-semibold text-text-primary">반복 설정</Text>
+              <Text className="text-label-sm text-text-tertiary mt-0.5">
                 매월 자동으로 기록
               </Text>
             </View>
-            <Switch
+            <Toggle
               value={form.isRecurring}
-              onValueChange={(v) => onFieldChange('isRecurring', v)}
-              trackColor={{ false: colors.bgElevated, true: colors.accentGreen }}
-              thumbColor="white"
+              onToggle={() => onFieldChange('isRecurring', !form.isRecurring)}
             />
           </View>
 
@@ -353,6 +345,7 @@ export function EntryForm({ onClose, onSuccess }: Props) {
           <Button
             variant="primary"
             size="lg"
+            fullWidth
             loading={isPending}
             onPress={onSave}
             disabled={isPending || !form.amount || !form.categoryId}

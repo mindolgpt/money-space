@@ -62,7 +62,7 @@ function CategoryBar({
     <View className="flex-row items-center mb-4">
       <View className="w-16 flex-row items-center">
         <IconComponent size={16} color={colors.textTertiary} />
-        <Text className="text-xs text-text-secondary ml-1.5" numberOfLines={1}>
+        <Text className="text-label-sm text-text-secondary ml-1.5" numberOfLines={1}>
           {cat}
         </Text>
       </View>
@@ -110,7 +110,7 @@ export function CategoryChart({ entries, type }: Props) {
 
   return (
     <View className="card p-4 mx-4 mt-4">
-      <Text className="text-base font-semibold text-text-primary mb-4">
+      <Text className="text-body-md font-semibold text-text-primary mb-4">
         {type === 'expense' ? '지출 카테고리' : '수입 카테고리'}
       </Text>
       {sorted.length > 0 ? (
@@ -128,7 +128,7 @@ export function CategoryChart({ entries, type }: Props) {
         ))
       ) : (
         <View className="py-8 items-center">
-          <Text className="text-text-tertiary text-sm">내역이 없습니다</Text>
+          <Text className="text-text-tertiary text-label-md">내역이 없습니다</Text>
         </View>
       )}
     </View>

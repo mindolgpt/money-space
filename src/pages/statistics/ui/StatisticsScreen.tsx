@@ -12,7 +12,7 @@ import { MonthlyComparisonChart, useMonthlyComparison } from '@/widgets/monthly-
 import { PeriodSelector, getPeriodDisplayLabel, getDateRangeForPeriod, type PeriodType } from '@/widgets/period-selector'
 import { exportToPdf } from '@/shared/lib/export-helper'
 import { colors } from '@/shared/lib/colors'
-import { Card, AmountText } from '@/shared/ui'
+import { Card, AmountText, TopAppBar, ProgressBar } from '@/shared/ui'
 
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
 
@@ -174,26 +174,30 @@ export function StatisticsScreen() {
   return (
     <ScrollView className="flex-1 bg-bg-primary" contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
       {/* Header */}
-      <View className="px-5 pt-6 pb-2 flex-row items-center justify-between">
-        <Text className="text-xl font-bold text-text-primary tracking-tight">통계</Text>
-        <TouchableOpacity
-          className="px-3 py-1.5 bg-bg-tertiary rounded-lg flex-row items-center"
-          onPress={() => setShowExportMenu(!showExportMenu)}
-        >
-          <Download size={14} color={colors.textTertiary} />
-          <Text className="text-xs text-text-secondary font-medium ml-1.5">내보내기</Text>
-        </TouchableOpacity>
-        {showExportMenu && (
-          <View className="absolute top-full right-0 mt-2 bg-bg-secondary rounded-lg shadow-md z-10 border border-border">
+      <TopAppBar
+        title="통계"
+        trailing={
+          <TouchableOpacity
+            className="px-3 py-1.5 bg-bg-tertiary rounded-lg flex-row items-center"
+            onPress={() => setShowExportMenu(!showExportMenu)}
+          >
+            <Download size={14} color={colors.textTertiary} />
+            <Text className="text-label-sm font-medium ml-1.5">내보내기</Text>
+          </TouchableOpacity>
+        }
+      />
+      {showExportMenu && (
+        <View className="px-4 mb-2">
+          <Card padded={false} className="overflow-hidden">
             <TouchableOpacity className="px-4 py-3 border-b border-border" onPress={() => { handleExportCSV(); setShowExportMenu(false) }}>
-              <Text className="text-sm text-text-primary font-medium">CSV 내보내기</Text>
+              <Text className="text-body-md font-semibold">CSV 내보내기</Text>
             </TouchableOpacity>
             <TouchableOpacity className="px-4 py-3" onPress={handleExportPDF}>
-              <Text className="text-sm text-text-primary font-medium">PDF 내보내기</Text>
+              <Text className="text-body-md font-semibold">PDF 내보내기</Text>
             </TouchableOpacity>
-          </View>
-        )}
-      </View>
+          </Card>
+        </View>
+      )}
 
       <View className="px-4 mb-3">
         <PeriodSelector selected={periodType} onChange={setPeriodType} />
@@ -204,7 +208,7 @@ export function StatisticsScreen() {
         <TouchableOpacity className="w-9 h-9 rounded-full items-center justify-center bg-bg-tertiary" onPress={() => changeMonth(-1)}>
           <ChevronLeft size={20} color={colors.textTertiary} />
         </TouchableOpacity>
-        <Text className="text-base font-bold text-text-primary">
+        <Text className="text-headline-md font-bold text-text-primary">
           {periodType === 'year' ? `${year}년` : `${year}년 ${MONTHS[month - 1]}`}
         </Text>
         <TouchableOpacity className="w-9 h-9 rounded-full items-center justify-center bg-bg-tertiary" onPress={() => changeMonth(1)}>
@@ -220,25 +224,25 @@ export function StatisticsScreen() {
           </Text>
           <View className="flex-row">
             <View className="flex-1 items-center">
-              <View className="w-9 h-9 rounded-lg bg-semantic-income/10 items-center justify-center mb-1.5">
+              <View className="w-9 h-9 rounded-md bg-semantic-income/10 items-center justify-center mb-1.5">
                 <TrendingUp size={16} color={colors.accentGreen} />
               </View>
-              <Text className="text-xs text-text-secondary mb-1">총 수입</Text>
-              <AmountText amount={income} type="income" className="text-sm" showSign={false} />
+              <Text className="text-label-sm text-text-secondary mb-1">총 수입</Text>
+              <AmountText amount={income} type="income" className="text-label-md" showSign={false} />
             </View>
             <View className="flex-1 items-center">
-              <View className="w-9 h-9 rounded-lg bg-semantic-expense/10 items-center justify-center mb-1.5">
+              <View className="w-9 h-9 rounded-md bg-semantic-expense/10 items-center justify-center mb-1.5">
                 <TrendingDown size={16} color={colors.accentRed} />
               </View>
-              <Text className="text-xs text-text-secondary mb-1">총 지출</Text>
-              <AmountText amount={expense} type="expense" className="text-sm" showSign={false} />
+              <Text className="text-label-sm text-text-secondary mb-1">총 지출</Text>
+              <AmountText amount={expense} type="expense" className="text-label-md" showSign={false} />
             </View>
             <View className="flex-1 items-center">
-              <View className="w-9 h-9 rounded-lg bg-bg-tertiary items-center justify-center mb-1.5">
-                <Text className="text-sm font-bold text-text-primary">%</Text>
+              <View className="w-9 h-9 rounded-md bg-bg-tertiary items-center justify-center mb-1.5">
+                <Text className="text-label-md font-bold text-text-primary">%</Text>
               </View>
-              <Text className="text-xs text-text-secondary mb-1">절감률</Text>
-              <Text className={`text-sm font-bold ${savingsRate > 0 ? 'text-semantic-income' : 'text-semantic-expense'}`}>
+              <Text className="text-label-sm text-text-secondary mb-1">절감률</Text>
+              <Text className={`text-label-md font-semibold ${savingsRate > 0 ? 'text-semantic-income' : 'text-semantic-expense'}`}>
                 {savingsRate}%
               </Text>
             </View>
@@ -249,12 +253,12 @@ export function StatisticsScreen() {
       {/* Saving & Daily Avg */}
       <View className="flex-row px-4 gap-3 mb-4">
         <Card className="flex-1">
-          <Text className="text-xs text-text-secondary mb-1 font-medium">저축</Text>
-          <AmountText amount={saving} type="saving" className="text-sm" showSign={false} />
+          <Text className="text-label-sm font-medium">저축</Text>
+          <AmountText amount={saving} type="saving" className="text-label-md" showSign={false} />
         </Card>
         <Card className="flex-1">
-          <Text className="text-xs text-text-secondary mb-1 font-medium">일 평균 지출</Text>
-          <Text className={`text-sm font-bold ${expense > 0 ? 'text-semantic-expense' : 'text-text-primary'}`}>
+          <Text className="text-label-sm font-medium">일 평균 지출</Text>
+          <Text className={`text-label-md font-semibold ${expense > 0 ? 'text-semantic-expense' : 'text-text-primary'}`}>
             {expense > 0 ? `₩${dailyAvg.toLocaleString()}` : '-'}
           </Text>
         </Card>
@@ -278,18 +282,16 @@ export function StatisticsScreen() {
       {topExpenses.length > 0 && (
         <View className="px-4 mt-4 mb-3">
           <Card>
-            <Text className="text-sm font-semibold text-text-primary mb-4 tracking-tight">지출 상위 카테고리</Text>
+            <Text className="text-label-md font-semibold text-text-primary mb-4 tracking-tight">지출 상위 카테고리</Text>
             {topExpenses.map((item, index) => {
               const pct = totalTopExpense > 0 ? Math.round((item.amount / totalTopExpense) * 100) : 0
               return (
                 <View key={item.cat} className="flex-row items-center mb-3 last:mb-0">
-                  <Text className="text-xs text-text-tertiary w-4 font-medium">{index + 1}</Text>
+                  <Text className="text-label-sm font-medium">{index + 1}</Text>
                   <FileText size={16} color={colors.textTertiary} className="mr-2" />
-                  <Text className="text-sm text-text-primary flex-1">{item.cat}</Text>
-                  <View className="flex-1 h-1.5 bg-bg-tertiary rounded-full overflow-hidden mr-2">
-                    <View className="h-full bg-semantic-expense rounded-full" style={{ width: `${pct}%` }} />
-                  </View>
-                  <Text className="text-xs text-semantic-expense w-20 text-right font-medium">{item.amount.toLocaleString()}원</Text>
+                  <Text className="text-body-md font-semibold text-text-primary flex-1">{item.cat}</Text>
+                  <ProgressBar value={pct} variant="red" size="sm" className="flex-1 mr-2" />
+                  <Text className="text-body-md font-semibold text-semantic-expense w-20 text-right">{item.amount.toLocaleString()}원</Text>
                 </View>
               )
             })}

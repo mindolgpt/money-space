@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import * as Haptics from 'expo-haptics'
 import { AlertTriangle, FileText } from 'lucide-react-native'
 import { colors } from '@/shared/lib/colors'
+import { Typography } from '@/shared/ui'
 
 type Props = {
   categoryName: string
@@ -80,18 +81,21 @@ export function BudgetProgress({
         <View className="flex-row justify-between items-center mb-2">
           <View className="flex-row items-center">
             <FileText size={16} color={colors.textTertiary} className="mr-1.5" />
-            <Text className="text-sm font-medium text-text-primary">
+            <Typography variant="label-md" weight="medium">
               {categoryName}
-            </Text>
+            </Typography>
             {isOver && (
-              <AlertTriangle size={12} color={colors.accentRed} className="ml-1.5" />
+              <View className="ml-1.5">
+                <AlertTriangle size={12} color={colors.accentRed} />
+              </View>
             )}
           </View>
-          <Text
-            className={`text-sm ${isOver ? 'text-accent-red' : 'text-text-secondary'}`}
+          <Typography
+            variant="label-md"
+            color={isOver ? 'expense' : 'secondary'}
           >
             {spent.toLocaleString()} / {budget.toLocaleString()}원
-          </Text>
+          </Typography>
         </View>
         <View className="h-1.5 bg-bg-tertiary rounded-full overflow-hidden">
           <Animated.View
@@ -100,14 +104,14 @@ export function BudgetProgress({
           />
         </View>
         <View className="flex-row justify-between mt-1.5">
-          <Text className={`text-xs ${isOver ? 'text-accent-red' : 'text-text-tertiary'}`}>
+          <Typography variant="label-sm" color={isOver ? 'expense' : 'tertiary'}>
             {percentage}% 사용
-          </Text>
-          <Text className="text-xs text-text-tertiary">
+          </Typography>
+          <Typography variant="label-sm" color="tertiary">
             {isOver
               ? `초과 ${Math.abs(remaining).toLocaleString()}원`
               : `남은 ${remaining.toLocaleString()}원`}
-          </Text>
+          </Typography>
         </View>
       </Animated.View>
     </TouchableOpacity>

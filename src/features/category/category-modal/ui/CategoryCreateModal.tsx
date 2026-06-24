@@ -1,13 +1,4 @@
-import { useState } from 'react'
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Modal,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native'
+import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native'
 import { colors } from '@/shared/lib/colors'
 import {
   CreditCard,
@@ -44,8 +35,9 @@ import {
   Palette,
   type LucideIcon,
 } from 'lucide-react-native'
-import { useCreateCategory } from '@/entities/category'
+import { useCategoryCreate } from '@/features/category/category-modal/model/use-category-create'
 import type { CategoryType } from '@/entities/category'
+import { Button, Input, Typography } from '@/shared/ui'
 
 const ICON_DATA: { icon: string | LucideIcon; key: string }[] = [
   { icon: Utensils, key: '🍽️' }, { icon: Bus, key: '🚌' }, { icon: Home, key: '🏠' }, { icon: Smartphone, key: '📱' },
@@ -80,58 +72,27 @@ type Props = {
 }
 
 export function CategoryCreateModal({ type, onClose }: Props) {
-  const [name, setName] = useState('')
-  const [selectedIcon, setSelectedIcon] = useState('')
-  const [nameError, setNameError] = useState('')
-  const { mutateAsync: createCategory, isPending } = useCreateCategory()
-
-  const onNameChange = (text: string) => {
-    if (text.length > 20) return
-    setName(text)
-    if (text.trim()) setNameError('')
-  }
-
-  const onIconSelect = (icon: string) => {
-    setSelectedIcon(icon)
-  }
-
-  const onSave = async () => {
-    if (!selectedIcon) {
-      return
-    }
-
-    if (!name.trim()) {
-      setNameError('카테고리명을 입력해주세요')
-      return
-    }
-
-    try {
-      await createCategory({
-        name: name.trim(),
-        icon: selectedIcon,
-        type,
-      })
-      onClose()
-    } catch {
-      setNameError('생성에 실패했습니다')
-    }
-  }
+  const {
+    name,
+    selectedIcon,
+    nameError,
+    isPending,
+    onNameChange,
+    onIconSelect,
+    onSave,
+  } = useCategoryCreate(type, onClose)
 
   return (
     <Modal visible animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <View className="flex-1 bg-bg-primary">
-        {/* Header */}
         <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
-          <TouchableOpacity onPress={onClose}>
-            <Text className="text-accent-green text-base">취소</Text>
-          </TouchableOpacity>
-          <Text className="text-lg font-bold text-text-primary">카테고리 추가</Text>
+          <Button variant="ghost" onPress={onClose}>취소</Button>
+          <Typography variant="headline-md">카테고리 추가</Typography>
           <View style={{ width: 50 }} />
         </View>
 
         <ScrollView contentContainerStyle={{ padding: 16 }}>
-          {/* Icon Picker */}
-          <Text className="text-sm text-text-secondary mb-2">아이콘 선택</Text>
+          <Typography variant="label-md" color="secondary" className="mb-2">아이콘 선택</Typography>
           <View className="flex-row flex-wrap gap-2 mb-6">
             {ICONS.map((icon) => (
               <TouchableOpacity
@@ -146,41 +107,33 @@ export function CategoryCreateModal({ type, onClose }: Props) {
             ))}
           </View>
 
-          {/* Name Input */}
-          <Text className="text-sm text-text-secondary mb-2">카테고리명</Text>
-          <TextInput
-            className={`input mb-1 ${nameError ? 'border-accent-red' : ''}`}
+          <Input
+            variant="box"
+            label="카테고리명"
             placeholder="카테고리명 (최대 20자)"
-            placeholderTextColor={colors.textTertiary}
             value={name}
             onChangeText={onNameChange}
             maxLength={20}
             editable={!isPending}
+            containerClassName="mb-1"
           />
           <View className="flex-row justify-between mb-6">
             {nameError ? (
-              <Text className="text-accent-red text-xs">{nameError}</Text>
+              <Typography variant="label-sm" color="expense">{nameError}</Typography>
             ) : null}
-            <Text className="text-xs text-text-tertiary ml-auto">{name.length}/20</Text>
+            <Typography variant="label-sm" color="tertiary" className="ml-auto">{name.length}/20</Typography>
           </View>
 
-          {/* Save Button */}
-          <TouchableOpacity
-            className={`py-4 flex-row justify-center items-center rounded-lg ${
-              !selectedIcon || !name.trim() || isPending
-                ? 'bg-accent-green/60'
-                : 'bg-accent-green'
-            }`}
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={isPending}
+            disabled={!selectedIcon || !name.trim()}
             onPress={onSave}
-            disabled={!selectedIcon || !name.trim() || isPending}
           >
-            {isPending ? (
-              <ActivityIndicator color={colors.white} className="mr-2" />
-            ) : null}
-            <Text className="text-white font-semibold text-base">
-              {isPending ? '저장 중...' : '저장'}
-            </Text>
-          </TouchableOpacity>
+            저장
+          </Button>
         </ScrollView>
       </View>
     </Modal>

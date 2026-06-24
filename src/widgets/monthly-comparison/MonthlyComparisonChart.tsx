@@ -24,13 +24,13 @@ export function MonthlyComparisonChart({ data, maxValue }: Props) {
 
   return (
     <View className="card p-4 mx-4 mt-4">
-      <Text className="text-base font-semibold text-text-primary mb-4">
+      <Text className="text-body-md font-semibold text-text-primary mb-4">
         월별 비교
       </Text>
 
       {data.length === 0 ? (
         <View className="py-8 items-center">
-          <Text className="text-text-tertiary text-sm">데이터가 없습니다</Text>
+          <Text className="text-text-tertiary text-label-md">데이터가 없습니다</Text>
         </View>
       ) : (
         <View className="flex-row items-end justify-between h-48 px-2">

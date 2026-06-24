@@ -325,7 +325,103 @@ function mergeByTimestamp(local: any, remote: any): any {
 }
 ```
 
-### 5.4 SyncQueueManager (설정 화면)
+### 5.4 SubscribeToRealtime
+
+```typescript
+// Events: src/features/sync/sync-engine/lib/subscribe-to-realtime.ts
+
+// ===== 실시간 구독 시작 =====
+function subscribeToRealtime() {
+  const user = useAuthStore.getState().user
+  if (!user) return null
+
+  const entryApi = createEntryApi()
+
+  // Supabase Realtime 구독
+  const subscription = entryApi.remote.subscribe(
+    user.id,
+    (payload: RealtimePayload) => {
+      handleEntryChange(payload)
+    },
+  )
+
+  return subscription
+}
+
+// ===== 실시간 변경 처리 =====
+function handleEntryChange(payload: RealtimePayload) {
+  const entryApi = createEntryApi()
+
+  if (payload.eventType === 'DELETE') {
+    // 원격 삭제: 로컬에서도 삭제
+    entryApi.local.delete(payload.old.id)
+  } else {
+    // 원격 생성/수정: 로컬에 반영
+    entryApi.local.upsertFromRemote(payload.new)
+  }
+}
+
+// 다른 기기에서 변경된 데이터를 실시간으로 수신하여 로컬에 반영
+```
+
+### 5.5 NetworkStatus
+
+```typescript
+// Events: src/features/sync/sync-engine/model/network-status.ts
+
+// ===== 네트워크 상태 조회 =====
+getNetworkStatus(): boolean  // 온라인 여부
+
+// ===== 네트워크 상태 설정 =====
+setNetworkStatus(isOnline: boolean): void
+
+// ===== 네트워크 변경 콜백 등록 =====
+onNetworkChange(callback: (isOnline: boolean) => void): () => void
+
+// ===== Wi-Fi 연결 상태 =====
+isWifi(): Promise<boolean>
+```
+
+### 5.6 PushPendingChanges
+
+```typescript
+// Events: src/features/sync/sync-engine/model/push-pending-changes.ts
+
+// ===== 대기 중인 변경사항 푸시 =====
+pushPendingChanges(): Promise<SyncResult>
+
+// isSyncing: boolean - 동기화 진행 중 상태
+```
+
+### 5.7 ConflictResolution
+
+```typescript
+// Events: src/features/sync/sync-engine/model/conflict-resolution.ts
+
+// ===== 충돌 감지 =====
+detectConflict(localId: string, tableName: string): Promise<SyncConflict | null>
+
+// ===== 충돌 해결 =====
+resolveConflict(
+  localId: string,
+  tableName: string,
+  local: any,
+  remote: any,
+  strategy: 'local' | 'remote' | 'merge'
+): Promise<void>
+```
+
+### 5.8 UseManualSync
+
+```typescript
+// Events: src/features/sync/sync-engine/model/use-manual-sync.ts
+
+const { mutate: manualSync, isPending } = useManualSync()
+
+// 수동 동기화 트리거 hook
+```
+
+### 5.9 SyncQueueManager (설정 화면)
 
 ```typescript
 // Events: src/pages/settings/sync/SyncSettings.tsx

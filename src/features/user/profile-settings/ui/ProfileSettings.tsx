@@ -1,92 +1,31 @@
-import { useState, useEffect } from 'react'
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  Image,
-} from 'react-native'
-import * as ImagePicker from 'expo-image-picker'
+import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { useAuthStore } from '@/features/auth/auth-manager'
-import { colors } from '@/shared/lib/colors'
-import { useUserProfile, useUpdateProfile, useUploadAvatar } from '@/entities/user'
+import { useProfileSettings } from '@/features/user/profile-settings/model/use-profile-settings'
+import { Button, Input } from '@/shared/ui'
 
 export function ProfileSettings() {
   const { user } = useAuthStore()
-  const { data: profile, isLoading } = useUserProfile(user?.id)
-  const { mutateAsync: updateProfile, isPending } = useUpdateProfile()
-  const { mutateAsync: uploadAvatar } = useUploadAvatar()
-
-  const [name, setName] = useState('')
-  const [isDirty, setIsDirty] = useState(false)
-  const [isUploading, setIsUploading] = useState(false)
-
-  useEffect(() => {
-    if (profile?.name) {
-      setName(profile.name)
-    } else if (user?.name) {
-      setName(user.name)
-    }
-  }, [profile, user])
-
-  const onNameChange = (text: string) => {
-    if (text.length > 30) return
-    setName(text)
-    setIsDirty(true)
-  }
-
-  const onSave = async () => {
-    if (!user || !name.trim()) return
-    try {
-      await updateProfile({ userId: user.id, updates: { name: name.trim() } })
-      setIsDirty(false)
-    } catch {
-      // error handled by query client
-    }
-  }
-
-  const changeAvatar = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if (!permissionResult.granted) {
-      return
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.8,
-    })
-
-    if (result.canceled || !result.assets?.[0]) return
-
-    setIsUploading(true)
-    try {
-      const publicUrl = await uploadAvatar({ userId: user!.id, uri: result.assets[0].uri })
-
-      if (publicUrl) {
-        await updateProfile({
-          userId: user!.id,
-          updates: { avatarUrl: publicUrl },
-        })
-      }
-    } catch {
-      // error handled
-    } finally {
-      setIsUploading(false)
-    }
-  }
+  const {
+    profile,
+    isLoading,
+    name,
+    isDirty,
+    isPending,
+    isUploading,
+    onNameChange,
+    onSave,
+    changeAvatar,
+  } = useProfileSettings()
 
   return (
     <View>
-      <Text className="text-base font-semibold text-text-primary mb-4">
+      <Text className="text-headline-md font-semibold text-text-primary mb-4">
         프로필
       </Text>
 
       {isLoading ? (
         <View className="py-4 items-center">
-          <ActivityIndicator />
+          <Text className="text-body-md text-text-tertiary">로딩 중...</Text>
         </View>
       ) : (
         <View className="card p-4 mb-4">
@@ -106,52 +45,37 @@ export function ProfileSettings() {
               )}
               {isUploading && (
                 <View className="absolute inset-0 bg-black/50 rounded-full items-center justify-center">
-                  <ActivityIndicator color={colors.white} />
+                  <Text className="text-white text-label-sm">업로드 중...</Text>
                 </View>
               )}
             </TouchableOpacity>
             <View className="flex-1 ml-4">
-              <Text className="font-semibold text-text-primary text-lg">
+              <Text className="text-headline-md font-semibold text-text-primary">
                 {profile?.name || user?.name || '사용자'}
               </Text>
-              <Text className="text-sm text-text-secondary">{user?.email}</Text>
-              <Text className="text-xs text-accent-green mt-1">프로필 사진 변경</Text>
+              <Text className="text-body-md text-text-secondary">{user?.email}</Text>
+              <Text className="text-label-sm text-accent-green mt-1">프로필 사진 변경</Text>
             </View>
           </View>
 
           {/* Name Input */}
-          <Text className="text-sm text-text-secondary mb-2">이름</Text>
-          <TextInput
-            className="input mb-3"
+          <Input
+            variant="box"
+            label="이름"
             placeholder="이름을 입력하세요"
-            placeholderTextColor={colors.textTertiary}
             value={name}
             onChangeText={onNameChange}
           />
 
-          <TouchableOpacity
-            className={`py-3 rounded-lg items-center ${
-              isDirty && name.trim()
-                ? 'bg-accent-green'
-                : 'bg-bg-tertiary'
-            }`}
-            onPress={onSave}
+          <Button
+            variant={isDirty && name.trim() ? 'primary' : 'secondary'}
+            fullWidth
+            loading={isPending}
             disabled={!isDirty || !name.trim() || isPending}
+            onPress={onSave}
           >
-            {isPending ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text
-                className={`font-semibold ${
-                  isDirty && name.trim()
-                    ? 'text-white'
-                    : 'text-text-tertiary'
-                }`}
-              >
-                저장하기
-              </Text>
-            )}
-          </TouchableOpacity>
+            저장하기
+          </Button>
         </View>
       )}
     </View>

@@ -1,93 +1,172 @@
-# Expo HAS CHANGED
+# Money-Space
 
-Read the exact versioned docs at https://docs.expo.dev/versions/v54.0.0/ before writing any code.
+오프라인 우선 가계부 앱 (Expo ~54.0, React Native 0.81, TypeScript strict, nativewind v4, Supabase + SQLite).
 
-# FSD 아키텍처 규칙
+## Quick Commands
 
-이 프로젝트는 FSD(Feature-Sliced Design) 원칙을 따릅니다. features와 pages 레이어 하위가 [도메인]별로 그룹화되어 있습니다.
+| 명령 | 실행 |
+|------|------|
+| Start | `npx expo start` |
+| Test | `npx jest` (jest-expo preset, `src/test/` root) |
+| Lint | `npx expo lint` (eslint flat config, `eslint-config-expo`) |
+| Format | `npx prettier --write .` |
+| Path alias | `@/` → `src/` (tsconfig + babel module-resolver) |
 
-## 레이어 구조
-- `src/features/[도메인명]/[기능명]/ui/`, `model/`, `lib/`
-- `src/pages/[도메인명]/[페이지명]/ui/`, `model/`
-- `src/widgets/[위젯명]/` — 각 위젯 slice는 `index.ts` Public API 필수
-- `src/entities/[도메인명]/model/types.ts`, `api/index.ts`, `lib/`
-- `src/shared/api/[도메인명]/` — sqlite + supabase 분리, `index.ts` barrel 필수
-- `src/shared/config/index.ts`, `src/shared/lib/index.ts` — segment barrel 필수
+## Expo
 
-## 타입 배치 규칙
+Read exact versioned docs at https://docs.expo.dev/versions/v54.0.0/ before writing any code.
 
-### 1. 지역 타입 (컴포넌트 `.tsx` 파일 내부)
-- 특정 컴포넌트 내부에서만 단독으로 사용하는 타입은 해당 `.tsx` 파일 내부에 선언
-- 처음부터 `model/types.ts`로 분리하는 오버엔지니어링 금지
-- 대상: 해당 컴포넌트 전용 `Props`, 내부 `useState`/`useReducer` 상태 구조
+## Routing
 
-### 2. Shared 레이어 (`src/shared`)
-- 프로젝트 전역에서 비즈니스 로직과 관계없이 재사용되는 공통 타입
-- 위치: `src/shared/model/types.ts` 또는 `src/shared/ui/[컴포넌트명]/types.ts`
-- 대상: 공통 API 응답 규격, 페이징 구조, 디자인 시스템 공통 컴포넌트 Props
+- `app/(tabs)/` — 5 Tab screens (TabBar custom component)
+- `app/auth/` — login, register, reset-password (Stack nav)
+- `app/details.tsx` — standalone Stack screen
+- `app/invite/[code].tsx` — dynamic route (expo-router `useLocalSearchParams`)
+- `app/onboarding/` — 3-step onboarding
+- All `app/` screens are thin wrappers (delegate to `@/pages/` or `@/features/`)
+- Auth redirect: `router.replace()` (not push)
 
-### 3. Entities 레이어 (`src/entities`)
-- 비즈니스 핵심 도메인 모델 타입, 여러 features/pages에서 공통 참조
-- 위치: `src/entities/[도메인명]/model/types.ts`
-- 대상: DB 스키마 기반 데이터 구조 (Entry, User, Budget, Category, Family 등)
+## Providers
 
-### 4. Features 레이어 (`src/features`)
-- 특정 기능 전용 타입 (폼 데이터, 액션, 기능 전용 API 요청)
-- 위치: `src/features/[도메인명]/[기능명]/model/types.ts`
-- 대상: `LoginPayload`, `SearchFilterOptions` 등
+`src/providers.tsx` hierarchy (outer → inner):
+`QueryClientProvider` > `ThemeProvider` > `ThemeInitializer` > `NotificationsProvider` > `AuthRouter` > `NetworkMonitor`
 
-### 5. Widgets & Pages 레이어
-- 특정 UI 블록/페이지 전용 타입, 다른 곳에서 재사용되지 않음
-- 위치: `src/widgets/[슬라이스명]/model/types.ts`, `src/pages/[도메인명]/[페이지명]/model/types.ts`
+- QueryClient: `retry: 1`, `staleTime: 5 min`
+- AuthRouter: session restore + auth listener + biometric + route guard + periodic sync
+- NetworkMonitor: online/offline → auto `pushPendingChanges()`
 
-## Public API 규칙 (필수)
-1. **모든 slice는 `index.ts` barrel 필수**: entities, features, pages, widgets 모두 최상위 `index.ts` 보유
-2. **명시적 named export만 사용**: `export *` 금지. `export { createEntryApi, useEntries, ENTRY_KEYS }` 형태로 명시
-3. **segment-level `index.ts` 금지**: `ui/`, `model/`, `api/` 내부에는 `index.ts` 만들지 않음
-4. **deep import 금지**: 외부에서 `@/entities/entry/model/types` 직접 import 금지. 반드시 `@/entities/entry` barrel로 접근
-5. **Shared segment barrel 필수**: `shared/api/[도메인명]/index.ts`, `shared/config/index.ts`, `shared/lib/index.ts` 필수
-6. **Runtime side-effect가 있는 모듈은 barrel에서 제외**: `shared/config/env.ts`는 직접 import
+## Testing
 
-## 데이터 접근 규칙 (FSD layer rule)
+- `jest.config.js` → preset `jest-expo`, roots `src/test/`
+- `babel.config.test.js` — separate babel (no nativewind/reanimated in tests)
+- Mock pattern: `src/test/__mocks__/expo-sqlite.ts` (in-memory SQL Map, exports `resetDb()`)
+- All tests are SQLite/data-layer only (no component tests yet)
+- File location: `src/test/<layer>/<domain>/<testname>.test.ts`
+
+## FSD Layer Rules
+
+- `src/entities/[domain]/model/types.ts` — DB 스키마 기반 도메인 모델
+- `src/entities/[domain]/api/index.ts` — API factory + hooks + query key factory, barrel export
+- `src/features/[domain]/[feature]/ui/`, `model/` — 기능 전용. 간단한 기능은 `ui/`만 있어도 됨
+- `src/pages/[domain]/ui/`, `index.ts` — 페이지. `model/` 없음 (단순 wrapper)
+- `src/widgets/[name]/` — flat 구조 (하위 segment 없음). `index.ts` + `*.tsx`
+- `src/shared/api/[domain]/sqlite.ts` + `supabase.ts` + `index.ts` barrel
+- `src/shared/lib/index.ts`, `src/shared/config/index.ts` — segment barrel 필수
+
+### Public API 규칙
+
+1. 모든 slice `index.ts` barrel 필수 (entities/features/pages/widgets)
+2. **명시적 named export만**: `export { X }` — `export *` 금지 (예외: `shared/ui/icons/index.ts` → legacy)
+3. `ui/`, `model/`, `api/` 내부 `index.ts` 금지
+4. Deep import 금지 — 반드시 slice barrel(`@/entities/entry`)로 접근
+5. Runtime side-effect 모듈(`env.ts`)은 barrel에서 제외, 직접 import
+
+### Data Access
 
 ```
 shared/api/supabase.ts (base client)
-  └─ shared/api/<domain>/supabase.ts (domain supabase wrapper)
-      └─ entities/<domain>/api/index.ts (entity API factory + hooks)
+  └─ shared/api/<domain>/supabase.ts
+      └─ entities/<domain>/api/index.ts (factory + hooks)
           └─ features/pages/widgets (entity barrel만 import)
 ```
 
-1. **Feature/PAGE/WIDGET이 직접 supabase import 금지**: 반드시 entity barrel(`@/entities/<domain>`)을 통해서만 데이터 접근
-2. **Entity API factory = 유일한 supabase 접근 통로**: `shared/api/<domain>/supabase.ts`는 `entities/<domain>/api/index.ts`만 import 가능
-3. **Entity barrel은 두 가지 내보내기**: 
-   - `createXxxApi()` — factory (비React 코드에서 사용, e.g. sync-engine model)
-   - `useXxx*()` — TanStack Query hooks (React 컴포넌트에서 사용)
-4. **Feature는 hooks 우선 사용**: zustand store에서 factory 직접 호출 금지. hooks + local state 패턴 사용
+- Feature/PAGE/WIDGET → 직접 supabase import 금지. 반드시 `@/entities/<domain>` barrel
+- Entity barrel은 `createXxxApi()` (비React) + `useXxx*()` (React hooks) 둘 다 export
+- Feature는 hooks 우선 사용 (factory 직접 호출 금지)
 
-## TanStack Query 규칙
-1. 모든 query key는 **key factory** 사용: `ENTRY_KEYS.all()`, `ENTRY_KEYS.list(userId, year, month)`
-2. invalidation은 반드시 key factory로: `queryClient.invalidateQueries({ queryKey: FAMILY_KEYS.all() })`
-3. Entity `api/index.ts`에서 key factory 정의 + export
+## TanStack Query
 
-## model vs lib 세그먼트 구분 규칙
+- 모든 query key는 **key factory** 사용: `ENTRY_KEYS.all()`, `ENTRY_KEYS.list(userId, year, month)`
+- Invalidation: `queryClient.invalidateQueries({ queryKey: FAMILY_KEYS.all() })`
+- Key factory 정의 + export 위치: `entities/<domain>/api/index.ts`
+- Naming: `ENTRY_KEYS`, `FAMILY_KEYS`, `CATEGORY_KEYS`, `BUDGET_KEYS`, `AUTH_KEYS`, `USER_KEYS`, `SYNC_KEYS`
 
-슬라이스 내부에서 다음 기준으로 `model/`과 `lib/`을 구분한다:
+## model vs lib
 
-### model/ (비즈니스 로직, 상태 관리)
-- 비즈니스 도메인과 직접 연관된 커스텀 훅 (`use-auth-store.ts`, `use-search-store.ts`)
-- 상태 관리 (zustand store 등)
-- API 호출 및 데이터 가공 파일
-- 도메인 타입 정의 (`types.ts`)
-- 대상 예: `model/use-auth-store.ts`, `model/types.ts`, `model/create-entry-locally.ts`
+- `model/`: 비즈니스 도메인 관련 (store, hooks, API call, types)
+- `lib/`: 기술적/범용 유틸리티 (format-date, debounce, token-storage, click-outside)
+- 모호하면 `model/` 우선
 
-### lib/ (순수 유틸리티, 기술적 기능, 외부 연동)
-- 비즈니스와 무관한 순수 유틸리티 함수
-- 기술적 기능 (디바운스, 쓰로틀, 포매터, 검증기)
-- 외부 라이브러리 연동 래퍼 (SecureStore, AsyncStorage, 사운드, 애니메이션 헬퍼)
-- **단, UI 관련 훅이더라도 기술적 기능(예: `use-click-outside.ts`, `use-debounce.ts`)이면 lib/**
-- 대상 예: `lib/format-date.ts`, `lib/use-click-outside.ts`, `lib/token-storage.ts`, `lib/validate-form.ts`
+## Entity API Factory Pattern
 
-### 구분 기준
-- **비즈니스 도메인 용어**가 코드에 등장하는가? → `model/`
-- **비즈니스 도메인과 무관**하게 다른 프로젝트에서도 재사용 가능한 기술인가? → `lib/`
-- 모호하다면 `model/` 우선 (나중에 `lib/`로 이동하는 것은 쉬움)
+```typescript
+// entry/family/user — { remote, local } split
+createEntryApi() → { remote: { fetchAll, subscribe, upsert }, local: { insert, getById, update, delete } }
+
+// category/budget/sync-queue — flat structure
+createCategoryApi() → { getAll, getByType, remote: { fetchByType } }
+```
+
+## User Entity Exception
+
+`entities/user/api/index.ts`가 `shared/api/supabase`를 직접 import (avatar upload). 이는 유일한 예외.
+
+## Architecture
+
+전체 아키텍처 개요: `docs/architecture.md` (FSD layer map, data flow, provider hierarchy, sync engine, route design).
+
+## Common Conventions
+
+### Components
+- `export function ComponentName({ prop }: Props)` — named export only, no `export default`
+- `Props` type defined locally above component, never imported from elsewhere
+- Style: 100% NativeWind `className`, no `StyleSheet.create`
+- Spacing: Tailwind numeric scale (`p-4`, `gap-2`, `mb-6`), base unit 16px
+- Feedback: `Alert.alert('', message)` for all toast/dialog (no toast library)
+- Keyboard: `KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}`
+- Form state: local `useState` with `INITIAL_STATE` constant + `onFieldChange<K>(key, value)` updater
+- Form dirty check: `hasChanges` boolean + confirm dialog on close
+- Modals: `animationType="slide"` + `presentationStyle="pageSheet"`, wrapper `<View className="flex-1 bg-bg-primary">`
+- Event handler naming: `on` + PascalCase (`onSave`, `onClose`) or `handle` prefix (`handleAmountChange`)
+
+### Navigation (expo-router)
+- `router.replace()` for auth redirects (`/auth/login`, `/(tabs)`)
+- `router.push()` for normal navigation; cast route params with `as any`
+- All `app/` screens are thin wrappers (delegate to `@/pages/` or `@/features/`)
+
+### Data Fetching
+- TanStack Query hooks: `staleTime: Infinity` for local SQLite queries (never auto-refetch)
+- Mutations: `useMutation` with `onMutate` (optimistic update), `onError` (rollback), `onSettled` (invalidate)
+- Pull-to-refresh: `setRefreshing(true)` → `await refetch()` → `setTimeout(() => setRefreshing(false), 300)`
+- Entity barrel always exports `createXxxApi()` (non-React) + `useXxx*()` (React hooks) + `XXX_KEYS`
+
+### Animations
+- `useAnimatedStyle` + `withSpring(stiffness, damping)` from react-native-reanimated
+- motion library `^12.40` available for declarative animation
+
+### State Management
+- Server/cache state: TanStack Query (`@tanstack/react-query ^5`)
+- Client/UI state: zustand `^5` (auth, theme, form UI), `useState` (local form data)
+- No zustand `persist` middleware used anywhere
+
+### Tests
+- Location: `src/test/<layer>/<domain>/<testname>.test.ts`
+- Preset: `jest-expo`, config in `babel.config.test.js` (no nativewind/reanimated)
+- Mock: `expo-sqlite` → `src/test/__mocks__/expo-sqlite.ts` (in-memory Map, `resetDb()`)
+- Data-layer only (SQLite), no component tests
+
+## Design
+
+| 문서 | 경로 | 내용 |
+|------|------|------|
+| Style Guide | `docs/design/style-guide.md` | Color palette, spacing, radii, shadows, glass effect, button/pill/badge/toggle specs |
+| Design System | `docs/design/design-system.md` | Principles, component inventory, icon system, theming, CSS architecture |
+| Typography | `docs/design/typography.md` | Font stack (Inter), type scale `headline-xl`~`label-sm`, weights, Typography component |
+
+## docs/prd Reference
+
+상세 PRD 문서는 `docs/prd/`에 있음. AI 에이전트는 필요시 아래 문서를 hit하여 컨텍스트 로드:
+
+| 문서 | 경로 | 주요 내용 |
+|------|------|-----------|
+| **Index** | `docs/prd/index.md` | 전체 구조, 데이터 접근 규칙, 공통 타입 |
+| **Progress** | `docs/prd/progress-tracker.md` | 기능별 완료율 99%, 도메인별 체크리스트 |
+| **Entry** | `docs/prd/entry/README.md` | CRUD + 검색, `CreateEntryInput`, `ENTRY_KEYS`, UI 이벤트 스크립트 |
+| **Budget** | `docs/prd/budget/README.md` | 예산 설정, 진행률, `BUDGET_KEYS` |
+| **Category** | `docs/prd/category/README.md` | 카테고리 CRUD, 아이콘, 순서변경, `CATEGORY_KEYS` |
+| **Auth** | `docs/prd/auth/README.md` | 이메일 로그인/회원가입, 세션, SecureStore, `AUTH_KEYS` |
+| **Family** | `docs/prd/family/README.md` | 가족 초대, 멤버 역할(admin/member/viewer), `FAMILY_KEYS` |
+| **Sync** | `docs/prd/sync/README.md` | 오프라인 큐, 충돌 해결, Wi-Fi only, `SYNC_KEYS` |
+| **User** | `docs/prd/user/README.md` | 프로필, 알림설정, 데이터 내보내기/가져오기, `USER_KEYS` |
+| **Home** | `docs/prd/home/README.md` | 메인 대시보드, QuickInput, RecentEntries, MonthlySummary |
+| **Shared** | `docs/prd/shared/README.md` | 공통 UI, 컴포넌트 규칙, 이벤트 처리 |

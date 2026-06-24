@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
 import { Utensils, ShoppingCart, Car, Coffee, Film, Pill, Wallet, FileText, Gift } from 'lucide-react-native'
-import { colors } from '@/shared/lib/colors'
+import { CategoryPill } from '@/shared/ui'
 import { useCategories, type Category } from '@/entities/category'
 
 type Props = {
@@ -14,6 +14,7 @@ type CategoryItemProps = {
   item: Category
   selectedId?: string
   onSelect: (id: string) => void
+  variantPill: 'green' | 'red' | 'blue' | 'orange' | 'purple' | 'gray'
 }
 
 const CATEGORY_ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
@@ -28,7 +29,7 @@ const CATEGORY_ICON_MAP: Record<string, React.ComponentType<{ size?: number; col
   etc: FileText,
 }
 
-function CategoryGridItem({ item, selectedId, onSelect }: CategoryItemProps) {
+function CategoryGridItem({ item, selectedId, onSelect, variantPill }: CategoryItemProps) {
   const isSelected = selectedId === item.id
   const animStyle = useAnimatedStyle(
     () => ({
@@ -47,34 +48,15 @@ function CategoryGridItem({ item, selectedId, onSelect }: CategoryItemProps) {
   const IconComponent = CATEGORY_ICON_MAP[item.id] || FileText
 
   return (
-    <Animated.View style={animStyle} className="w-1/4 px-1 mb-3">
-      <TouchableOpacity
-        className={`items-center py-3 rounded-lg border ${
-          isSelected
-            ? 'bg-accent-green border-accent-green'
-            : 'bg-transparent border-border'
-        }`}
+    <Animated.View style={animStyle} className="w-1/4 px-1 mb-3 items-center">
+      <CategoryPill
+        icon={IconComponent}
+        label={item.name}
+        active={isSelected}
+        variant={variantPill}
+        size="md"
         onPress={() => onSelect(item.id)}
-        activeOpacity={0.7}
-      >
-        <View
-          className={`w-11 h-11 rounded-full items-center justify-center mb-1.5 ${
-            isSelected ? 'bg-bg-secondary/20' : 'bg-bg-tertiary border border-border'
-          }`}
-        >
-          <IconComponent
-            size={20}
-            color={isSelected ? colors.white : colors.textTertiary}
-          />
-        </View>
-        <Text
-          className={`text-[11px] font-semibold ${
-            isSelected ? 'text-white' : 'text-text-secondary'
-          }`}
-        >
-          {item.name}
-        </Text>
-      </TouchableOpacity>
+      />
     </Animated.View>
   )
 }
@@ -82,9 +64,11 @@ function CategoryGridItem({ item, selectedId, onSelect }: CategoryItemProps) {
 export function CategoryPicker({ type, selectedId, onSelect }: Props) {
   const { data: categories = [] } = useCategories(type)
 
+  const variantPill: 'green' | 'red' | 'blue' = type === 'income' ? 'green' : type === 'saving' ? 'blue' : 'red'
+
   return (
     <View className="mb-5">
-      <Text className="text-sm font-medium text-text-secondary tracking-widest uppercase mb-3">카테고리</Text>
+      <Text className="text-label-md font-semibold text-text-secondary tracking-widest uppercase mb-3">카테고리</Text>
       <View className="flex-row flex-wrap -mx-1">
         {categories.map((cat) => (
           <CategoryGridItem
@@ -92,6 +76,7 @@ export function CategoryPicker({ type, selectedId, onSelect }: Props) {
             item={cat}
             selectedId={selectedId}
             onSelect={onSelect}
+            variantPill={variantPill}
           />
         ))}
       </View>

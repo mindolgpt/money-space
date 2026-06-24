@@ -7,11 +7,12 @@ import Animated, {
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import * as Haptics from 'expo-haptics'
-import { FileText } from 'lucide-react-native'
+import { FileText, Trash2 } from 'lucide-react-native'
+import { colors } from '@/shared/lib/colors'
 import type { Budget } from '@/entities/budget'
 import { useDeleteBudget, BUDGET_KEYS } from '@/entities/budget'
 import { BudgetProgress } from '@/widgets/budget-progress/BudgetProgress'
-import { colors } from '@/shared/lib/colors'
+import { Card } from '@/shared/ui'
 
 type Props = {
   budget: Budget
@@ -79,12 +80,13 @@ export function BudgetCard({
 
   return (
     <View className="mb-3">
-      <View className="absolute right-0 top-0 bottom-0 justify-center px-2">
+      <View className="absolute right-0 top-0 bottom-0 justify-center px-2 z-10">
         <TouchableOpacity
-          className="bg-accent-red px-4 py-6 rounded-r-xl h-full justify-center"
+          className="bg-semantic-expense w-20 h-full items-center justify-center rounded-r-xl"
           onPress={handleDelete}
         >
-          <Text className="text-white text-sm font-medium">삭제</Text>
+          <Trash2 size={18} color={colors.white} />
+          <Text className="text-label-sm text-white mt-1">삭제</Text>
         </TouchableOpacity>
       </View>
 
@@ -93,24 +95,25 @@ export function BudgetCard({
           activeOpacity={0.9}
           onPress={handlePress}
           onLongPress={handleSwipeLeft}
-          className="card p-4"
         >
-          <View className="flex-row items-center justify-between mb-1">
+          <Card className="flex-row items-center justify-between mb-1">
             <View className="flex-row items-center">
               <FileText size={16} color={colors.textTertiary} className="mr-2" />
               <Text className="font-medium text-text-primary">{categoryName}</Text>
             </View>
-            <Text className="text-xs text-text-secondary">
+            <Text className="text-label-sm text-text-secondary">
               {budget.amount.toLocaleString()}원
             </Text>
-          </View>
-
-          <BudgetProgress
-            categoryName={categoryName}
-            spent={spent}
-            budget={budget.amount}
-          />
+          </Card>
         </TouchableOpacity>
+      </Animated.View>
+
+      <Animated.View style={cardAnim} className="px-1">
+        <BudgetProgress
+          categoryName={categoryName}
+          spent={spent}
+          budget={budget.amount}
+        />
       </Animated.View>
     </View>
   )

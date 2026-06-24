@@ -1,22 +1,13 @@
-import { useState, useEffect } from 'react'
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Switch,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
-} from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import { X } from 'lucide-react-native'
 import { colors } from '@/shared/lib/colors'
-import { useEntry, useUpdateEntry, useDeleteEntry, EntryType, PaymentMethod, UpdateEntryInput } from '@/entities/entry'
-import { AmountInput } from '@/features/entry/add-entry/ui/AmountInput'
+import { Toggle } from '@/shared/ui'
+import type { EntryType } from '@/entities/entry'
 import { CategoryPicker } from '@/features/entry/add-entry/ui/CategoryPicker'
 import { PaymentMethodSelector } from '@/features/entry/add-entry/ui/PaymentMethodSelector'
 import { DatePicker } from '@/features/entry/add-entry/ui/DatePicker'
 import { LocationPicker } from '@/features/entry/add-entry/ui/LocationPicker'
+import { useEditEntry } from '../model/use-edit-entry'
 
 type Props = {
   entryId: string
@@ -31,108 +22,33 @@ const ENTRY_TYPES: { key: EntryType; label: string }[] = [
 ]
 
 export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
-  const { data: entry, isLoading } = useEntry(entryId)
-  const { mutateAsync: updateEntry, isPending: isUpdating } = useUpdateEntry()
-  const { mutateAsync: deleteEntry, isPending: isDeleting } = useDeleteEntry()
-
-  const [type, setType] = useState<EntryType>('expense')
-  const [amount, setAmount] = useState('')
-  const [categoryId, setCategoryId] = useState('')
-  const [date, setDate] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card')
-  const [note, setNote] = useState('')
-  const [isShared, setIsShared] = useState(false)
-  const [isRecurring, setIsRecurring] = useState(false)
-  const [latitude, setLatitude] = useState<number | undefined>()
-  const [longitude, setLongitude] = useState<number | undefined>()
-  const [locationName, setLocationName] = useState<string | undefined>()
-
-  useEffect(() => {
-    if (entry) {
-      setType(entry.type)
-      setAmount(entry.amount.toString())
-      setCategoryId(entry.categoryId ?? '')
-      setDate(entry.date)
-      setPaymentMethod(entry.paymentMethod ?? 'card')
-      setNote(entry.note ?? '')
-      setIsShared(entry.isShared)
-      setIsRecurring(entry.isRecurring)
-      setLatitude(entry.latitude)
-      setLongitude(entry.longitude)
-      setLocationName(entry.locationName)
-    }
-  }, [entry])
-
-  const onAmountChange = (text: string) => {
-    const numeric = text.replace(/,/g, '').replace(/[^\d]/g, '')
-    if (numeric.length > 12) return
-    setAmount(numeric)
-  }
-
-  const formatAmountDisplay = (val: string) => {
-    if (!val) return ''
-    return parseInt(val, 10).toLocaleString()
-  }
-
-  const showToast = (message: string) => Alert.alert('', message)
-
-  const onSave = async () => {
-    if (!amount || parseInt(amount, 10) === 0) {
-      showToast('금액을 입력해주세요')
-      return
-    }
-
-    if (!categoryId) {
-      showToast('카테고리를 선택해주세요')
-      return
-    }
-
-    try {
-      const input: UpdateEntryInput = {
-        type,
-        amount: parseInt(amount, 10),
-        categoryId,
-        date,
-        paymentMethod,
-        note: note || undefined,
-        latitude,
-        longitude,
-        locationName,
-        isShared,
-        isRecurring,
-      }
-      await updateEntry({ id: entryId, input })
-      showToast('수정되었습니다')
-      onClose()
-      onSuccess?.()
-    } catch {
-      showToast('수정에 실패했습니다')
-    }
-  }
-
-  const onDelete = () => {
-    Alert.alert(
-      '기록 삭제',
-      '이 기록을 삭제하시겠습니까?',
-      [
-        { text: '취소', style: 'cancel' },
-        {
-          text: '삭제',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteEntry(entryId)
-              showToast('삭제되었습니다')
-              onClose()
-              onSuccess?.()
-            } catch {
-              showToast('삭제에 실패했습니다')
-            }
-          },
-        },
-      ],
-    )
-  }
+  const {
+    isLoading,
+    type,
+    amount,
+    categoryId,
+    date,
+    paymentMethod,
+    note,
+    isShared,
+    isRecurring,
+    latitude,
+    longitude,
+    locationName,
+    isPending,
+    setType,
+    setCategoryId,
+    setDate,
+    setPaymentMethod,
+    setNote,
+    setIsShared,
+    setIsRecurring,
+    setLocation,
+    onAmountChange,
+    formatAmountDisplay,
+    onSave,
+    onDelete,
+  } = useEditEntry(entryId, onClose, onSuccess)
 
   if (isLoading) {
     return (
@@ -142,8 +58,6 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
     )
   }
 
-  const isPending = isUpdating || isDeleting
-
   return (
     <View className="flex-1 bg-bg-primary">
       <ScrollView
@@ -152,7 +66,6 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Header */}
         <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
           <TouchableOpacity
             className="w-8 h-8 rounded-full items-center justify-center"
@@ -160,14 +73,13 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
           >
             <X size={20} color={colors.textTertiary} />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-text-primary">거래 수정</Text>
+          <Text className="text-headline-md font-bold text-text-primary">거래 수정</Text>
           <TouchableOpacity onPress={onDelete}>
-            <Text className="text-accent-red text-base">삭제</Text>
+            <Text className="text-body-md text-accent-red">삭제</Text>
           </TouchableOpacity>
         </View>
 
         <View className="p-4">
-          {/* Type Selector (disabled for edit) */}
           <View className="flex-row gap-2 mb-4">
             {ENTRY_TYPES.map((t) => (
               <TouchableOpacity
@@ -178,7 +90,7 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
                 onPress={() => setType(t.key)}
               >
                 <Text
-                  className={`text-sm font-medium ${
+                  className={`text-label-md font-semibold ${
                     type === t.key ? 'text-white' : 'text-text-secondary'
                   }`}
                 >
@@ -188,46 +100,46 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
             ))}
           </View>
 
-          {/* Amount */}
-          <AmountInput
-            value={amount}
-            displayValue={formatAmountDisplay(amount)}
-            onChange={onAmountChange}
-          />
+          <View className="items-center py-6 px-4">
+            <Text className="text-label-md font-semibold text-text-secondary tracking-widest uppercase mb-2">금액</Text>
+            <View className="flex-row items-baseline">
+              <Text className="text-3xl font-bold text-accent-green mr-1">₩</Text>
+              <TextInput
+                className="text-[36px] font-bold text-text-primary"
+                style={{ letterSpacing: -0.72 }}
+                placeholder="0"
+                keyboardType="numeric"
+                value={formatAmountDisplay(amount)}
+                onChangeText={onAmountChange}
+                placeholderTextColor={colors.textTertiary}
+              />
+            </View>
+          </View>
 
-          {/* Category */}
           <CategoryPicker
             type={type}
             selectedId={categoryId}
             onSelect={setCategoryId}
           />
 
-          {/* Date */}
           <DatePicker value={date} onChange={setDate} />
 
-          {/* Payment Method */}
           <PaymentMethodSelector
             value={paymentMethod}
             onChange={setPaymentMethod}
           />
 
-          {/* Location */}
           <LocationPicker
             latitude={latitude}
             longitude={longitude}
             locationName={locationName}
-            onChange={(loc) => {
-              setLatitude(loc?.latitude)
-              setLongitude(loc?.longitude)
-              setLocationName(loc?.locationName)
-            }}
+            onChange={setLocation}
           />
 
-          {/* Note */}
           <View className="mb-4">
             <View className="flex-row justify-between mb-2">
-              <Text className="text-sm text-text-secondary">메모</Text>
-              <Text className="text-xs text-text-tertiary">{note.length}/500</Text>
+              <Text className="text-label-md text-text-secondary">메모</Text>
+              <Text className="text-label-sm text-text-tertiary">{note.length}/500</Text>
             </View>
             <TextInput
               className="input min-h-[80px]"
@@ -243,39 +155,32 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
             />
           </View>
 
-          {/* Shared Toggle */}
           <View className="flex-row items-center justify-between mb-4 py-3 border-b border-border">
             <View>
-              <Text className="text-sm font-medium text-text-primary">가족 공유</Text>
-              <Text className="text-xs text-text-tertiary mt-0.5">
+              <Text className="text-label-md font-semibold text-text-primary">가족 공유</Text>
+              <Text className="text-label-sm text-text-tertiary mt-0.5">
                 가족과 거래를 공유합니다
               </Text>
             </View>
-            <Switch
+            <Toggle
               value={isShared}
-              onValueChange={setIsShared}
-              trackColor={{ false: colors.bgElevated, true: colors.accentGreen }}
-              thumbColor="white"
+              onToggle={() => setIsShared(!isShared)}
             />
           </View>
 
-          {/* Recurring Toggle */}
           <View className="flex-row items-center justify-between mb-6 py-3 border-b border-border">
             <View>
-              <Text className="text-sm font-medium text-text-primary">반복 설정</Text>
-              <Text className="text-xs text-text-tertiary mt-0.5">
+              <Text className="text-label-md font-semibold text-text-primary">반복 설정</Text>
+              <Text className="text-label-sm text-text-tertiary mt-0.5">
                 매월 자동으로 기록
               </Text>
             </View>
-            <Switch
+            <Toggle
               value={isRecurring}
-              onValueChange={setIsRecurring}
-              trackColor={{ false: colors.bgElevated, true: colors.accentGreen }}
-              thumbColor="white"
+              onToggle={() => setIsRecurring(!isRecurring)}
             />
           </View>
 
-          {/* Save Button */}
           <TouchableOpacity
             className={`py-3.5 rounded-lg items-center justify-center flex-row ${
               isPending || !amount || !categoryId
@@ -288,7 +193,7 @@ export function EditEntryModal({ entryId, onClose, onSuccess }: Props) {
             {isPending ? (
               <ActivityIndicator color={colors.white} className="mr-2" />
             ) : null}
-            <Text className="text-white font-semibold text-base">
+            <Text className="text-white font-semibold text-body-md">
               {isPending ? '저장 중...' : '저장하기'}
             </Text>
           </TouchableOpacity>

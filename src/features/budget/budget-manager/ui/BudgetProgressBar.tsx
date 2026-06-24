@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,6 +9,7 @@ import Animated, {
 import { useEffect } from 'react'
 import { colors } from '@/shared/lib/colors'
 import { AlertTriangle, FileText, type LucideIcon } from 'lucide-react-native'
+import { ProgressBar, Typography } from '@/shared/ui'
 
 type Props = {
   categoryName: string
@@ -28,11 +29,8 @@ export function BudgetProgressBar({
   const remaining = budget - spent
 
   const opacityAnim = useSharedValue(1)
-  const progressAnim = useSharedValue(0)
 
   useEffect(() => {
-    progressAnim.value = withTiming(Math.min(percentage, 100), { duration: 500 })
-
     if (isOver) {
       opacityAnim.value = withRepeat(
         withSequence(
@@ -44,22 +42,13 @@ export function BudgetProgressBar({
     } else {
       opacityAnim.value = 1
     }
-  }, [percentage, isOver, opacityAnim, progressAnim])
-
-  const barAnim = useAnimatedStyle(() => ({
-    width: `${progressAnim.value}%`,
-  }))
+  }, [isOver, opacityAnim])
 
   const containerAnim = useAnimatedStyle(() => ({
     opacity: opacityAnim.value,
   }))
 
-  const getProgressColor = () => {
-    if (isOver) return 'bg-accent-red'
-    if (percentage >= 80) return 'bg-accent-orange'
-    if (percentage >= 50) return 'bg-accent-yellow'
-    return 'bg-accent-green'
-  }
+  const barVariant = isOver ? 'red' : percentage >= 80 ? 'orange' : 'green'
 
   return (
     <View>
@@ -70,34 +59,27 @@ export function BudgetProgressBar({
               const IconComponent = categoryIcon || FileText
               return <IconComponent size={16} color={colors.textTertiary} className="mr-1.5" />
             })()}
-            <Text className="text-sm font-medium text-text-primary">
+            <Typography variant="label-md" color="primary" className="ml-1.5">
               {categoryName}
-            </Text>
+            </Typography>
             {isOver && (
-              <AlertTriangle size={12} className="ml-1.5 text-accent-red" />
+              <AlertTriangle size={12} color={colors.accentRed} className="ml-1.5" />
             )}
           </View>
-          <Text
-            className={`text-sm ${isOver ? 'text-accent-red' : 'text-text-secondary'}`}
-          >
+          <Typography variant="label-sm" color={isOver ? 'expense' : 'secondary'}>
             {spent.toLocaleString()} / {budget.toLocaleString()}원
-          </Text>
+          </Typography>
         </View>
-        <View className="h-1.5 bg-bg-tertiary rounded-full overflow-hidden">
-          <Animated.View
-            style={barAnim}
-            className={`h-full rounded-full ${getProgressColor()}`}
-          />
-        </View>
+        <ProgressBar value={percentage} variant={barVariant} size="sm" />
         <View className="flex-row justify-between mt-1.5">
-          <Text className={`text-xs ${isOver ? 'text-accent-red' : 'text-text-tertiary'}`}>
+          <Typography variant="label-sm" color={isOver ? 'expense' : 'tertiary'}>
             {percentage}% 사용
-          </Text>
-          <Text className="text-xs text-text-tertiary">
+          </Typography>
+          <Typography variant="label-sm" color="tertiary">
             {isOver
               ? `초과 ${Math.abs(remaining).toLocaleString()}원`
               : `남은 ${remaining.toLocaleString()}원`}
-          </Text>
+          </Typography>
         </View>
       </Animated.View>
     </View>

@@ -37,9 +37,9 @@ export function PieChart({ data, title, chartColors = DEFAULT_COLORS }: Props) {
   if (data.length === 0 || total === 0) {
     return (
       <View className="card p-4 mx-4 mt-4">
-        <Text className="text-base font-semibold text-text-primary mb-4">{title}</Text>
+<Text className="text-body-md font-semibold text-text-primary mb-4">{title}</Text>
         <View className="py-8 items-center">
-          <Text className="text-text-tertiary text-sm">데이터가 없습니다</Text>
+          <Text className="text-text-tertiary text-label-md">데이터가 없습니다</Text>
         </View>
       </View>
     )
@@ -104,7 +104,7 @@ export function PieChart({ data, title, chartColors = DEFAULT_COLORS }: Props) {
             <Text className="text-2xl font-bold text-text-primary">
               {total.toLocaleString()}
             </Text>
-            <Text className="text-xs text-text-secondary">원</Text>
+            <Text className="text-label-sm text-text-secondary">원</Text>
           </View>
         </View>
       </View>

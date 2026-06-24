@@ -11,7 +11,7 @@ import { DeleteAccount } from '@/features/user/delete-account'
 import { BudgetManager } from '@/features/budget/budget-manager'
 import { SyncStatus } from '@/widgets/sync-status'
 import { useThemeStore } from '@/shared/lib/theme-provider'
-import { Card, Toggle } from '@/shared/ui'
+import { Card, Toggle, TopAppBar } from '@/shared/ui'
 import { colors } from '@/shared/lib/colors'
 import Constants from 'expo-constants'
 
@@ -58,7 +58,7 @@ export function SettingsScreen() {
       onPress={() => toggleSection(section)}
       activeOpacity={0.7}
     >
-      <Text className="text-base font-semibold text-text-primary tracking-tight">{label}</Text>
+      <Text className="text-body-md font-semibold text-text-primary tracking-tight">{label}</Text>
       {expandedSection === section ? (
         <ChevronDown size={20} color={colors.textTertiary} />
       ) : (
@@ -68,12 +68,10 @@ export function SettingsScreen() {
   )
 
   return (
-    <ScrollView className="flex-1 bg-bg-primary" contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
-      <View className="px-5 pt-6 pb-4">
-        <Text className="text-xl font-bold text-text-primary tracking-tight">설정</Text>
-      </View>
-
-      <View className="px-4 gap-2">
+    <View className="flex-1 bg-bg-primary">
+      <TopAppBar title="설정" />
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+        <View className="px-4 gap-2 pt-4">
         <SectionToggle section="profile" label="프로필" />
         {expandedSection === 'profile' && <View className="px-1 mb-2"><ProfileSettings /></View>}
 
@@ -83,8 +81,8 @@ export function SettingsScreen() {
             <Card>
               <View className="flex-row items-center justify-between">
                 <View>
-                  <Text className="text-sm font-semibold text-text-primary">다크 모드</Text>
-                  <Text className="text-xs text-text-secondary mt-0.5">{isDark ? '다크 테마' : '라이트 테마'}</Text>
+                  <Text className="text-label-md font-semibold text-text-primary">다크 모드</Text>
+                  <Text className="text-label-sm font-medium">{isDark ? '다크 테마' : '라이트 테마'}</Text>
                 </View>
                 <Toggle value={isDark} onToggle={toggleTheme} />
               </View>
@@ -101,8 +99,8 @@ export function SettingsScreen() {
             <Card>
               <View className="flex-row items-center justify-between">
                 <View className="flex-1">
-                  <Text className="text-sm font-semibold text-text-primary">생체 인증</Text>
-                  <Text className="text-xs text-text-secondary mt-0.5">
+                  <Text className="text-label-md font-semibold text-text-primary">생체 인증</Text>
+<Text className="text-label-sm font-medium">
                     {biometricAvailable
                       ? (biometricEnabled ? '생체 인증으로 잠금 해제' : '앱 실행 시 생체 인증 필요')
                       : '이 기기에서 생체 인증을 지원하지 않습니다'}
@@ -121,7 +119,7 @@ export function SettingsScreen() {
               className="py-3.5 rounded-lg items-center bg-accent-green"
               onPress={() => setBudgetModalVisible(true)}
             >
-              <Text className="text-white font-semibold">예산 설정하기</Text>
+              <Text className="text-label-md font-semibold text-white">예산 설정하기</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -140,7 +138,7 @@ export function SettingsScreen() {
               onPress={handleSignOut}
               disabled={isSigningOut}
             >
-              <Text className="text-semantic-expense font-semibold">{isSigningOut ? '로그아웃 중...' : '로그아웃'}</Text>
+              <Text className="text-label-md font-semibold text-semantic-expense">{isSigningOut ? '로그아웃 중...' : '로그아웃'}</Text>
             </TouchableOpacity>
             <DeleteAccount />
           </View>
@@ -150,21 +148,21 @@ export function SettingsScreen() {
       {/* Sync Status */}
       <View className="px-4 mt-6 mb-8">
         <Card className="items-center py-4">
-          <Text className="text-sm font-semibold text-text-primary mb-2">동기화 상태</Text>
+          <Text className="text-label-md font-semibold text-text-primary mb-2">동기화 상태</Text>
           <SyncStatus />
           <View className="flex-row items-center justify-between mt-4 pt-3 border-t border-border w-full">
             <View>
-              <Text className="text-sm font-semibold text-text-primary">Wi-Fi만 동기화</Text>
-              <Text className="text-xs text-text-secondary mt-0.5">모바일 데이터 사용 시 동기화 안 함</Text>
+              <Text className="text-label-md font-semibold text-text-primary">Wi-Fi만 동기화</Text>
+              <Text className="text-label-sm font-medium">모바일 데이터 사용 시 동기화 안 함</Text>
             </View>
             <Toggle value={settings?.sync?.wifiOnly ?? false} onToggle={toggleWifiOnly} />
           </View>
         </Card>
       </View>
 
-      <Text className="text-xs text-text-tertiary text-center">Money Space v{appVersion}</Text>
-
-      <BudgetManager visible={budgetModalVisible} onClose={() => setBudgetModalVisible(false)} />
+      <Text className="text-label-sm text-text-tertiary text-center">Money Space v{appVersion}</Text>
     </ScrollView>
+      <BudgetManager visible={budgetModalVisible} onClose={() => setBudgetModalVisible(false)} />
+    </View>
   )
 }

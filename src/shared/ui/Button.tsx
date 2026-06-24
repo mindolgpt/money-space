@@ -7,6 +7,7 @@ type ButtonProps = TouchableOpacityProps & {
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   icon?: React.ReactNode
+  fullWidth?: boolean
 }
 
 export function Button({
@@ -14,6 +15,7 @@ export function Button({
   size = 'md',
   loading = false,
   icon,
+  fullWidth = false,
   className = '',
   disabled,
   children,
@@ -37,14 +39,14 @@ export function Button({
 
   const sizeClasses = {
     sm: 'py-2 px-4 rounded-md',
-    md: 'py-3.5 px-6 rounded-lg',
-    lg: 'py-4 px-8 rounded-lg',
+    md: 'py-2.5 px-6 rounded-lg',
+    lg: 'py-3.5 px-8 rounded-lg',
   }
 
   const textSizeClasses = {
     sm: 'text-sm',
-    md: 'text-base',
-    lg: 'text-lg',
+    md: 'text-base font-bold',
+    lg: 'text-lg font-bold',
   }
 
   return (
@@ -53,6 +55,7 @@ export function Button({
         'flex-row items-center justify-center',
         variantClasses[variant],
         sizeClasses[size],
+        fullWidth && 'w-full',
         (disabled || loading) && 'opacity-50',
         className
       )}

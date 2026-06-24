@@ -38,12 +38,18 @@ createCategoryApi(supabase: SupabaseClient): {
   reorder(categoryIds: string[]): Promise<void>
   listSystemCategories(): Promise<Category[]>
   listUserCategories(userId: string): Promise<Category[]>
+  getLastUsed(userId: string, type: CategoryType): Promise<Category | null>  // 마지막 사용 카테고리
+  setLastUsed(userId: string, type: CategoryType, categoryId: string): Promise<void>  // 마지막 사용 설정
 }
 
 useCategories(type?: string): UseQueryResult<Category[]>
+useCategory(id: string): UseQueryResult<Category | null>
 useCreateCategory(): UseMutationResult<Category, Error, CreateCategoryInput>
 useUpdateCategory(): UseMutationResult<Category, Error, { id: string; input: UpdateCategoryInput }>
 useDeleteCategory(): UseMutationResult<void, Error, string>
+useReorderCategories(): UseMutationResult<void, Error, string[]>
+useLastUsedCategory(userId: string, type: CategoryType): UseQueryResult<Category | null>  // 마지막 사용 카테고리
+useSetLastUsedCategory(): UseMutationResult<void, Error, { userId: string; type: CategoryType; categoryId: string }>
 ```
 
 ## 4. 주요 유저 플로우
@@ -335,3 +341,32 @@ onSearchFilterChange(text: string) {
 | 아이콘 미선택 | 저장 버튼 비활성화 |
 | 순서 저장 실패 | 원래 순서로 자동 롤백 |
 | 카테고리 사용 중 삭제 | "사용 중인 카테고리는 삭제할 수 없습니다" 확인 다이얼로그 |
+
+## 8. 위젯
+
+### 8.1 CategoryChart
+
+```typescript
+// Events: src/widgets/category-chart/CategoryChart.tsx
+
+interface CategoryChartProps {
+  entries: Entry[]
+  type: 'expense' | 'income'
+}
+
+// 카테고리별 지출/수입 바 차트
+// StatisticsScreen에서 사용
+// 아이콘 + 카테고리명 + 막대바 +百分比 표시
+```
+
+## 9. Family 관련 추가 기능
+
+### 9.1 SharedScreen
+
+```typescript
+// Events: src/pages/shared/ui/SharedScreen.tsx
+
+// 가족 공유 내역 보기
+// 특정 가족의 공유된 Entry 목록 표시
+// FamilyMembers와 연계하여 필터링
+```

@@ -307,6 +307,29 @@ async function executeSignUp() {
 ```typescript
 // Events: src/features/auth/auth-manager/model/use-auth-store.ts
 
+type AuthState = {
+  user: AuthUser | null
+  isAuthenticated: boolean
+  isLoading: boolean
+  isSigningOut: boolean
+  hasCompletedOnboarding: boolean
+  biometricAvailable: boolean
+  biometricEnabled: boolean
+  needsBiometric: boolean
+  signUp: (email: string, password: string, name: string) => Promise<void>
+  signIn: (email: string, password: string) => Promise<void>
+  signOut: () => Promise<void>
+  restoreSession: () => Promise<void>
+  initializeAuthListener: () => () => void
+  setUser: (user: AuthUser | null) => void
+  checkOnboardingStatus: () => Promise<void>
+  completeOnboarding: () => Promise<void>
+  checkBiometricAvailability: () => Promise<boolean>
+  authenticateBiometric: () => Promise<boolean>
+  enableBiometric: (userId: string) => Promise<void>
+  disableBiometric: (userId: string) => Promise<void>
+}
+
 // ===== 초기화 =====
 onInitialize() {
   // 1. SecureStore에서 세션 복원
@@ -340,6 +363,26 @@ onInitialize() {
   setUnsubscribe(unsubscribe)
 }
 
+// ===== 생체 인증 =====
+// 생체 인증 가능 여부 확인
+checkBiometricAvailability(): Promise<boolean>
+
+// 생체 인증 수행
+authenticateBiometric(): Promise<boolean>
+
+// 생체 인증 활성화
+enableBiometric(userId: string): Promise<void>
+
+// 생체 인증 비활성화
+disableBiometric(userId: string): Promise<void>
+
+// ===== 온보딩 =====
+checkOnboardingStatus(): Promise<void>
+completeOnboarding(): Promise<void>
+
+// ===== 세션 복원 =====
+restoreSession(): Promise<void>
+
 // ===== 로그인 =====
 setUser(user: AuthUser) {
   set({ user, isAuthenticated: true })
@@ -367,6 +410,64 @@ onSignOut() {
     set({ isSigningOut: false })
     showToast('로그아웃 실패')
   })
+}
+```
+
+### 5.4 OnboardingFlow
+
+```typescript
+// Events: 온보딩 화면 (첫 사용 시)
+
+// ===== 진행 상황 확인 =====
+onCheckOnboardingStatus() {
+  const completed = await getOnboardingStatus()
+  if (completed) {
+    // 이미 온보딩 완료 → 홈으로
+  } else {
+    // 온보딩 화면 표시
+  }
+}
+
+// ===== 온보딩 완료 =====
+onCompleteOnboarding() {
+  await setOnboardingCompleted()
+  router.replace('/(tabs)/home')
+}
+
+// 온보딩 완료 여부는 onboarding-storage에 저장
+```
+
+### 5.5 BiometricAuth
+
+```typescript
+// Events: 생체 인증 화면
+
+// ===== 인증 요청 =====
+onAuthenticate() {
+  // 1. 생체 인증 가능 여부 확인
+  const available = await checkBiometricAvailability()
+  if (!available) {
+    // 생체 인증 사용 불가 → 일반 로그인
+    return
+  }
+
+  // 2. 인증 수행
+  const success = await authenticateBiometric()
+  if (success) {
+    router.replace('/(tabs)/home')
+  } else {
+    // 실패 시 재시도 또는 비밀번호 입력 옵션
+  }
+}
+
+// 생체 인증 설정 (Settings → 보안)
+onEnableBiometric() {
+  //指纹/ Face ID 활성화
+  enableBiometric(userId)
+}
+
+onDisableBiometric() {
+  disableBiometric(userId)
 }
 ```
 

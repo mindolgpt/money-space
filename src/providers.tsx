@@ -113,10 +113,10 @@ function AuthRouter({ children }: { children: ReactNode }) {
         <View className="w-20 h-20 rounded-full bg-accent-green/20 items-center justify-center mb-6">
           <Lock size={40} color={colors.accentGreen} />
         </View>
-        <Text className="text-xl font-semibold text-text-primary mb-2">
+        <Text className="text-headline-lg font-semibold text-text-primary mb-2">
           생체 인증 필요
         </Text>
-        <Text className="text-sm text-text-secondary mb-8 text-center px-8">
+        <Text className="text-label-md text-text-secondary mb-8 text-center px-8">
           계정 보안을 위해 생체 인증이 필요합니다
         </Text>
         <ActivityIndicator size="large" color={colors.accentGreen} />

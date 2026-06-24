@@ -160,7 +160,7 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
             onPress={handleEdit}
           >
             <Edit3 size={16} color={colors.white} />
-            <Text className="text-white text-xs mt-1">수정</Text>
+            <Text className="text-label-sm text-white mt-1">수정</Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="w-20 bg-accent-red items-center justify-center"
@@ -177,7 +177,7 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
             onPress={handleDelete}
           >
             <Trash2 size={16} color={colors.white} />
-            <Text className="text-white text-xs mt-1">삭제</Text>
+            <Text className="text-label-sm text-white mt-1">삭제</Text>
           </TouchableOpacity>
         </View>
 
@@ -198,21 +198,21 @@ function SwipeableEntry({ item, index }: AnimatedEntryProps) {
                 })()}
               </View>
               <View className="flex-1">
-                <Text className="text-sm font-medium text-text-primary">
+                <Text className="text-label-md font-medium text-text-primary">
                   {item.note || '내역'}
                 </Text>
-                <Text className="text-xs text-text-tertiary mt-0.5">
+                <Text className="text-label-sm text-text-tertiary mt-0.5">
                   {item.date} · {item.paymentMethod || '카드'}
                 </Text>
               </View>
-              <Text
-                className={`text-sm font-bold ${
-                  item.type === 'income' ? 'text-semantic-income' : item.type === 'saving' ? 'text-semantic-saving' : 'text-semantic-expense'
-                }`}
-              >
-                {item.type === 'income' ? '+' : '-'}
-                {item.amount.toLocaleString()}
-              </Text>
+<Text
+                  className={`text-label-md font-bold ${
+                    item.type === 'income' ? 'text-semantic-income' : item.type === 'saving' ? 'text-semantic-saving' : 'text-semantic-expense'
+                  }`}
+                >
+                  {item.type === 'income' ? '+' : '-'}
+                  {item.amount.toLocaleString()}
+                </Text>
             </View>
           </TouchableOpacity>
         </Animated.View>
@@ -227,17 +227,17 @@ export function RecentEntries({ entries }: Props) {
   return (
     <View className="px-4 mt-2 mb-4">
       <View className="flex-row items-center justify-between mb-3">
-        <Text className="text-base font-semibold text-text-primary">최근 거래</Text>
+        <Text className="text-body-lg font-semibold text-text-primary">최근 거래</Text>
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/(tabs)/calendar' } as any)}
         >
-          <Text className="text-sm text-semantic-saving font-medium">전체 보기</Text>
+          <Text className="text-label-md text-semantic-saving font-medium">전체 보기</Text>
         </TouchableOpacity>
       </View>
       {displayEntries.length === 0 ? (
           <View className="bg-bg-secondary rounded-lg py-8 items-center border border-border">
           <FileText size={32} color={colors.textTertiary} className="mb-2" />
-          <Text className="text-sm text-text-tertiary">첫 기록을 남겨보세요</Text>
+          <Text className="text-label-md text-text-tertiary">첫 기록을 남겨보세요</Text>
         </View>
       ) : (
           <View className="bg-bg-secondary rounded-lg overflow-hidden border border-border">

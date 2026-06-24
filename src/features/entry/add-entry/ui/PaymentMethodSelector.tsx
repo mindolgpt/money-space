@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text } from 'react-native'
+import { Chip } from '@/shared/ui'
 import { PaymentMethod } from '@/entities/entry'
 
 type Props = {
@@ -16,24 +17,17 @@ const METHODS: { key: PaymentMethod; label: string }[] = [
 export function PaymentMethodSelector({ value, onChange }: Props) {
   return (
     <View className="mb-4">
-      <Text className="text-sm font-medium text-text-secondary tracking-widest uppercase mb-2">결제수단</Text>
-      <View className="flex-row">
+      <Text className="text-label-md font-semibold text-text-secondary tracking-widest uppercase mb-2">결제수단</Text>
+      <View className="flex-row flex-wrap gap-2">
         {METHODS.map((m) => (
-          <TouchableOpacity
+          <Chip
             key={m.key}
-            className={`px-4 py-2.5 rounded-full mr-2 ${
-              value === m.key ? 'bg-accent-green' : 'bg-bg-tertiary'
-            }`}
+            label={m.label}
+            variant={value === m.key ? 'filled' : 'outlined'}
+            color="green"
+            size="md"
             onPress={() => onChange(m.key)}
-          >
-            <Text
-              className={`text-sm font-medium ${
-                value === m.key ? 'text-white' : 'text-text-secondary'
-              }`}
-            >
-              {m.label}
-            </Text>
-          </TouchableOpacity>
+          />
         ))}
       </View>
     </View>

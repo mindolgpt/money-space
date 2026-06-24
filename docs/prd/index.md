@@ -56,23 +56,20 @@ type EntryType = 'income' | 'expense' | 'saving'
 type PaymentMethod = 'cash' | 'card' | 'account' | 'transfer'
 ```
 
-## 도메인 문서 인덱스
+## 도메인 문서 인덱스 (AI 에이전트 가이드)
 
-| 문서 | 설명 |
-|------|------|
-| [entry.md](./entry/README.md) | 수입/지출 기록 CRUD, 검색 |
-| [budget.md](./budget/README.md) | 예산 설정, 진행률 추적 |
-| [category.md](./category/README.md) | 카테고리 관리 (아이콘, 명칭) |
-| [family.md](./family/README.md) | 가족 초대, 멤버 관리, 역할 |
-| [auth.md](./auth/README.md) | 인증, 회원가입, 세션 관리 |
-| [sync.md](./sync/README.md) | 오프라인 동기화, 큐 관리 |
-| [user.md](./user/README.md) | 프로필, 설정, 알림 |
-| [shared](./shared/README.md) | 공통 UI 이벤트, 컴포넌트 규칙 |
-| [progress-tracker](./progress-tracker.md) | 화면/기능별 완료 여부 추적 |
-| [sprint-checklist](./sprint-checklist.md) | 스프린트 단위 체크리스트 |
-| [agent-prompts.md](./agent-prompts.md) | AI 에이전트용 프롬프트 가이드 |
-| [quick-prompts.md](./quick-prompts.md) | 복사해서 쓰는 프롬프트 예시 |
-| [dev-commands.md](./dev-commands.md) | 도메인별 개발 명령어 |
+| 문서 | 경로 | 키워드 |
+|------|------|--------|
+| Entry | `docs/prd/entry/README.md` | CRUD, 검색, `CreateEntryInput`, `ENTRY_KEYS` |
+| Budget | `docs/prd/budget/README.md` | 예산 설정, 진행률, `BUDGET_KEYS` |
+| Category | `docs/prd/category/README.md` | 카테고리 CRUD, 아이콘, 순서변경, `CATEGORY_KEYS` |
+| Family | `docs/prd/family/README.md` | 가족 초대, 멤버 역할, `FAMILY_KEYS` |
+| Auth | `docs/prd/auth/README.md` | 인증, 회원가입, 세션, `AUTH_KEYS` |
+| Sync | `docs/prd/sync/README.md` | 오프라인 동기화, 큐, 충돌, `SYNC_KEYS` |
+| User | `docs/prd/user/README.md` | 프로필, 설정, 알림, `USER_KEYS` |
+| Shared | `docs/prd/shared/README.md` | 공통 UI 이벤트, 컴포넌트 규칙 |
+| Home | `docs/prd/home/README.md` | 메인 대시보드, QuickInput, RecentEntries |
+| Progress | `docs/prd/progress-tracker.md` | 기능별 완료율 ~99%, 체크리스트 |
 
 ---
 

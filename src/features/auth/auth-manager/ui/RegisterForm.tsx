@@ -1,8 +1,6 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import {
   View,
-  Text,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
@@ -11,7 +9,7 @@ import {
 import { Wallet, Eye, EyeOff, Check } from 'lucide-react-native'
 import { useAuthStore } from '@/features/auth/auth-manager/model/use-auth-store'
 import { colors } from '@/shared/lib/colors'
-import { Button } from '@/shared/ui'
+import { Button, Input, Typography } from '@/shared/ui'
 
 type FormErrors = {
   name?: string
@@ -63,10 +61,6 @@ export function RegisterForm({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { signUp } = useAuthStore()
-
-  const emailRef = useRef<TextInput>(null)
-  const passwordRef = useRef<TextInput>(null)
-  const confirmPasswordRef = useRef<TextInput>(null)
 
   const passwordStrength = password ? evaluatePasswordStrength(password) : null
 
@@ -195,100 +189,79 @@ export function RegisterForm({
             <View className="w-20 h-20 rounded-2xl bg-accent-green items-center justify-center mb-4">
               <Wallet size={36} color={colors.white} />
             </View>
-            <Text className="text-3xl font-bold text-text-primary tracking-tight">회원가입</Text>
-            <Text className="text-sm text-text-secondary mt-1.5">
+            <Typography variant="headline-md" weight="bold" color="primary" className="tracking-tight">
+              회원가입
+            </Typography>
+            <Typography variant="label-sm" color="secondary" className="mt-1.5">
               Money Space 시작하기
-            </Text>
+            </Typography>
           </View>
 
           {/* General Error */}
           {errors.general ? (
             <View className="bg-semantic-expense/10 rounded-xl p-3 mb-4">
-              <Text className="text-semantic-expense text-sm text-center font-medium">
+              <Typography variant="label-sm" color="expense" weight="medium" className="text-center">
                 {errors.general}
-              </Text>
+              </Typography>
             </View>
           ) : null}
 
           {/* Form */}
           <View className="mb-6">
             {/* Name */}
-            <Text className="text-sm text-text-secondary mb-2 font-medium">이름</Text>
-            <TextInput
-              className={`w-full bg-bg-tertiary rounded-xl px-4 py-4 text-base text-text-primary mb-1 ${
-                errors.name ? 'border border-semantic-expense' : ''
-              }`}
+            <Input
+              variant="box"
+              label="이름"
               placeholder="김철수"
-              placeholderTextColor={colors.textTertiary}
               value={name}
               onChangeText={onNameChange}
+              error={errors.name}
               editable={!isLoading}
               returnKeyType="next"
-              onSubmitEditing={() => emailRef.current?.focus()}
             />
-            {errors.name ? (
-              <Text className="text-semantic-expense text-xs mb-3 ml-1 font-medium">{errors.name}</Text>
-            ) : (
-              <View className="mb-3" />
-            )}
 
             {/* Email */}
-            <Text className="text-sm text-text-secondary mb-2 font-medium">이메일</Text>
-            <TextInput
-              ref={emailRef}
-              className={`w-full bg-bg-tertiary rounded-xl px-4 py-4 text-base text-text-primary mb-1 ${
-                errors.email ? 'border border-semantic-expense' : ''
-              }`}
+            <Input
+              variant="box"
+              label="이메일"
               placeholder="example@email.com"
-              placeholderTextColor={colors.textTertiary}
               value={email}
               onChangeText={onEmailChange}
+              error={errors.email}
               autoCapitalize="none"
               keyboardType="email-address"
               editable={!isLoading}
               returnKeyType="next"
-              onSubmitEditing={() => passwordRef.current?.focus()}
             />
-            {errors.email ? (
-              <Text className="text-semantic-expense text-xs mb-3 ml-1 font-medium">{errors.email}</Text>
-            ) : (
-              <View className="mb-3" />
-            )}
 
             {/* Password */}
-            <Text className="text-sm text-text-secondary mb-2 font-medium">비밀번호</Text>
-            <View
-              className={`flex-row items-center w-full bg-bg-tertiary rounded-xl px-4 py-4 mb-1 ${
-                errors.password ? 'border border-semantic-expense' : ''
-              }`}
-            >
-              <TextInput
-                ref={passwordRef}
-                className="flex-1 text-base text-text-primary"
-                placeholder="비밀번호 (8자 이상)"
-                placeholderTextColor={colors.textTertiary}
-                value={password}
-                onChangeText={onPasswordChange}
-                secureTextEntry={!showPassword}
-                editable={!isLoading}
-                returnKeyType="next"
-                onSubmitEditing={() => confirmPasswordRef.current?.focus()}
-              />
-              <TouchableOpacity
-                className="p-2"
-                onPress={() => setShowPassword((prev) => !prev)}
-              >
-                {showPassword ? (
-                  <EyeOff size={20} color={colors.textTertiary} />
-                ) : (
-                  <Eye size={20} color={colors.textTertiary} />
-                )}
-              </TouchableOpacity>
-            </View>
+            <Input
+              variant="box"
+              label="비밀번호"
+              placeholder="비밀번호 (8자 이상)"
+              value={password}
+              onChangeText={onPasswordChange}
+              error={errors.password}
+              secureTextEntry={!showPassword}
+              editable={!isLoading}
+              returnKeyType="next"
+              rightElement={
+                <TouchableOpacity
+                  className="p-2"
+                  onPress={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color={colors.textTertiary} />
+                  ) : (
+                    <Eye size={20} color={colors.textTertiary} />
+                  )}
+                </TouchableOpacity>
+              }
+            />
 
             {/* Password Strength */}
             {passwordStrength && password.length > 0 ? (
-              <View className="flex-row items-center mb-1 ml-1">
+              <View className="flex-row items-center mb-3 ml-1">
                 <View className="flex-row flex-1 gap-1 mr-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <View
@@ -301,53 +274,41 @@ export function RegisterForm({
                     />
                   ))}
                 </View>
-                <Text className={`text-xs font-medium ${passwordStrength.color}`}>
+                <Typography
+                  variant="label-sm"
+                  weight="medium"
+                  className={passwordStrength.color}
+                >
                   {passwordStrength.label}
-                </Text>
+                </Typography>
               </View>
             ) : null}
 
-            {errors.password ? (
-              <Text className="text-semantic-expense text-xs mb-3 ml-1 font-medium">{errors.password}</Text>
-            ) : (
-              <View className="mb-3" />
-            )}
-
             {/* Confirm Password */}
-            <Text className="text-sm text-text-secondary mb-2 font-medium">비밀번호 확인</Text>
-            <View
-              className={`flex-row items-center w-full bg-bg-tertiary rounded-xl px-4 py-4 mb-1 ${
-                errors.confirmPassword ? 'border border-semantic-expense' : ''
-              }`}
-            >
-              <TextInput
-                ref={confirmPasswordRef}
-                className="flex-1 text-base text-text-primary"
-                placeholder="비밀번호 다시 입력"
-                placeholderTextColor={colors.textTertiary}
-                value={confirmPassword}
-                onChangeText={onConfirmPasswordChange}
-                secureTextEntry={!showConfirmPassword}
-                editable={!isLoading}
-                returnKeyType="done"
-                onSubmitEditing={onSignUpPress}
-              />
-              <TouchableOpacity
-                className="p-2"
-                onPress={() => setShowConfirmPassword((prev) => !prev)}
-              >
-                {showConfirmPassword ? (
-                  <EyeOff size={20} color={colors.textTertiary} />
-                ) : (
-                  <Eye size={20} color={colors.textTertiary} />
-                )}
-              </TouchableOpacity>
-            </View>
-            {errors.confirmPassword ? (
-              <Text className="text-semantic-expense text-xs mb-4 ml-1 font-medium">{errors.confirmPassword}</Text>
-            ) : (
-              <View className="mb-4" />
-            )}
+            <Input
+              variant="box"
+              label="비밀번호 확인"
+              placeholder="비밀번호 다시 입력"
+              value={confirmPassword}
+              onChangeText={onConfirmPasswordChange}
+              error={errors.confirmPassword}
+              secureTextEntry={!showConfirmPassword}
+              editable={!isLoading}
+              returnKeyType="done"
+              onSubmitEditing={onSignUpPress}
+              rightElement={
+                <TouchableOpacity
+                  className="p-2"
+                  onPress={() => setShowConfirmPassword((prev) => !prev)}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} color={colors.textTertiary} />
+                  ) : (
+                    <Eye size={20} color={colors.textTertiary} />
+                  )}
+                </TouchableOpacity>
+              }
+            />
 
             {/* Terms Agreement */}
             <TouchableOpacity
@@ -364,11 +325,11 @@ export function RegisterForm({
               >
                 {isTermsAgreed ? <Check size={12} color={colors.white} /> : null}
               </View>
-              <Text className="text-sm text-text-secondary flex-1 leading-5">
+              <Typography variant="label-sm" color="secondary" className="flex-1 leading-5">
                 이용약관 및{' '}
-                <Text className="text-accent-green font-semibold">개인정보 처리방침</Text>에
+                <Typography variant="label-sm" color="accent" weight="semibold">개인정보 처리방침</Typography>에
                 동의합니다
-              </Text>
+              </Typography>
             </TouchableOpacity>
 
             <Button
@@ -388,10 +349,10 @@ export function RegisterForm({
             onPress={onSwitch}
             disabled={isLoading}
           >
-            <Text className="text-text-secondary font-medium">
+            <Typography variant="label-sm" color="secondary" weight="medium">
               이미 계정이 있으신가요?{' '}
-              <Text className="text-accent-green font-semibold">로그인</Text>
-            </Text>
+              <Typography variant="label-sm" color="accent" weight="semibold">로그인</Typography>
+            </Typography>
           </TouchableOpacity>
         </View>
       </ScrollView>

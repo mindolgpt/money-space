@@ -1,5 +1,6 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 import * as Haptics from 'expo-haptics'
+import { CategoryPill } from '@/shared/ui'
 
 export type PeriodType = 'week' | 'month' | 'year'
 
@@ -25,21 +26,15 @@ export function PeriodSelector({ selected, onChange }: Props) {
   return (
     <View className="flex-row bg-bg-tertiary rounded-xl p-1">
       {PERIODS.map(({ key, label }) => (
-        <TouchableOpacity
-          key={key}
-          className={`flex-1 py-2 rounded-lg items-center ${
-            selected === key ? 'bg-accent-green' : 'bg-transparent'
-          }`}
-          onPress={() => handlePress(key)}
-        >
-          <Text
-            className={`text-sm font-medium ${
-              selected === key ? 'text-white' : 'text-text-secondary'
-            }`}
-          >
-            {label}
-          </Text>
-        </TouchableOpacity>
+        <View key={key} className="flex-1">
+          <CategoryPill
+            label={label}
+            active={selected === key}
+            variant="green"
+            size="md"
+            onPress={() => handlePress(key)}
+          />
+        </View>
       ))}
     </View>
   )

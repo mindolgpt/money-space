@@ -76,7 +76,7 @@ export function QuickInput({ onEntryAdded }: Props) {
           activeOpacity={0.7}
         >
           <Zap size={16} color={colors.accentOrange} className="mr-2" />
-          <Text className="text-sm font-medium text-text-secondary">빠른 입력</Text>
+          <Text className="text-label-md font-semibold text-text-secondary">빠른 입력</Text>
         </TouchableOpacity>
       </View>
     )
@@ -88,7 +88,7 @@ export function QuickInput({ onEntryAdded }: Props) {
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
             <Zap size={16} color={colors.accentOrange} className="mr-2" />
-            <Text className="text-sm font-semibold text-text-primary">빠른 입력</Text>
+            <Text className="text-label-md font-semibold text-text-primary">빠른 입력</Text>
           </View>
           <TouchableOpacity
             className="w-6 h-6 rounded-full items-center justify-center bg-bg-tertiary"
@@ -112,7 +112,7 @@ export function QuickInput({ onEntryAdded }: Props) {
               activeOpacity={0.7}
             >
               <Text
-                className={`text-xs font-medium ${
+                className={`text-label-sm font-semibold ${
                   type === t.key ? 'text-white' : 'text-text-secondary'
                 }`}
               >
@@ -124,16 +124,16 @@ export function QuickInput({ onEntryAdded }: Props) {
 
         {lastCategory && (
           <TouchableOpacity className="flex-row items-center bg-bg-tertiary rounded-lg px-3 py-2.5 mb-3">
-            <Text className="text-base mr-2">{lastCategory.icon}</Text>
-            <Text className="text-sm text-text-secondary flex-1">{lastCategory.name}</Text>
-            <Text className="text-xs text-text-tertiary">마지막 사용</Text>
+            <Text className="text-body-md mr-2">{lastCategory.icon}</Text>
+            <Text className="text-label-md text-text-secondary flex-1">{lastCategory.name}</Text>
+            <Text className="text-label-sm text-text-tertiary">마지막 사용</Text>
           </TouchableOpacity>
         )}
 
         <View className="flex-row items-center bg-bg-tertiary rounded-lg px-4 py-3 mb-3">
-          <Text className="text-sm text-text-secondary mr-2">₩</Text>
+          <Text className="text-label-md text-text-secondary mr-2">₩</Text>
           <TextInput
-            className="flex-1 text-lg font-semibold text-text-primary"
+            className="flex-1 text-headline-md font-semibold text-text-primary"
             placeholder="0"
             keyboardType="numeric"
             value={amount}
@@ -143,7 +143,7 @@ export function QuickInput({ onEntryAdded }: Props) {
           />
           {displayAmount ? (
             <Text
-              className={`text-sm font-medium ${
+              className={`text-label-md font-medium ${
                 type === 'income' ? 'text-semantic-income' : type === 'saving' ? 'text-semantic-saving' : 'text-semantic-expense'
               }`}
             >
@@ -161,7 +161,7 @@ export function QuickInput({ onEntryAdded }: Props) {
           activeOpacity={0.7}
         >
           <Text
-            className={`text-sm font-semibold ${
+            className={`text-label-md font-medium ${
               amount && parseInt(amount, 10) > 0 && lastCategory ? 'text-white' : 'text-text-tertiary'
             }`}
           >
@@ -170,7 +170,7 @@ export function QuickInput({ onEntryAdded }: Props) {
         </TouchableOpacity>
 
         {!lastCategory && (
-          <Text className="text-xs text-text-tertiary text-center mt-2">
+          <Text className="text-label-sm text-text-tertiary text-center mt-2">
             먼저 카테고리를 선택한 후 기록이 필요합니다
           </Text>
         )}

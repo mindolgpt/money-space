@@ -22,7 +22,10 @@ interface Entry {
   paymentMethod?: PaymentMethod
   note?: string              // 최대 500자
   date: string               // ISO 8601: "2024-01-15"
-  photoUrls?: string[]       // 영수증 사진 URL 배열
+  photoUrls?: string[]       // 영수증 사진 URL 배열 (최대 5장)
+  latitude?: number          // 거래 위치 위도
+  longitude?: number        // 거래 위치 경도
+  locationName?: string      // 거래 위치 이름 (지오코딩된 주소)
   isShared: boolean          // 가족 공유 여부
   isRecurring: boolean       // 반복 설정 여부
   recurringRule?: string     // rrule 형식 (예: "FREQ=MONTHLY")
@@ -47,28 +50,41 @@ const ENTRY_KEYS = {
     ['entries', 'list', { userId, year, month }] as const,
   details: () => ['entries', 'detail'] as const,
   detail: (id: string) => ['entries', 'detail', id] as const,
+  remote: (userId: string) => ['entries', 'remote', userId] as const,
   search: (userId: string, query: string) =>
     ['entries', 'search', { userId, query }] as const,
+  family: (familyId: string) => ['entries', 'family', familyId] as const,
 }
 
 // Factory (비React 코드용)
-createEntryApi(supabase: SupabaseClient): {
-  create(input: CreateEntryInput): Promise<Entry>
-  update(id: string, input: UpdateEntryInput): Promise<Entry>
-  delete(id: string): Promise<void>
-  getById(id: string): Promise<Entry | null>
-  listByMonth(userId: string, year: number, month: number): Promise<Entry[]>
-  search(userId: string, query: string): Promise<Entry[]>
-  createOffline(entry: CreateEntryInput): Promise<Entry>  // SQLite 우선
+createEntryApi(): {
+  remote: {
+    fetchAll(userId: string): Promise<Entry[]>
+    subscribe(userId: string, callback: (payload: any) => void): Unsubscribe
+    upsert(entry: Entry): Promise<void>
+  }
+  local: {
+    insert(entry: CreateEntryInput): Promise<Entry>
+    getById(id: string): Promise<Entry | null>
+    getByMonth(userId: string, year: number, month: number): Promise<Entry[]>
+    update(id: string, input: UpdateEntryInput): Promise<Entry>
+    delete(id: string): Promise<void>
+    search(userId: string, query: string): Promise<Entry[]>
+    getByDateRange(userId: string, start: string, end: string): Promise<Entry[]>
+    upsertFromRemote(entry: Entry): Promise<void>
+  }
 }
 
 // Hooks (React 컴포넌트용)
 useEntry(id: string): UseQueryResult<Entry | null>
 useEntries(userId: string, year: number, month: number): UseQueryResult<Entry[]>
+useRemoteEntries(userId: string): UseQueryResult<Entry[]>  // 원격에서 모든 엔트리 Fetch
 useSearchEntries(userId: string, query: string): UseQueryResult<Entry[]>
+useFamilyEntries(familyId: string): UseQueryResult<Entry[]>  // 가족 공유 내역
 useCreateEntry(): UseMutationResult<Entry, Error, CreateEntryInput>
 useUpdateEntry(): UseMutationResult<Entry, Error, { id: string; input: UpdateEntryInput }>
 useDeleteEntry(): UseMutationResult<void, Error, string>
+useUpsertEntry(): UseMutationResult<void, Error, Entry>  // 원격 upsert (동기화용)
 ```
 
 ## 4. 주요 유저 플로우
@@ -498,6 +514,148 @@ onClearFilters() {
 // ===== 결과 항목 탭 =====
 onResultPress(entry: Entry) {
   router.push(`/details/${entry.id}`)
+}
+```
+
+### 5.5 LocationPicker
+
+```typescript
+// Events: src/features/entry/add-entry/ui/LocationPicker.tsx
+
+interface LocationPickerProps {
+  latitude?: number
+  longitude?: number
+  locationName?: string
+  onChange: (location: { latitude: number; longitude: number; locationName: string } | null) => void
+}
+
+// ===== 현재 위치 요청 =====
+onRequestLocation() {
+  // 1. 위치 권한 요청
+  const { status } = await Location.requestForegroundPermissionsAsync()
+  if (status !== 'granted') {
+    Alert.alert('위치 권한 필요', '위치 정보를 사용하려면 권한이 필요합니다')
+    return
+  }
+
+  // 2. 현재 위치 가져오기
+  const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced })
+
+  // 3. 역지오코딩으로 주소 변환
+  const geocode = await Location.reverseGeocodeAsync({
+    latitude: pos.coords.latitude,
+    longitude: pos.coords.longitude,
+  })
+
+  // 4. 주소 조합
+  const name = [place.region, place.city, place.street, place.name].filter(Boolean).join(' ')
+
+  onChange({
+    latitude: pos.coords.latitude,
+    longitude: pos.coords.longitude,
+    locationName: name,
+  })
+}
+
+// ===== 지도에서 열기 =====
+onOpenInMaps() {
+  const url = `https://maps.google.com/maps?q=${latitude},${longitude}`
+  Linking.openURL(url)
+}
+
+// ===== 위치 삭제 =====
+onRemoveLocation() {
+  onChange(null)
+}
+```
+
+### 5.6 PhotoPicker
+
+```typescript
+// Events: src/features/entry/add-entry/ui/PhotoPicker.tsx
+
+interface PhotoPickerProps {
+  photoUrls: string[]
+  onAddPhoto: (uri: string) => void
+  onRemovePhoto: (index: number) => void
+}
+
+// ===== 사진 선택 옵션 표시 =====
+onShowOptions() {
+  Alert.alert('사진 추가', '사진을 선택하세요', [
+    { text: '카메라로 촬영', onPress: onTakePhoto },
+    { text: '라이브러리에서 선택', onPress: onPickImage },
+    { text: '취소', style: 'cancel' },
+  ])
+}
+
+// ===== 카메라 촬영 =====
+onTakePhoto() {
+  // 1. 권한 요청
+  // 2. ImagePicker.launchCameraAsync 실행
+  // 3. 사진 추가
+}
+
+// ===== 라이브러리에서 선택 =====
+onPickImage() {
+  // 1. 권한 요청
+  // 2. ImagePicker.launchImageLibraryAsync 실행
+  // 3. 사진 추가
+}
+
+// ===== 사진 삭제 =====
+onRemovePhoto(index: number) {
+  Alert.alert('사진 삭제', '이 사진을 삭제하시겠습니까?', [
+    { text: '취소', style: 'cancel' },
+    { text: '삭제', style: 'destructive', onPress: () => onRemovePhoto(index) },
+  ])
+}
+
+// 최대 5장까지 추가 가능
+```
+
+### 5.7 EditEntryModal
+
+```typescript
+// Events: src/features/entry/edit-entry/ui/EditEntryModal.tsx
+
+// AddEntryModal과 동일한 폼 구조
+// 수정할 Entry 데이터로 초기화
+// 저장 시 updateEntry API 호출
+```
+
+### 5.8 DetailScreen
+
+```typescript
+// Events: src/pages/details/ui/DetailScreen.tsx
+
+// ===== Entry 상세 조회 =====
+onScreenFocus(entryId: string) {
+  // 1. Entry 데이터 Fetch
+  // 2. 사진, 위치, 메모 표시
+  // 3. 수정/삭제 버튼 표시
+}
+
+// ===== 수정 버튼 =====
+onEditPress() {
+  openEditModal(entry)
+}
+
+// ===== 삭제 버튼 =====
+onDeletePress() {
+  showConfirmDialog({
+    title: '기록 삭제',
+    message: '이 기록을 삭제하시겠습니까?',
+    confirmText: '삭제',
+    onConfirm: executeDelete,
+  })
+}
+
+// ===== 지도에서 보기 =====
+onOpenLocation() {
+  if (entry.latitude && entry.longitude) {
+    Linking.openURL(`https://maps.google.com/maps?q=${entry.latitude},${entry.longitude}`)
+  }
 }
 ```
 

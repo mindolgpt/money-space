@@ -52,14 +52,19 @@ createFamilyApi(supabase: SupabaseClient): {
   removeMember(familyId: string, userId: string): Promise<void>
   listMembers(familyId: string): Promise<FamilyMember[]>
   listUserFamilies(userId: string): Promise<Family[]>
+  inviteByEmail(email: string, familyId: string): Promise<void>  // 이메일 초대
 }
 
 useFamilies(userId: string): UseQueryResult<Family[]>
 useFamilyMembers(familyId: string): UseQueryResult<FamilyMember[]>
-useCreateFamily(): UseMutationResult<Family, Error, { name: string }>
+useCreateFamily(): UseMutationResult<{ family: Family; inviteCode: string }, Error, { name: string }>
 useJoinFamily(): UseMutationResult<FamilyMember, Error, { inviteCode: string }>
+useLeaveFamily(): UseMutationResult<void, Error, { familyId: string; userId: string }>  // 가족 탈퇴
 useUpdateMemberRole(): UseMutationResult<void, Error, { familyId: string; userId: string; role: string }>
 useRemoveMember(): UseMutationResult<void, Error, { familyId: string; userId: string }>
+useGenerateInviteCode(): UseMutationResult<string, Error, string>  // 초대 코드 생성
+useInviteByEmail(): UseMutationResult<void, Error, { email: string; familyId: string }>  // 이메일로 초대
+useAcceptInvite(): UseMutationResult<void, Error, { code: string; userId: string }>  // 초대 수락
 ```
 
 ## 4. 주요 유저 플로우
@@ -493,3 +498,65 @@ onDeepLinkJoin(familyId: string, inviteCode: string) {
 | 탈퇴 시 마지막 관리자 | "마지막 관리자는 탈퇴할 수 없습니다" |
 | 가족 삭제 시 남은 멤버 | 관리자가가족을 삭제하면 모든 멤버에게 알림 |
 | 초대 코드 오타 | 실시간 검증 후 "유효하지 않은 코드" 표시 |
+
+## 8. 주요 페이지
+
+### 8.1 FamilyManagerScreen
+
+```typescript
+// Events: src/pages/family/ui/FamilyManagerScreen.tsx
+// src/features/family/family-manager/ui/FamilyManager.tsx
+
+// ===== 가족 목록 조회 =====
+onScreenFocus() {
+  // 1. 내 가족 목록 Fetch
+  // 2. FamilyManagerScreen에 표시
+}
+
+// ===== 가족 선택 =====
+onFamilySelect(family: Family) {
+  // 1. 선택된 가족 상태 업데이트
+  // 2. 해당 가족 데이터 로드
+  // 3. 가족 모드 진입
+}
+
+// ===== 가족 생성 =====
+onCreateFamily() {
+  openCreateFamilyModal()
+}
+
+// ===== 가족 편집 =====
+onEditFamily(family: Family) {
+  if (!isAdmin(family.id)) {
+    showToast('관리자만 수정할 수 있습니다')
+    return
+  }
+  openEditModal(family)
+}
+
+// ===== 가족 삭제 =====
+onDeleteFamily(family: Family) {
+  if (!isAdmin(family.id)) return
+
+  showConfirmDialog({
+    title: '가족 삭제',
+    message: '이 가족을 삭제하시겠습니까?',
+    confirmText: '삭제',
+    onConfirm: executeDelete,
+  })
+}
+```
+
+### 8.2 SharedScreen
+
+```typescript
+// Events: src/pages/shared/ui/SharedScreen.tsx
+
+// ===== 공유 내역 조회 =====
+onScreenFocus() {
+  // 1. 선택된 가족의 공유된 Entry Fetch
+  // 2. 목록 표시
+}
+
+// 특정 가족 그룹과 공유된 가계 기록만 필터링하여 표시
+```

@@ -525,3 +525,36 @@ async function executeDelete() {
 | 가져오기 포맷 오류 | 구체적인 오류 위치 안내 |
 | 계정 삭제 실패 | 비밀번호 재입력 요청 |
 | 세션 만료 (설정 저장 시) | 재로그인 후 자동 재시도 |
+
+## 8. 주요 페이지
+
+### 8.1 SettingsScreen
+
+```typescript
+// Events: src/pages/settings/ui/SettingsScreen.tsx
+
+// 메인 설정 화면
+// 하위 메뉴:
+//   - 프로필 수정 (ProfileSettings)
+    // - 알림 설정 (NotificationSettings)
+    // - 테마 설정
+    // - 데이터 내보내기 (DataExport)
+    // - 데이터 가져오기 (DataImport)
+    // - 가족 관리 (FamilyManagerScreen)
+    // - 카테고리 관리 (CategoryManagerScreen)
+    // - 계정 삭제 (DeleteAccount)
+    // - 로그아웃
+
+// ===== 로그아웃 =====
+onLogout() {
+  showConfirmDialog({
+    title: '로그아웃',
+    message: '정말 로그아웃하시겠습니까?',
+    confirmText: '로그아웃',
+    onConfirm: async () => {
+      await signOut()
+      router.replace('/auth/login')
+    },
+  })
+}
+```

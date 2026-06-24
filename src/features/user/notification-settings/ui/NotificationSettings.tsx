@@ -1,13 +1,7 @@
-import { useEffect, useRef } from 'react'
-import { View, Text, Switch } from 'react-native'
-import { useAuthStore } from '@/features/auth/auth-manager'
-import { useUserSettings, useUpdateSettings } from '@/entities/user'
-
-type NotificationKey =
-  | 'budgetAlert'
-  | 'recurringReminder'
-  | 'weeklySummary'
-  | 'monthlyReport'
+import { View, Text } from 'react-native'
+import { useNotificationSettings } from '@/features/user/notification-settings/model/use-notification-settings'
+import type { NotificationKey } from '@/features/user/notification-settings/model/use-notification-settings'
+import { Toggle } from '@/shared/ui'
 
 const NOTIFICATION_ITEMS: {
   key: NotificationKey
@@ -37,42 +31,13 @@ const NOTIFICATION_ITEMS: {
 ]
 
 export function NotificationSettings() {
-  const { user } = useAuthStore()
-  const { data: settings } = useUserSettings(user?.id)
-  const { mutateAsync: updateSettings } = useUpdateSettings()
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-
-  const onToggleChange = (key: NotificationKey, value: boolean) => {
-    if (!user || !settings) return
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(async () => {
-      try {
-        await updateSettings({
-          userId: user.id,
-          updates: {
-            notifications: {
-              ...settings.notifications,
-              [key]: value,
-            },
-          },
-        })
-      } catch {
-        // error handled by query client -> rollback
-      }
-    }, 500)
-  }
-
-  useEffect(() => {
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current)
-    }
-  }, [])
+  const { settings, onToggleChange } = useNotificationSettings()
 
   if (!settings) return null
 
   return (
     <View>
-      <Text className="text-base font-semibold text-text-primary mb-4">
+      <Text className="text-headline-md font-semibold text-text-primary mb-4">
         알림 설정
       </Text>
 
@@ -83,21 +48,16 @@ export function NotificationSettings() {
             className="flex-row items-center justify-between py-3 border-b border-border last:border-b-0"
           >
             <View className="flex-1 mr-4">
-              <Text className="text-sm font-medium text-text-primary">
+              <Text className="text-body-md font-medium text-text-primary">
                 {item.label}
               </Text>
-              <Text className="text-xs text-text-tertiary mt-0.5">
+              <Text className="text-label-sm text-text-tertiary mt-0.5">
                 {item.description}
               </Text>
             </View>
-            <Switch
+            <Toggle
               value={settings.notifications[item.key]}
-              onValueChange={(v) => onToggleChange(item.key, v)}
-              trackColor={{
-                false: '#edeeef',
-                true: '#10b981',
-              }}
-              thumbColor="white"
+              onToggle={() => onToggleChange(item.key, !settings.notifications[item.key])}
             />
           </View>
         ))}

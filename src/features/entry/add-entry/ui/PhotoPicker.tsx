@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { View, Text, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, Image, Alert, ActivityIndicator } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { colors } from '@/shared/lib/colors'
-import { X } from 'lucide-react-native'
+import { X, Camera } from 'lucide-react-native'
+import { Button, IconCircle } from '@/shared/ui'
 
 type Props = {
   photoUrls: string[]
@@ -97,7 +98,7 @@ export function PhotoPicker({ photoUrls, onAddPhoto, onRemovePhoto }: Props) {
 
   return (
     <View className="mb-4">
-      <Text className="text-sm text-text-secondary mb-2">사진 ({photoUrls.length}/5)</Text>
+      <Text className="text-label-md text-text-secondary mb-2">사진 ({photoUrls.length}/5)</Text>
 
       <View className="flex-row flex-wrap gap-2">
         {photoUrls.map((uri, index) => (
@@ -107,27 +108,32 @@ export function PhotoPicker({ photoUrls, onAddPhoto, onRemovePhoto }: Props) {
               className="w-20 h-20 rounded-xl"
               resizeMode="cover"
             />
-            <TouchableOpacity
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-accent-red items-center justify-center"
-              onPress={() => onRemove(index)}
-            >
-              <X size={12} color={colors.white} />
-            </TouchableOpacity>
+            <View className="absolute -top-1.5 -right-1.5">
+              <IconCircle
+                icon={X}
+                variant="red"
+                size="sm"
+                iconSize={10}
+                onPress={() => onRemove(index)}
+              />
+            </View>
           </View>
         ))}
 
         {photoUrls.length < 5 && (
-          <TouchableOpacity
-            className="w-20 h-20 rounded-xl border-2 border-dashed border-border items-center justify-center"
-            onPress={showOptions}
-            disabled={isLoading}
-          >
+          <View className="w-20 h-20 rounded-xl border-2 border-dashed border-border items-center justify-center">
             {isLoading ? (
               <ActivityIndicator size="small" color={colors.accentGreen} />
             ) : (
-              <Text className="text-2xl text-text-tertiary">+</Text>
+              <Button
+                variant="ghost"
+                size="sm"
+                icon={<Camera size={18} color={colors.textTertiary} />}
+                onPress={showOptions}
+                className="w-full h-full rounded-xl"
+              />
             )}
-          </TouchableOpacity>
+          </View>
         )}
       </View>
     </View>

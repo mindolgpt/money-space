@@ -1,10 +1,9 @@
-import { useState, useMemo } from 'react'
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
-import { useCategories, useDeleteCategory } from '@/entities/category'
-import type { Category, CategoryType } from '@/entities/category'
-import { colors } from '@/shared/lib/colors'
+import { useCategoryPicker } from '@/features/category/category-picker/model/use-category-picker'
 import { CategoryEditModal } from '@/features/category/category-modal'
+import { Input, CategoryPill, Typography } from '@/shared/ui'
+import type { Category, CategoryType } from '@/entities/category'
 
 type Props = {
   type: CategoryType
@@ -25,75 +24,33 @@ export function CategoryPicker({
   showSearch = false,
   allowContextMenu = false,
 }: Props) {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
-  const { data: categories = [] } = useCategories(type)
-  const { mutate: deleteCategory } = useDeleteCategory()
-
-  const filteredCategories = useMemo(() => {
-    if (!searchQuery.trim()) return categories
-    const q = searchQuery.toLowerCase()
-    return categories.filter((c) => c.name.toLowerCase().includes(q))
-  }, [categories, searchQuery])
-
-  const onCategoryItemPress = (category: Category) => {
-    if (closeOnSelect && onClose) {
-      setTimeout(() => onClose(), 200)
-    }
-    onSelect(category)
-  }
-
-  const onCategoryItemLongPress = (category: Category) => {
-    if (!allowContextMenu || category.isSystem) return
-
-    Alert.alert(category.name, undefined, [
-      {
-        text: '편집',
-        onPress: () => setEditingCategory(category),
-      },
-      {
-        text: '삭제',
-        style: 'destructive',
-        onPress: () => {
-          Alert.alert(
-            '카테고리 삭제',
-            `"${category.name}"을(를) 삭제하시겠습니까?`,
-            [
-              { text: '취소', style: 'cancel' },
-              {
-                text: '삭제',
-                style: 'destructive',
-                onPress: () => deleteCategory(category.id),
-              },
-            ],
-          )
-        },
-      },
-      { text: '취소', style: 'cancel' },
-    ])
-  }
-
-  const onSearchFilterChange = (text: string) => {
-    setSearchQuery(text)
-  }
+  const {
+    searchQuery,
+    editingCategory,
+    filteredCategories,
+    onCategoryItemPress,
+    onCategoryItemLongPress,
+    onSearchFilterChange,
+    setEditingCategory,
+  } = useCategoryPicker(type, onSelect, closeOnSelect, onClose, allowContextMenu)
 
   return (
     <View>
       {showSearch && (
-        <TextInput
-          className="input mb-3"
+        <Input
+          variant="box"
           placeholder="카테고리 검색"
-          placeholderTextColor={colors.textTertiary}
           value={searchQuery}
           onChangeText={onSearchFilterChange}
+          containerClassName="mb-3"
         />
       )}
 
       {filteredCategories.length === 0 ? (
         <View className="py-8 items-center">
-          <Text className="text-text-tertiary">
+          <Typography variant="body-md" color="tertiary">
             {searchQuery ? '검색 결과가 없습니다' : '카테고리가 없습니다'}
-          </Text>
+          </Typography>
         </View>
       ) : (
         <View className="flex-row flex-wrap gap-2">
@@ -140,23 +97,14 @@ function CategoryPickerItem({ category, isSelected, onPress, onLongPress }: Item
 
   return (
     <Animated.View style={animStyle}>
-      <TouchableOpacity
-        className={`px-4 py-3 rounded-lg items-center min-w-[72px] ${
-          isSelected ? 'bg-accent-green' : 'bg-bg-tertiary'
-        }`}
+      <CategoryPill
+        emoji={category.icon}
+        label={category.name}
+        active={isSelected}
+        variant="green"
         onPress={onPress}
         onLongPress={onLongPress}
-      >
-        <Text className="text-xl mb-1">{category.icon}</Text>
-        <Text
-          className={`text-xs font-medium ${
-            isSelected ? 'text-white' : 'text-text-secondary'
-          }`}
-          numberOfLines={1}
-        >
-          {category.name}
-        </Text>
-      </TouchableOpacity>
+      />
     </Animated.View>
   )
 }

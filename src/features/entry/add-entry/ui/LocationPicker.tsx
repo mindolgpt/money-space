@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, Alert, Linking, ActivityIndicator } from 'react-native'
+import { Chip } from '@/shared/ui'
 import { colors } from '@/shared/lib/colors'
 import * as Location from 'expo-location'
 
@@ -57,30 +58,23 @@ export function LocationPicker({ latitude, longitude, locationName, onChange }: 
     <View className="mb-4 py-3 border-b border-border">
       <View className="flex-row items-center justify-between">
         <View className="flex-1">
-          <Text className="text-sm font-medium text-text-primary">위치</Text>
+          <Text className="text-label-md font-semibold text-text-primary">위치</Text>
           {hasLocation ? (
             <TouchableOpacity onPress={openInMaps}>
-              <Text className="text-xs text-accent-green mt-0.5 underline" numberOfLines={1}>
+              <Text className="text-label-sm text-accent-green mt-0.5 underline" numberOfLines={1}>
                 {locationName ?? `${latitude!.toFixed(4)}, ${longitude!.toFixed(4)}`}
               </Text>
             </TouchableOpacity>
           ) : (
-            <Text className="text-xs text-text-tertiary mt-0.5">거래 위치를 추가합니다</Text>
+            <Text className="text-label-sm text-text-tertiary mt-0.5">거래 위치를 추가합니다</Text>
           )}
         </View>
         {loading ? (
           <ActivityIndicator size="small" color={colors.accentGreen} />
         ) : hasLocation ? (
-          <TouchableOpacity onPress={removeLocation} className="p-2">
-            <Text className="text-accent-red text-sm">삭제</Text>
-          </TouchableOpacity>
+          <Chip label="삭제" variant="tinted" color="red" size="sm" onPress={removeLocation} />
         ) : (
-          <TouchableOpacity
-            onPress={requestLocation}
-            className="px-3 py-1.5 rounded-lg bg-accent-green/10"
-          >
-            <Text className="text-accent-green text-sm font-medium">현재 위치 추가</Text>
-          </TouchableOpacity>
+          <Chip label="현재 위치 추가" variant="tinted" color="green" size="sm" onPress={requestLocation} />
         )}
       </View>
     </View>

@@ -4,22 +4,23 @@ import { cn } from '@/shared/lib/cn'
 type CardProps = ViewProps & {
   variant?: 'default' | 'glass' | 'elevated' | 'outlined'
   padded?: boolean
+  hoverable?: boolean
 }
 
-export function Card({ variant = 'default', padded = true, className = '', style, children, ...props }: CardProps) {
+export function Card({ variant = 'default', padded = true, hoverable = false, className = '', style, children, ...props }: CardProps) {
   const variants = {
     default: 'bg-bg-secondary border-border',
     glass: 'bg-bg-glass border-border',
-    elevated: 'bg-bg-secondary border-border shadow-md',
+    elevated: 'bg-bg-secondary border-border',
     outlined: 'bg-transparent border-border',
   }
 
   const shadowStyles: Record<string, object> = {
     default: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.04,
-      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.03,
+      shadowRadius: 12,
       elevation: 1,
     },
     glass: {
@@ -32,7 +33,7 @@ export function Card({ variant = 'default', padded = true, className = '', style
     elevated: {
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.06,
+      shadowOpacity: 0.03,
       shadowRadius: 12,
       elevation: 3,
     },
@@ -42,9 +43,10 @@ export function Card({ variant = 'default', padded = true, className = '', style
   return (
     <View
       className={cn(
-        'rounded-lg border',
+        'rounded-xl border',
         variants[variant],
         padded && 'p-4',
+        hoverable && 'active:shadow-md',
         className
       )}
       style={[shadowStyles[variant], style]}
