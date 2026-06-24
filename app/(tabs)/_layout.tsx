@@ -8,9 +8,9 @@ function CustomTabBar(props: BottomTabBarProps) {
 export default function TabsLayout() {
   return (
     <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBar: (props) => <CustomTabBar {...props} />,
       }}
     >
       <Tabs.Screen name="index" />
